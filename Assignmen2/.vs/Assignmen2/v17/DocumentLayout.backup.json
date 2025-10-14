@@ -3,28 +3,84 @@
   "WorkspaceRootPath": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\dashboard\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\dashboard\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\account\\logout.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\account\\logout.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\shared\\_dashboardmenu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\shared\\_dashboardmenu.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\shared\\_dashboardlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\shared\\_dashboardlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\home\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\home\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\businesslayer\\mapping\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|solutionrelative:businesslayer\\mapping\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\home\\privacy.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\presentationlayer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\dataaccesslayer\\data\\appcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\data\\appcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\dataaccesslayer\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\businesslayer\\mapping\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|solutionrelative:businesslayer\\mapping\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|e:\\fpt\\k\u00EC 7\\prn222-assignment2\\assignmen2\\businesslayer\\businesslayer.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -46,48 +102,145 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Dashboard\\Index.cshtml.cs",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml.cs",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Dashboard\\Index.cshtml.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T16:59:52.479Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T16:59:50.043Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AutoMapperProfile.cs",
-              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
-              "RelativeDocumentMoniker": "BusinessLayer\\Mapping\\AutoMapperProfile.cs",
-              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
-              "RelativeToolTip": "BusinessLayer\\Mapping\\AutoMapperProfile.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAkwF8AAABgAAAAAAAAAA==",
+              "Title": "Logout.cshtml.cs",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Logout.cshtml.cs",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Account\\Logout.cshtml.cs",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Logout.cshtml.cs",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Account\\Logout.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-14T08:48:22.712Z",
+              "WhenOpened": "2025-10-14T16:59:46.955Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Privacy.cshtml",
-              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Privacy.cshtml",
-              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Privacy.cshtml",
-              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Privacy.cshtml",
-              "RelativeToolTip": "PresentationLayer\\Pages\\Privacy.cshtml",
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Account\\Login.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Account\\Login.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-14T08:46:56.254Z"
+              "WhenOpened": "2025-10-14T16:59:45.072Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Index.cshtml",
-              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Index.cshtml",
-              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Index.cshtml",
-              "RelativeToolTip": "PresentationLayer\\Pages\\Index.cshtml",
+              "Title": "_DashboardMenu.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Shared\\_DashboardMenu.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Shared\\_DashboardMenu.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Shared\\_DashboardMenu.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Shared\\_DashboardMenu.cshtml",
+              "ViewState": "AgIAANsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T16:29:56.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "_DashboardLayout.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Shared\\_DashboardLayout.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Shared\\_DashboardLayout.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Shared\\_DashboardLayout.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Shared\\_DashboardLayout.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-14T08:46:53.83Z"
+              "WhenOpened": "2025-10-14T16:29:54.768Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "_ViewStart.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\_ViewStart.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\_ViewStart.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\_ViewStart.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\_ViewStart.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T14:58:00.096Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "_ViewImports.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\_ViewImports.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\_ViewImports.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\_ViewImports.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\_ViewImports.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T14:57:59.216Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T14:57:56.436Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Privacy.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Privacy.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Home\\Privacy.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Privacy.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Home\\Privacy.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T14:41:38.394Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "Error.cshtml",
               "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Error.cshtml",
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Error.cshtml",
@@ -95,11 +248,126 @@
               "RelativeToolTip": "PresentationLayer\\Pages\\Error.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-14T08:46:52.421Z"
+              "WhenOpened": "2025-10-14T08:46:52.421Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "Privacy.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Privacy.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Privacy.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Privacy.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Privacy.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T08:46:56.254Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T09:12:28.372Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Home\\Index.cshtml",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Index.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Home\\Index.cshtml",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAqwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-14T14:41:28.798Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "PresentationLayer\\appsettings.Development.json",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.Development.json",
+              "RelativeToolTip": "PresentationLayer\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAByAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-14T13:11:27.974Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AppContextFactory.cs",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Data\\AppContextFactory.cs",
+              "RelativeDocumentMoniker": "DataAccessLayer\\Data\\AppContextFactory.cs",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Data\\AppContextFactory.cs",
+              "RelativeToolTip": "DataAccessLayer\\Data\\AppContextFactory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T12:08:05.862Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "DataAccessLayer\\Data\\AppDbContext.cs",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "DataAccessLayer\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T12:08:05.082Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
+              "RelativeDocumentMoniker": "PresentationLayer\\Program.cs",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
+              "RelativeToolTip": "PresentationLayer\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T06:04:27.998Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.json",
+              "RelativeDocumentMoniker": "PresentationLayer\\appsettings.json",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.json",
+              "RelativeToolTip": "PresentationLayer\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAByAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-14T12:07:46.243Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "AutoMapperProfile.cs",
+              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
+              "RelativeDocumentMoniker": "BusinessLayer\\Mapping\\AutoMapperProfile.cs",
+              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
+              "RelativeToolTip": "BusinessLayer\\Mapping\\AutoMapperProfile.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAkwF8AAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T08:48:22.712Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
               "Title": "DataAccessLayer.csproj",
               "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
               "RelativeDocumentMoniker": "DataAccessLayer\\DataAccessLayer.csproj",
@@ -111,7 +379,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 20,
               "Title": "BusinessLayer.csproj",
               "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj",
               "RelativeDocumentMoniker": "BusinessLayer\\BusinessLayer.csproj",
@@ -123,37 +391,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
-              "RelativeDocumentMoniker": "PresentationLayer\\Program.cs",
-              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
-              "RelativeToolTip": "PresentationLayer\\Program.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAApwDUAAABYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-14T06:04:27.998Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{56df62a4-05a3-4e5b-aa1a-99371ccfb997}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Index.cshtml.cs",
-              "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
-              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
-              "ToolTip": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
-              "RelativeToolTip": "PresentationLayer\\Pages\\Home\\Index.cshtml.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAAwCMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-14T09:12:28.372Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 21,
               "Title": "PresentationLayer.csproj",
               "DocumentMoniker": "E:\\FPT\\K\u00EC 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj",
               "RelativeDocumentMoniker": "PresentationLayer\\PresentationLayer.csproj",

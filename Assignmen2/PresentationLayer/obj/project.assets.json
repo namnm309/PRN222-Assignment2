@@ -3437,7 +3437,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Ngoc Lan\\.nuget\\packages\\": {},
+    "C:\\Users\\MinhNam\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
@@ -3446,14 +3446,14 @@
       "projectUniqueName": "E:\\FPT\\Kì 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj",
       "projectName": "PresentationLayer",
       "projectPath": "E:\\FPT\\Kì 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj",
-      "packagesPath": "C:\\Users\\Ngoc Lan\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\MinhNam\\.nuget\\packages\\",
       "outputPath": "E:\\FPT\\Kì 7\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Ngoc Lan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\MinhNam\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3462,6 +3462,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

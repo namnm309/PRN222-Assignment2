@@ -3,6 +3,7 @@ using BusinessLayer.Services;
 using DataAccessLayer.Data;
 using DataAccessLayer.Repository;
 using Microsoft.EntityFrameworkCore;
+using PresentationLayer.Infrastructure;
 
 namespace PresentationLayer
 {
@@ -43,6 +44,19 @@ namespace PresentationLayer
             {
                 // Route "/" tới trang Home/Index
                 options.Conventions.AddPageRoute("/Home/Index", "");
+                // Thêm filter bảo vệ Dashboard
+                options.Conventions.AddFolderApplicationModelConvention("/Dashboard", model =>
+                {
+                    model.Filters.Add(new DashboardAuthorizePageFilter());
+                });
+            });
+
+            // Session for auth
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
 
             // Đăng ký Repository (DataAccessLayer)
@@ -75,7 +89,7 @@ namespace PresentationLayer
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthorization();
 
             app.MapRazorPages();
