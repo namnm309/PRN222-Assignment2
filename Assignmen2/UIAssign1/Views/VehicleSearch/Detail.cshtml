@@ -1,0 +1,170 @@
+@model BusinessLayer.ViewModels.ProductViewModel
+@{
+    ViewData["Title"] = "Chi tiết xe";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-car mr-2"></i>Chi tiết xe
+                    </h3>
+                    <div class="card-tools">
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name" style="max-height: 400px; width: 100%; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px;">
+                                    <i class="fas fa-car fa-5x text-muted"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <h2>@Model.Name</h2>
+                            <p class="text-muted">@Model.Description</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <strong>SKU:</strong> @Model.Sku
+                                </div>
+                                <div class="col-sm-6">
+                                    <strong>Thương hiệu:</strong> @Model.BrandName
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <strong>Giá bán:</strong> 
+                                    <span class="h4 text-primary">@Model.Price.ToString("N0") VNĐ</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <strong>Tồn kho:</strong>
+                                    @if (Model.StockQuantity > 0)
+                                    {
+                                        <span class="badge badge-success badge-lg">@Model.StockQuantity xe</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger badge-lg">Hết hàng</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <strong>Trạng thái:</strong>
+                                    @if (Model.IsActive)
+                                    {
+                                        <span class="badge badge-success">Đang bán</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary">Ngừng bán</span>
+                                    }
+                                </div>
+                                <div class="col-sm-6">
+                                    <strong>Ngày tạo:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h5>Thông tin bổ sung</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>ID sản phẩm:</strong></td>
+                                                <td>@Model.Id</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>ID thương hiệu:</strong></td>
+                                                <td>@Model.BrandId</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Cập nhật lần cuối:</strong></td>
+                                                <td>@Model.UpdatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h5>Hành động</h5>
+                                <div class="btn-group" role="group">
+                                    @if (Model.StockQuantity > 0)
+                                    {
+                                        <a href="@Url.Action("Create", "TestDrive", new { productId = Model.Id })" class="btn btn-success">
+                                            <i class="fas fa-calendar-check"></i> Đặt lịch lái thử
+                                        </a>
+                                    }
+                                    <a href="@Url.Action("Create", "Order", new { productId = Model.Id })" class="btn btn-primary">
+                                        <i class="fas fa-shopping-cart"></i> Tạo đơn hàng
+                                    </a>
+                                    <button type="button" class="btn btn-info" onclick="printProductInfo()">
+                                        <i class="fas fa-print"></i> In thông tin
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function printProductInfo() {
+            var printWindow = window.open('', '_blank');
+            var content = `
+                <html>
+                <head>
+                    <title>Thông tin xe - @Model.Name</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .info-table { width: 100%; border-collapse: collapse; }
+                        .info-table td { padding: 8px; border: 1px solid #ddd; }
+                        .info-table td:first-child { background-color: #f5f5f5; font-weight: bold; }
+                        .price { font-size: 18px; color: #007bff; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>THÔNG TIN XE</h1>
+                        <h2>@Model.Name</h2>
+                    </div>
+                    <table class="info-table">
+                        <tr><td>Tên xe:</td><td>@Model.Name</td></tr>
+                        <tr><td>SKU:</td><td>@Model.Sku</td></tr>
+                        <tr><td>Thương hiệu:</td><td>@Model.BrandName</td></tr>
+                        <tr><td>Giá bán:</td><td class="price">@Model.Price.ToString("N0") VNĐ</td></tr>
+                        <tr><td>Tồn kho:</td><td>@Model.StockQuantity xe</td></tr>
+                        <tr><td>Trạng thái:</td><td>@(Model.IsActive ? "Đang bán" : "Ngừng bán")</td></tr>
+                        <tr><td>Mô tả:</td><td>@Model.Description</td></tr>
+                        <tr><td>Ngày tạo:</td><td>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td></tr>
+                    </table>
+                </body>
+                </html>
+            `;
+            printWindow.document.write(content);
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+}

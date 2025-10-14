@@ -1,4 +1,5 @@
-using BusinessLayer.ViewModels;
+using BusinessLayer.DTOs.Responses;
+using BusinessLayer.DTOs.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,34 +11,34 @@ namespace BusinessLayer.Services
     public interface IInventoryManagementService
     {
         // Inventory Allocation Management
-        Task<List<InventoryAllocationViewModel>> GetAllInventoryAllocationsAsync();
-        Task<List<InventoryAllocationViewModel>> GetInventoryAllocationsByDealerAsync(Guid dealerId);
-        Task<List<InventoryAllocationViewModel>> GetInventoryAllocationsByProductAsync(Guid productId);
-        Task<InventoryAllocationViewModel?> GetInventoryAllocationAsync(Guid productId, Guid dealerId);
-        Task<bool> CreateInventoryAllocationAsync(InventoryAllocationViewModel allocation);
-        Task<bool> UpdateInventoryAllocationAsync(InventoryAllocationViewModel allocation);
+        Task<List<InventoryAllocationResponse>> GetAllInventoryAllocationsAsync();
+        Task<List<InventoryAllocationResponse>> GetInventoryAllocationsByDealerAsync(Guid dealerId);
+        Task<List<InventoryAllocationResponse>> GetInventoryAllocationsByProductAsync(Guid productId);
+        Task<InventoryAllocationResponse?> GetInventoryAllocationAsync(Guid productId, Guid dealerId);
+        Task<bool> CreateInventoryAllocationAsync(InventoryAllocationResponse allocation);
+        Task<bool> UpdateInventoryAllocationAsync(InventoryAllocationResponse allocation);
         Task<bool> DeleteInventoryAllocationAsync(Guid id);
 
         // Stock Alerts
-        Task<List<InventoryAllocationViewModel>> GetLowStockAllocationsAsync();
-        Task<List<InventoryAllocationViewModel>> GetCriticalStockAllocationsAsync();
-        Task<List<InventoryAllocationViewModel>> GetOutOfStockAllocationsAsync();
+        Task<List<InventoryAllocationResponse>> GetLowStockAllocationsAsync();
+        Task<List<InventoryAllocationResponse>> GetCriticalStockAllocationsAsync();
+        Task<List<InventoryAllocationResponse>> GetOutOfStockAllocationsAsync();
 
         // Inventory Transactions
-        Task<List<InventoryTransactionViewModel>> GetInventoryTransactionsAsync(Guid? productId = null, Guid? dealerId = null, string transactionType = null, DateTime? fromDate = null, DateTime? toDate = null);
-        Task<bool> CreateInventoryTransactionAsync(InventoryTransactionViewModel transaction);
+        Task<List<InventoryTransactionResponse>> GetInventoryTransactionsAsync(Guid? productId = null, Guid? dealerId = null, string transactionType = null, DateTime? fromDate = null, DateTime? toDate = null);
+        Task<bool> CreateInventoryTransactionAsync(InventoryTransactionCreateRequest transaction);
 
         // Stock Operations
         Task<bool> TransferStockAsync(Guid productId, Guid fromDealerId, Guid toDealerId, int quantity, string reason, Guid processedByUserId);
         Task<bool> AdjustStockAsync(Guid productId, Guid dealerId, int quantity, string reason, Guid processedByUserId);
 
         // Reports
-        Task<List<InventoryAllocationViewModel>> GetInventoryReportAsync(Guid? dealerId = null, Guid? productId = null, string status = null);
+        Task<List<InventoryAllocationResponse>> GetInventoryReportAsync(Guid? dealerId = null, Guid? productId = null, string status = null);
         Task<Dictionary<string, int>> GetStockSummaryAsync();
-        Task<List<InventoryTransactionViewModel>> GetStockMovementReportAsync(DateTime fromDate, DateTime toDate, Guid? productId = null, Guid? dealerId = null);
+        Task<List<InventoryTransactionResponse>> GetStockMovementReportAsync(DateTime fromDate, DateTime toDate, Guid? productId = null, Guid? dealerId = null);
 
         // Support methods
-        Task<List<ProductViewModel>> GetAllProductsAsync();
-        Task<List<DealerViewModel>> GetAllDealersAsync();
+        Task<List<ProductResponse>> GetAllProductsAsync();
+        Task<List<DealerResponse>> GetAllDealersAsync();
     }
 }

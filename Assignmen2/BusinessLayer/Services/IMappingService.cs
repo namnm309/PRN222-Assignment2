@@ -1,78 +1,79 @@
 using System.Collections.Generic;
 using DataAccessLayer.Entities;
-using BusinessLayer.ViewModels;
+using BusinessLayer.DTOs.Requests;
+using BusinessLayer.DTOs.Responses;
 
 namespace BusinessLayer.Services
 {
     public interface IMappingService
     {
         // Product mappings
-        ProductViewModel MapToProductViewModel(Product product);
-        List<ProductViewModel> MapToProductViewModels(List<Product> products);
-        Product MapToProduct(ProductCreateViewModel viewModel);
-        Product MapToProduct(ProductEditViewModel viewModel);
+        ProductResponse MapToProductViewModel(Product product);
+        List<ProductResponse> MapToProductViewModels(List<Product> products);
+        Product MapToProduct(ProductCreateRequest viewModel);
+        Product MapToProduct(ProductEditRequest viewModel);
 
         // Customer mappings
-        CustomerViewModel MapToCustomerViewModel(Customer customer);
-        Customer MapToCustomer(CustomerViewModel viewModel);
-        List<CustomerViewModel> MapToCustomerViewModels(List<Customer> customers);
+        CustomerResponse MapToCustomerViewModel(Customer customer);
+        Customer MapToCustomer(CustomerResponse viewModel);
+        List<CustomerResponse> MapToCustomerViewModels(List<Customer> customers);
 
         // User mappings
-        UserCreateViewModel MapToUserCreateViewModel(Users user);
-        Users MapToUser(UserCreateViewModel viewModel);
-        UserEditViewModel MapToUserEditViewModel(Users user);
-        Users MapToUser(UserEditViewModel viewModel);
+        UserCreateRequest MapToUserCreateViewModel(Users user);
+        Users MapToUser(UserCreateRequest viewModel);
+        UserEditRequest MapToUserEditViewModel(Users user);
+        Users MapToUser(UserEditRequest viewModel);
 
         // Brand mappings
-        BrandViewModel MapToBrandViewModel(Brand brand);
-        List<BrandViewModel> MapToBrandViewModels(List<Brand> brands);
+        BrandResponse MapToBrandViewModel(Brand brand);
+        List<BrandResponse> MapToBrandViewModels(List<Brand> brands);
 
         // Order mappings
-        OrderCreateViewModel MapToOrderCreateViewModel(Order order);
-        Order MapToOrder(OrderCreateViewModel viewModel);
-        List<OrderCreateViewModel> MapToOrderCreateViewModels(List<Order> orders);
+        OrderResponse MapToOrderCreateViewModel(Order order);
+        Order MapToOrder(OrderCreateRequest viewModel);
+        List<OrderResponse> MapToOrderCreateViewModels(List<Order> orders);
 
         // Feedback mappings
-        FeedbackViewModel MapToFeedbackViewModel(Feedback feedback);
-        List<FeedbackViewModel> MapToFeedbackViewModels(List<Feedback> feedbacks);
-        Feedback MapToFeedback(FeedbackViewModel viewModel);
+        FeedbackResponse MapToFeedbackViewModel(Feedback feedback);
+        List<FeedbackResponse> MapToFeedbackViewModels(List<Feedback> feedbacks);
+        Feedback MapToFeedback(FeedbackCreateRequest viewModel);
 
         // TestDrive mappings
-        TestDriveViewModel MapToTestDriveViewModel(TestDrive testDrive);
-        List<TestDriveViewModel> MapToTestDriveViewModels(List<TestDrive> testDrives);
-        TestDrive MapToTestDrive(TestDriveViewModel viewModel);
+        TestDriveResponse MapToTestDriveViewModel(TestDrive testDrive);
+        List<TestDriveResponse> MapToTestDriveViewModels(List<TestDrive> testDrives);
+        TestDrive MapToTestDrive(TestDriveCreateRequest viewModel);
 
         // PurchaseOrder mappings
-        PurchaseOrderViewModel MapToPurchaseOrderViewModel(PurchaseOrder purchaseOrder);
-        List<PurchaseOrderViewModel> MapToPurchaseOrderViewModels(List<PurchaseOrder> purchaseOrders);
+        PurchaseOrderResponse MapToPurchaseOrderViewModel(PurchaseOrder purchaseOrder);
+        List<PurchaseOrderResponse> MapToPurchaseOrderViewModels(List<PurchaseOrder> purchaseOrders);
 
         // User mappings
-        UserViewModel MapToUserViewModel(Users user);
-        List<UserViewModel> MapToUserViewModels(List<Users> users);
+        UserResponse MapToUserViewModel(Users user);
+        List<UserResponse> MapToUserViewModels(List<Users> users);
 
         // Dealer mappings
-        DealerViewModel MapToDealerViewModel(Dealer dealer);
-        List<DealerViewModel> MapToDealerViewModels(List<Dealer> dealers);
+        DealerResponse MapToDealerViewModel(Dealer dealer);
+        List<DealerResponse> MapToDealerViewModels(List<Dealer> dealers);
 
         // PricingPolicy mappings
-        PricingPolicyViewModel MapToPricingPolicyViewModel(PricingPolicy pricingPolicy);
-        List<PricingPolicyViewModel> MapToPricingPolicyViewModels(List<PricingPolicy> pricingPolicies);
-        PricingPolicy MapToPricingPolicy(PricingPolicyViewModel viewModel);
+        PricingPolicyResponse MapToPricingPolicyViewModel(PricingPolicy pricingPolicy);
+        List<PricingPolicyResponse> MapToPricingPolicyViewModels(List<PricingPolicy> pricingPolicies);
+        PricingPolicy MapToPricingPolicy(PricingPolicyResponse viewModel);
 
         // InventoryAllocation mappings
-        InventoryAllocationViewModel MapToInventoryAllocationViewModel(InventoryAllocation inventoryAllocation);
-        List<InventoryAllocationViewModel> MapToInventoryAllocationViewModels(List<InventoryAllocation> inventoryAllocations);
+        InventoryAllocationResponse MapToInventoryAllocationViewModel(InventoryAllocation inventoryAllocation);
+        List<InventoryAllocationResponse> MapToInventoryAllocationViewModels(List<InventoryAllocation> inventoryAllocations);
 
         // InventoryTransaction mappings
-        InventoryTransactionViewModel MapToInventoryTransactionViewModel(InventoryTransaction transaction);
-        List<InventoryTransactionViewModel> MapToInventoryTransactionViewModels(List<InventoryTransaction> transactions);
+        InventoryTransactionResponse MapToInventoryTransactionViewModel(InventoryTransaction transaction);
+        List<InventoryTransactionResponse> MapToInventoryTransactionViewModels(List<InventoryTransaction> transactions);
 
         // DealerContract mappings
-        DealerContractViewModel MapToDealerContractViewModel(DealerContract dealerContract);
-        List<DealerContractViewModel> MapToDealerContractViewModels(List<DealerContract> dealerContracts);
+        DealerContractResponse MapToDealerContractViewModel(DealerContract dealerContract);
+        List<DealerContractResponse> MapToDealerContractViewModels(List<DealerContract> dealerContracts);
 
         // Region mappings
-        RegionViewModel MapToRegionViewModel(Region region);
-        List<RegionViewModel> MapToRegionViewModels(List<Region> regions);
+        RegionResponse MapToRegionViewModel(Region region);
+        List<RegionResponse> MapToRegionViewModels(List<Region> regions);
     }
 }

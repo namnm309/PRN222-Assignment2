@@ -1,0 +1,128 @@
+@model BusinessLayer.ViewModels.TestDriveViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký Lái thử";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-calendar-plus"></i> Đăng ký Lái thử MIỄN PHÍ</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ProductId" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> 
+                            <strong>Lưu ý:</strong> Vui lòng điền đầy đủ thông tin. Chúng tôi sẽ liên hệ xác nhận với bạn trong vòng 24 giờ.
+                        </div>
+
+                        <h5 class="mb-3 text-primary">Chọn đại lý</h5>
+                        
+                        <div class="mb-4">
+                            <label asp-for="DealerId" class="form-label">Đại lý <span class="text-danger">*</span></label>
+                            <select asp-for="DealerId" class="form-select">
+                                <option value="">-- Chọn đại lý gần bạn --</option>
+                                @foreach (var dealer in ViewBag.Dealers as List<DataAccessLayer.Entities.Dealer>)
+                                {
+                                    <option value="@dealer.Id">
+                                        @dealer.Name - @dealer.Address (@dealer.Region)
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="DealerId" class="text-danger"></span>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-map-marker-alt"></i> Vui lòng chọn đại lý thuận tiện cho bạn để trải nghiệm lái thử
+                            </small>
+                        </div>
+
+                        <h5 class="mb-3 text-primary">Thông tin của bạn</h5>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="CustomerName" class="form-label"></label>
+                                <input asp-for="CustomerName" class="form-control" placeholder="Nguyễn Văn A" />
+                                <span asp-validation-for="CustomerName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CustomerPhone" class="form-label"></label>
+                                <input asp-for="CustomerPhone" class="form-control" placeholder="0123456789" />
+                                <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="CustomerEmail" class="form-label"></label>
+                            <input asp-for="CustomerEmail" class="form-control" type="email" placeholder="email@example.com" />
+                            <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+                        </div>
+
+                        <h5 class="mb-3 text-primary mt-4">Thời gian lái thử</h5>
+
+                        <div class="mb-3">
+                            <input type="hidden" asp-for="ScheduledDate" value="@DateTime.UtcNow.AddHours(2).ToString("u")" />
+                            <div class="alert alert-light border">
+                                <i class="fas fa-clock"></i> Bạn gửi yêu cầu đăng ký. <strong>Nhân viên đại lý sẽ liên hệ để hẹn thời gian cụ thể.</strong>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Notes" class="form-label"></label>
+                            <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Yêu cầu đặc biệt hoặc câu hỏi (không bắt buộc)"></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" onclick="history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane"></i> Gửi đăng ký
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[asp-action="Create"]');
+            const submitButton = document.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+            
+            form.addEventListener('submit', function(e) {
+                // Show loading state
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang gửi...';
+                
+                // Show processing message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-info mt-3';
+                alertDiv.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Đang gửi đơn đăng ký, vui lòng chờ...';
+                form.appendChild(alertDiv);
+                
+                // If form validation fails, restore button
+                setTimeout(function() {
+                    if (document.querySelector('.field-validation-error')) {
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalButtonText;
+                        alertDiv.remove();
+                    }
+                }, 100);
+            });
+        });
+    </script>
+}
+

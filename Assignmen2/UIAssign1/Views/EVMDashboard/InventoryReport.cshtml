@@ -1,0 +1,107 @@
+@model List<DataAccessLayer.Entities.Product>
+@{
+    ViewData["Title"] = "Báo cáo tồn kho EVM";
+    Layout = "_DashboardLayout";
+}
+
+<h2 class="mb-4">Quản lý tồn kho và tốc độ tiêu thụ</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Bộ lọc báo cáo</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="InventoryReport" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="brandId" class="form-label">Thương hiệu</label>
+                    <select id="brandId" name="brandId" class="form-select">
+                        <option value="">Tất cả thương hiệu</option>
+                        @if (ViewBag.Brands != null)
+                        {
+                            @foreach (var brand in (List<DataAccessLayer.Entities.Brand>)ViewBag.Brands)
+                            {
+                                <option value="@brand.Id" selected="@(ViewBag.BrandId?.ToString() == brand.Id.ToString())">@brand.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary">Xem báo cáo</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Tổng số lượng tồn kho</p>
+                <h3 class="mb-0 text-primary">@Model.Sum(x => x.StockQuantity)</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Số sản phẩm tồn kho thấp</p>
+                <h3 class="mb-0 text-warning">@Model.Count(x => x.StockQuantity <= 10)</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Số sản phẩm hết hàng</p>
+                <h3 class="mb-0 text-danger">@Model.Count(x => x.StockQuantity <= 0)</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Chi tiết tồn kho sản phẩm</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>SKU</th>
+                        <th>Thương hiệu</th>
+                        <th>Tồn kho</th>
+                        <th>Giá bán</th>
+                        <th>Trạng thái</th>
+                        <th>Cảnh báo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var stockStatus = item.StockQuantity <= 0 ? "Hết hàng" : (item.StockQuantity <= 10 ? "Tồn kho thấp" : "Bình thường");
+                        var stockClass = item.StockQuantity <= 0 ? "bg-danger" : (item.StockQuantity <= 10 ? "bg-warning" : "bg-success");
+                        
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Sku</td>
+                            <td>@(item.Brand?.Name ?? "N/A")</td>
+                            <td>@item.StockQuantity</td>
+                            <td>@item.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</td>
+                            <td><span class="badge @(item.IsActive ? "bg-success" : "bg-secondary")">@(item.IsActive ? "Hoạt động" : "Ngừng bán")</span></td>
+                            <td><span class="badge @stockClass">@stockStatus</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">Không có dữ liệu tồn kho để hiển thị.</p>
+        }
+    </div>
+</div>

@@ -1,0 +1,222 @@
+@model DataAccessLayer.Entities.Order
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Chi tiết đơn hàng: @Model.OrderNumber</h2>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Msg"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thông tin đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <th width="30%">Số đơn:</th>
+                            <td><strong>@Model.OrderNumber</strong></td>
+                        </tr>
+                        <tr>
+                            <th>Sản phẩm:</th>
+                            <td>@Model.Product?.Name</td>
+                        </tr>
+                        <tr>
+                            <th>Khách hàng:</th>
+                            <td>@Model.Customer?.FullName (@Model.Customer?.PhoneNumber)</td>
+                        </tr>
+                        <tr>
+                            <th>Đại lý:</th>
+                            <td>@Model.Dealer?.Name</td>
+                        </tr>
+                        @if (Model.SalesPerson != null)
+                        {
+                            <tr>
+                                <th>Nhân viên bán hàng:</th>
+                                <td>@Model.SalesPerson.FullName</td>
+                            </tr>
+                        }
+                        <tr>
+                            <th>Giá bán:</th>
+                            <td>@Model.Price.ToString("N0") VNĐ</td>
+                        </tr>
+                        <tr>
+                            <th>Giảm giá:</th>
+                            <td>@Model.Discount.ToString("N0") VNĐ</td>
+                        </tr>
+                        <tr>
+                            <th>Thành tiền:</th>
+                            <td><strong class="text-primary">@Model.FinalAmount.ToString("N0") VNĐ</strong></td>
+                        </tr>
+                        <tr>
+                            <th>Trạng thái:</th>
+                            <td>
+                                @switch (Model.Status)
+                                {
+                                    case "Draft":
+                                        <span class="badge bg-secondary">Báo giá</span>
+                                        break;
+                                    case "Confirmed":
+                                        <span class="badge bg-info">Đã xác nhận</span>
+                                        break;
+                                    case "Paid":
+                                        <span class="badge bg-success">Đã thanh toán</span>
+                                        break;
+                                    case "Delivered":
+                                        <span class="badge bg-primary">Đã giao xe</span>
+                                        break;
+                                    case "Cancelled":
+                                        <span class="badge bg-danger">Đã hủy</span>
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Thanh toán:</th>
+                            <td>
+                                <span class="badge @(Model.PaymentStatus == "Paid" ? "bg-success" : "bg-warning")">
+                                    @Model.PaymentStatus
+                                </span>
+                                @if (!string.IsNullOrEmpty(Model.PaymentMethod))
+                                {
+                                    <span> - @Model.PaymentMethod</span>
+                                }
+                            </td>
+                        </tr>
+                        @if (Model.OrderDate.HasValue)
+                        {
+                            <tr>
+                                <th>Ngày đặt hàng:</th>
+                                <td>@Model.OrderDate.Value.ToString("dd/MM/yyyy HH:mm")</td>
+                            </tr>
+                        }
+                        @if (Model.DeliveryDate.HasValue)
+                        {
+                            <tr>
+                                <th>Ngày giao xe:</th>
+                                <td>@Model.DeliveryDate.Value.ToString("dd/MM/yyyy HH:mm")</td>
+                            </tr>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <tr>
+                                <th>Mô tả:</th>
+                                <td>@Model.Description</td>
+                            </tr>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <tr>
+                                <th>Ghi chú:</th>
+                                <td>@Model.Notes</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Thao tác</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Status == "Draft")
+                    {
+                        <form asp-action="Confirm" asp-route-id="@Model.Id" method="post" class="mb-3">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-success w-100 mb-2">
+                                <i class="fas fa-check-circle"></i> Xác nhận đơn hàng
+                            </button>
+                        </form>
+                    }
+
+                    @if (Model.Status == "Confirmed" || Model.Status == "Paid")
+                    {
+                        <h6 class="mb-3">Cập nhật thanh toán</h6>
+                        <form asp-action="UpdatePayment" asp-route-id="@Model.Id" method="post" class="mb-3">
+                            @Html.AntiForgeryToken()
+                            <div class="mb-2">
+                                <select name="paymentStatus" class="form-select form-select-sm">
+                                    <option value="Unpaid">Chưa thanh toán</option>
+                                    <option value="Partial">Đã đặt cọc</option>
+                                    <option value="Paid">Đã thanh toán đủ</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" name="paymentMethod" class="form-control form-control-sm" placeholder="Phương thức thanh toán" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Hạn thanh toán</label>
+                                <input type="date" name="paymentDueDate" class="form-control form-control-sm" />
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 btn-sm">
+                                <i class="fas fa-money-bill"></i> Cập nhật thanh toán
+                            </button>
+                        </form>
+
+                        @if (Model.Status == "Paid" || Model.Status == "Confirmed")
+                        {
+                            <hr />
+                            <h6 class="mb-3">Giao xe</h6>
+                            <form asp-action="Deliver" asp-route-id="@Model.Id" method="post" class="mb-3">
+                                @Html.AntiForgeryToken()
+                                <div class="mb-2">
+                                    <label class="form-label small">Ngày giao xe</label>
+                                    <input type="date" name="deliveryDate" class="form-control form-control-sm" required />
+                                </div>
+                                <button type="submit" class="btn btn-info w-100 btn-sm">
+                                    <i class="fas fa-truck"></i> Giao xe
+                                </button>
+                            </form>
+                        }
+                    }
+
+                    @if (Model.Status == "Delivered")
+                    {
+                        <a asp-action="CreateContract" asp-route-orderId="@Model.Id" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-file-contract"></i> Tạo hợp đồng bán hàng
+                        </a>
+                    }
+
+                    @if (Model.Status != "Cancelled" && Model.Status != "Delivered")
+                    {
+                        <hr />
+                        <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" 
+                              onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn hàng này?')">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger w-100 btn-sm">
+                                <i class="fas fa-times-circle"></i> Hủy đơn hàng
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

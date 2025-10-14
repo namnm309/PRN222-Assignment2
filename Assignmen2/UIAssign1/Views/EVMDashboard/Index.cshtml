@@ -1,0 +1,136 @@
+@using BusinessLayer.Enums
+@{
+    ViewData["Title"] = "EVM Dashboard Overview";
+    Layout = "_DashboardLayout";
+    var userRole = ViewBag.UserRole as UserRole?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">EVM Dashboard Tổng quan</h2>
+        <p class="text-muted mb-0">Giám sát và quản lý hoạt động của hệ thống xe điện</p>
+    </div>
+    <div>
+        <span class="text-muted">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Tổng doanh số tháng này</p>
+                        <h3 class="mb-0">150 tỷ VNĐ</h3>
+                    </div>
+                    <div class="fs-1 text-success">📈</div>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-success">+12%</span>
+                    <small class="text-muted ms-1">so với tháng trước</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Tổng tồn kho xe</p>
+                        <h3 class="mb-0">2,500</h3>
+                    </div>
+                    <div class="fs-1 text-warning">📦</div>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-info">Toàn hệ thống</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Hợp đồng đại lý</p>
+                        <h3 class="mb-0">45</h3>
+                    </div>
+                    <div class="fs-1 text-primary">📄</div>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-primary">Đang hoạt động</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Độ chính xác dự báo AI</p>
+                        <h3 class="mb-0">88%</h3>
+                    </div>
+                    <div class="fs-1 text-info">🧠</div>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-success">Tăng 3%</span>
+                    <small class="text-muted ms-1">so với quý trước</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Báo cáo doanh số</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Phân tích doanh số bán hàng theo khu vực, đại lý và sản phẩm. Giúp đánh giá hiệu suất bán hàng tổng thể.</p>
+                <a asp-action="SalesReport" class="btn btn-primary">Xem chi tiết</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Quản lý tồn kho</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Giám sát mức tồn kho của các mẫu xe, tốc độ tiêu thụ và đưa ra cảnh báo khi cần bổ sung.</p>
+                <a asp-action="InventoryReport" class="btn btn-warning">Xem chi tiết</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">AI dự đoán nhu cầu</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Sử dụng trí tuệ nhân tạo để dự báo nhu cầu thị trường, hỗ trợ lập kế hoạch sản xuất và phân phối hiệu quả.</p>
+                <a asp-action="DemandForecast" class="btn btn-info">Xem chi tiết</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Quản lý hợp đồng đại lý</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Theo dõi các hợp đồng đại lý, chỉ tiêu doanh số, công nợ và đánh giá hiệu suất của từng đại lý.</p>
+                <a asp-action="ContractManagement" class="btn btn-danger">Xem chi tiết</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-4">
+    <strong>ℹ️ Thông báo:</strong> Các dữ liệu hiển thị trên dashboard này hiện tại là dữ liệu mẫu. Chức năng lấy dữ liệu thực sẽ được phát triển trong các bước tiếp theo.
+</div>
