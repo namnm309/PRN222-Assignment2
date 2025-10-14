@@ -1,0 +1,10 @@
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\rpswa.dswa.cache.json
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.GeneratedMSBuildEditorConfig.editorconfig
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.AssemblyInfoInputs.cache
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.AssemblyInfo.cs
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.csproj.CoreCompileInputs.cache
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.MvcApplicationPartsAssemblyInfo.cache
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.RazorAssemblyInfo.cache
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.RazorAssemblyInfo.cs
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.sourcelink.json
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.csproj.AssemblyReference.cache
