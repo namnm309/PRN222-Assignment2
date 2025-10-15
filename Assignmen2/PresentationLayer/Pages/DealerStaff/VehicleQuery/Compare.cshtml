@@ -1,0 +1,190 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.VehicleQuery.CompareModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "So sánh sản phẩm";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-balance-scale me-2 text-primary"></i>
+            So sánh sản phẩm
+        </h2>
+        <p class="text-muted mb-0">So sánh các mẫu xe điện</p>
+    </div>
+    <div>
+        <a asp-page="/DealerStaff/VehicleQuery/Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 200px;">Tiêu chí</th>
+                            @foreach (var product in Model.Products)
+                            {
+                                <th class="text-center" style="min-width: 250px;">
+                                    <div class="d-flex flex-column align-items-center">
+                                        @if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+                                        {
+                                            <img src="@product.ImageUrl" alt="@product.Name" class="mb-2" style="width: 80px; height: 60px; object-fit: cover; border-radius: 8px;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center justify-content-center mb-2" style="width: 80px; height: 60px; background-color: #f8f9fa; border-radius: 8px;">
+                                                <i class="fas fa-car text-muted"></i>
+                                            </div>
+                                        }
+                                        <h6 class="mb-1">@product.Name</h6>
+                                        <small class="text-muted">@product.Brand?.Name</small>
+                                        <small class="text-muted">SKU: @product.Sku</small>
+                                    </div>
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">Giá bán</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td class="text-center">
+                                    <div class="h5 text-primary mb-0">@product.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Tồn kho</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td class="text-center">
+                                    <span class="badge @(product.StockQuantity > 0 ? "bg-success" : "bg-danger") fs-6">
+                                        @product.StockQuantity xe
+                                    </span>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Hãng xe</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td class="text-center">
+                                    <span class="badge bg-primary">@product.Brand?.Name</span>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Trạng thái</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td class="text-center">
+                                    <span class="badge @(product.IsActive ? "bg-success" : "bg-danger")">
+                                        @(product.IsActive ? "Hoạt động" : "Ngừng bán")
+                                    </span>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Mô tả</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td class="text-center">
+                                    <div class="text-muted small">
+                                        @(string.IsNullOrWhiteSpace(product.Description) ? "Chưa có mô tả" : 
+                                          (product.Description.Length > 100 ? product.Description.Substring(0, 100) + "..." : product.Description))
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Cập nhật lần cuối</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td class="text-center">
+                                    <small class="text-muted">@product.UpdatedAt.ToString("dd/MM/yyyy")</small>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Hành động</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td class="text-center">
+                                    <div class="d-grid gap-2">
+                                        <a asp-page="/DealerStaff/VehicleQuery/Detail" asp-route-id="@product.Id" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye me-1"></i> Chi tiết
+                                        </a>
+                                        <a asp-page="/DealerStaff/Orders/Create" asp-route-productId="@product.Id" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-shopping-cart me-1"></i> Đặt hàng
+                                        </a>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Comparison -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Tóm tắt so sánh
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="h6 text-muted">Giá thấp nhất</div>
+                                <div class="h4 text-success">
+                                    @Model.Products.Min(p => p.Price).ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="h6 text-muted">Giá cao nhất</div>
+                                <div class="h4 text-danger">
+                                    @Model.Products.Max(p => p.Price).ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="h6 text-muted">Tổng tồn kho</div>
+                                <div class="h4 text-primary">
+                                    @Model.Products.Sum(p => p.StockQuantity) xe
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-balance-scale fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">Không có sản phẩm để so sánh</h5>
+        <p class="text-muted">Hãy chọn ít nhất 2 sản phẩm để so sánh</p>
+        <a asp-page="/DealerStaff/VehicleQuery/Index" class="btn btn-primary">
+            <i class="fas fa-search me-1"></i> Tìm sản phẩm
+        </a>
+    </div>
+}

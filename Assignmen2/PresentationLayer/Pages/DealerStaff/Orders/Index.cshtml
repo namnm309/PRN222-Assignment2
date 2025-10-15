@@ -1,0 +1,190 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.Orders.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-file-invoice me-2 text-primary"></i>
+            Quản lý đơn hàng
+        </h2>
+        <p class="text-muted mb-0">Quản lý báo giá, đơn hàng và hợp đồng bán hàng</p>
+    </div>
+    <div>
+        <a asp-page="/DealerStaff/Orders/Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Tạo mới
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Mã đơn hàng, khách hàng...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Trạng thái</label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="Pending" selected="@(Model.StatusFilter == "Pending")">Chờ xử lý</option>
+                    <option value="Completed" selected="@(Model.StatusFilter == "Completed")">Hoàn thành</option>
+                    <option value="Canceled" selected="@(Model.StatusFilter == "Canceled")">Đã hủy</option>
+                    <option value="Delivered" selected="@(Model.StatusFilter == "Delivered")">Đã giao</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Loại đơn hàng</label>
+                <select name="orderType" class="form-select">
+                    <option value="">Tất cả loại</option>
+                    <option value="Quotation" selected="@(Model.OrderTypeFilter == "Quotation")">Báo giá</option>
+                    <option value="Order" selected="@(Model.OrderTypeFilter == "Order")">Đơn hàng</option>
+                    <option value="Contract" selected="@(Model.OrderTypeFilter == "Contract")">Hợp đồng</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-1"></i> Tìm kiếm
+                    </button>
+                    <a asp-page="/DealerStaff/Orders/Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Xóa bộ lọc
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Orders List -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        @if (Model.Orders != null && Model.Orders.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Khách hàng</th>
+                            <th>Sản phẩm</th>
+                            <th>Loại</th>
+                            <th>Giá trị</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.Orders)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">@order.OrderNumber</div>
+                                    <small class="text-muted">#@order.Id.ToString("N")[..8]</small>
+                                </td>
+                                <td>
+                                    <div>@order.Customer?.FullName</div>
+                                    <small class="text-muted">@order.Customer?.PhoneNumber</small>
+                                </td>
+                                <td>
+                                    <div>@order.Product?.Name</div>
+                                    <small class="text-muted">@order.Product?.Brand?.Name</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">@order.Description</span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold">@order.FinalAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                    @if (order.Discount > 0)
+                                    {
+                                        <small class="text-success">-@order.Discount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</small>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge @(order.Status switch {
+                                        "Pending" => "bg-warning",
+                                        "Completed" => "bg-success",
+                                        "Canceled" => "bg-danger",
+                                        "Delivered" => "bg-primary",
+                                        _ => "bg-secondary"
+                                    })">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <div>@order.CreatedAt.ToString("dd/MM/yyyy")</div>
+                                    <small class="text-muted">@order.CreatedAt.ToString("HH:mm")</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-page="/DealerStaff/Orders/Detail" asp-route-id="@order.Id" class="btn btn-outline-primary" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-page="/DealerStaff/Orders/Edit" asp-route-id="@order.Id" class="btn btn-outline-secondary" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" title="Xóa" onclick="confirmDelete('@order.Id')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-file-invoice fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Chưa có đơn hàng nào</h5>
+                <p class="text-muted">Bắt đầu tạo đơn hàng đầu tiên của bạn</p>
+                <a asp-page="/DealerStaff/Orders/Create" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i> Tạo đơn hàng mới
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" href="?page=@(Model.CurrentPage - 1)&search=@Model.SearchTerm&status=@Model.StatusFilter&orderType=@Model.OrderTypeFilter">Trước</a>
+            </li>
+            
+            @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="?page=@i&search=@Model.SearchTerm&status=@Model.StatusFilter&orderType=@Model.OrderTypeFilter">@i</a>
+                </li>
+            }
+            
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="?page=@(Model.CurrentPage + 1)&search=@Model.SearchTerm&status=@Model.StatusFilter&orderType=@Model.OrderTypeFilter">Sau</a>
+            </li>
+        </ul>
+    </nav>
+}
+
+@section Scripts {
+    <script>
+        function confirmDelete(orderId) {
+            if (confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
+                // TODO: Implement delete functionality
+                alert('Chức năng xóa sẽ được triển khai');
+            }
+        }
+    </script>
+}

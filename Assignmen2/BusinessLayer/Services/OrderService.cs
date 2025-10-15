@@ -31,6 +31,58 @@ namespace BusinessLayer.Services
             return (true, null, list);
         }
 
+        public async Task<(bool Success, string Error, (List<Order> Data, int TotalPages))> SearchAsync(
+            Guid dealerId, string? search, string? status, string? orderType, int page, int pageSize)
+        {
+            try
+            {
+                var query = _dbContext.Order
+                    .Include(o => o.Customer)
+                    .Include(o => o.Product)
+                    .ThenInclude(p => p.Brand)
+                    .Where(o => o.DealerId == dealerId);
+
+                // Apply search filter
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    var searchTerm = search.Trim().ToLower();
+                    query = query.Where(o => 
+                        o.OrderNumber.ToLower().Contains(searchTerm) ||
+                        o.Customer.FullName.ToLower().Contains(searchTerm) ||
+                        o.Product.Name.ToLower().Contains(searchTerm));
+                }
+
+                // Apply status filter
+                if (!string.IsNullOrWhiteSpace(status))
+                {
+                    query = query.Where(o => o.Status == status);
+                }
+
+                // Apply order type filter (using Description field)
+                if (!string.IsNullOrWhiteSpace(orderType))
+                {
+                    query = query.Where(o => o.Description == orderType);
+                }
+
+                // Get total count
+                var totalCount = await query.CountAsync();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                // Apply pagination
+                var orders = await query
+                    .OrderByDescending(o => o.CreatedAt)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return (true, null, (orders, totalPages));
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi tìm kiếm: {ex.Message}", (new List<Order>(), 0));
+            }
+        }
+
         public async Task<(bool Success, string Error, Order Data)> CreateQuotationAsync(
             Guid productId, Guid customerId, Guid dealerId, Guid? salesPersonId,
             decimal price, decimal discount, string description, string notes)

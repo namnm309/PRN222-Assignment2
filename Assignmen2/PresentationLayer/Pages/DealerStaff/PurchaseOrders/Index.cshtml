@@ -1,0 +1,189 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.PurchaseOrders.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Đặt xe từ hãng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-truck me-2 text-primary"></i>
+            Đặt xe từ hãng
+        </h2>
+        <p class="text-muted mb-0">Đặt xe từ hãng theo nhu cầu bán hàng</p>
+    </div>
+    <div>
+        <a asp-page="/DealerStaff/PurchaseOrders/Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Tạo đơn đặt hàng
+        </a>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="Mã đơn hàng, sản phẩm...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Trạng thái</label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="Pending" selected="@(Model.Status == "Pending")">Chờ duyệt</option>
+                    <option value="Approved" selected="@(Model.Status == "Approved")">Đã duyệt</option>
+                    <option value="Rejected" selected="@(Model.Status == "Rejected")">Từ chối</option>
+                    <option value="Delivered" selected="@(Model.Status == "Delivered")">Đã giao</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" name="fromDate" value="@Model.FromDate?.ToString("yyyy-MM-dd")" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Purchase Orders List -->
+@if (Model.PurchaseOrders != null && Model.PurchaseOrders.Any())
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá nhập</th>
+                            <th>Thành tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th width="120">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.PurchaseOrders)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">@order.OrderNumber</div>
+                                    <div class="text-muted small">@order.RequestedDate.ToString("dd/MM/yyyy HH:mm")</div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="fw-bold">@order.Product?.Name</div>
+                                        <div class="text-muted small">@order.Product?.Brand?.Name</div>
+                                        <div class="text-muted small">SKU: @order.Product?.Sku</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info fs-6">@order.RequestedQuantity xe</span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold">@order.UnitPrice.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-primary">@order.TotalAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                </td>
+                                <td>
+                                    @{
+                                        var statusClass = order.Status switch
+                                        {
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Pending => "bg-warning",
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Approved => "bg-success",
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Rejected => "bg-danger",
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Delivered => "bg-info",
+                                            _ => "bg-secondary"
+                                        };
+                                        var statusText = order.Status switch
+                                        {
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Pending => "Chờ duyệt",
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Approved => "Đã duyệt",
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Rejected => "Từ chối",
+                                            DataAccessLayer.Enum.PurchaseOrderStatus.Delivered => "Đã giao",
+                                            _ => "Không xác định"
+                                        };
+                                    }
+                                    <span class="badge @statusClass">@statusText</span>
+                                </td>
+                                <td>
+                                    <div class="text-muted small">@order.RequestedDate.ToString("dd/MM/yyyy")</div>
+                                </td>
+                                <td>
+                                    <div class="btn-group-vertical btn-group-sm" role="group">
+                                        <a asp-page="/DealerStaff/PurchaseOrders/Detail" asp-route-id="@order.Id" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        @if (order.Status == DataAccessLayer.Enum.PurchaseOrderStatus.Pending)
+                                        {
+                                            <a asp-page="/DealerStaff/PurchaseOrders/Edit" asp-route-id="@order.Id" class="btn btn-outline-secondary btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Tổng đơn hàng</div>
+                    <div class="h4 text-primary">@Model.PurchaseOrders.Count</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Chờ duyệt</div>
+                    <div class="h4 text-warning">@Model.PurchaseOrders.Count(o => o.Status == DataAccessLayer.Enum.PurchaseOrderStatus.Pending)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Đã duyệt</div>
+                    <div class="h4 text-success">@Model.PurchaseOrders.Count(o => o.Status == DataAccessLayer.Enum.PurchaseOrderStatus.Approved)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-muted small">Tổng giá trị</div>
+                    <div class="h4 text-info">@Model.PurchaseOrders.Sum(o => o.TotalAmount).ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-truck fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">Không có đơn đặt hàng nào</h5>
+        <p class="text-muted">Chưa có đơn đặt hàng nào được tạo</p>
+        <a asp-page="/DealerStaff/PurchaseOrders/Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Tạo đơn đặt hàng đầu tiên
+        </a>
+    </div>
+}

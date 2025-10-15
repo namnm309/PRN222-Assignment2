@@ -1,0 +1,188 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.VehicleQuery.DetailModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-car me-2 text-primary"></i>
+            Chi tiết sản phẩm
+        </h2>
+        <p class="text-muted mb-0">Thông tin chi tiết về xe điện</p>
+    </div>
+    <div>
+        <a asp-page="/DealerStaff/VehicleQuery/Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+@if (Model.Product != null)
+{
+    <div class="row g-4">
+        <!-- Product Image -->
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    @if (!string.IsNullOrWhiteSpace(Model.Product.ImageUrl))
+                    {
+                        <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" class="img-fluid rounded" style="width: 100%; height: 400px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center text-muted" style="height: 400px; background-color: #f8f9fa;">
+                            <div class="text-center">
+                                <i class="fas fa-car fa-4x mb-3"></i>
+                                <div class="h5">@Model.Product.Name</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Information -->
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h3 class="card-title mb-0">@Model.Product.Name</h3>
+                        <span class="badge bg-primary fs-6">@Model.Product.Brand?.Name</span>
+                    </div>
+                    
+                    <div class="text-muted mb-3">SKU: @Model.Product.Sku</div>
+                    
+                    <div class="mb-4">
+                        <h5>Mô tả sản phẩm</h5>
+                        <p class="text-muted">@(string.IsNullOrWhiteSpace(Model.Product.Description) ? "Chưa có mô tả" : Model.Product.Description)</p>
+                    </div>
+
+                    <!-- Price and Stock Info -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <div class="text-muted small">Giá bán</div>
+                                    <div class="h4 text-primary fw-bold">@Model.Product.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <div class="text-muted small">Tồn kho</div>
+                                    <div class="h4 @(Model.Product.StockQuantity > 0 ? "text-success" : "text-danger") fw-bold">
+                                        @Model.Product.StockQuantity xe
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Specifications -->
+                    <div class="mb-4">
+                        <h5>Thông số kỹ thuật</h5>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Hãng xe:</span>
+                                    <span class="fw-bold">@Model.Product.Brand?.Name</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Mã SKU:</span>
+                                    <span class="fw-bold">@Model.Product.Sku</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Trạng thái:</span>
+                                    <span class="badge @(Model.Product.IsActive ? "bg-success" : "bg-danger")">
+                                        @(Model.Product.IsActive ? "Hoạt động" : "Ngừng bán")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Cập nhật:</span>
+                                    <span class="fw-bold">@Model.Product.UpdatedAt.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <a asp-page="/DealerStaff/Orders/Create" asp-route-productId="@Model.Product.Id" class="btn btn-primary btn-lg">
+                            <i class="fas fa-shopping-cart me-2"></i> Tạo đơn hàng
+                        </a>
+                        <a asp-page="/DealerStaff/VehicleQuery/Compare" asp-route-ids="@Model.Product.Id" class="btn btn-outline-secondary">
+                            <i class="fas fa-balance-scale me-2"></i> So sánh với xe khác
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="mt-5">
+        <h4 class="mb-4">
+            <i class="fas fa-th me-2"></i>
+            Sản phẩm cùng hãng
+        </h4>
+        @if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+        {
+            <div class="row g-3">
+                @foreach (var related in Model.RelatedProducts.Take(4))
+                {
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="card ev-card h-100 border-0 shadow-sm">
+                            <div class="ev-card-img">
+                                @if (!string.IsNullOrWhiteSpace(related.ImageUrl))
+                                {
+                                    <img src="@related.ImageUrl" alt="@related.Name" class="card-img-top" style="height: 150px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="placeholder-img d-flex align-items-center justify-content-center text-muted" style="height: 150px; background-color: #f8f9fa;">
+                                        <i class="fas fa-car fa-2x"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title">@related.Name</h6>
+                                <div class="text-muted small mb-2">SKU: @related.Sku</div>
+                                <div class="fw-bold text-primary">@related.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                <a asp-page="/DealerStaff/VehicleQuery/Detail" asp-route-id="@related.Id" class="btn btn-outline-primary btn-sm w-100 mt-2">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-3">
+                <p class="text-muted">Không có sản phẩm cùng hãng</p>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+        <h5 class="text-muted">Không tìm thấy sản phẩm</h5>
+        <p class="text-muted">Sản phẩm có thể đã bị xóa hoặc không tồn tại</p>
+        <a asp-page="/DealerStaff/VehicleQuery/Index" class="btn btn-primary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+        </a>
+    </div>
+}
