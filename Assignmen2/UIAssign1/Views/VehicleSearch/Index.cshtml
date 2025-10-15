@@ -1,0 +1,229 @@
+@model List<BusinessLayer.ViewModels.ProductViewModel>
+@{
+    ViewData["Title"] = "Tra cứu xe";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-search mr-2"></i>Tra cứu xe
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <!-- Search Form -->
+                    <form method="get" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Q">Từ khóa tìm kiếm</label>
+                                    <input type="text" class="form-control" id="Q" name="Q" 
+                                           value="@ViewBag.SearchModel?.Q" placeholder="Nhập tên xe, SKU...">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BrandId">Thương hiệu</label>
+                                    <select class="form-control" id="BrandId" name="BrandId">
+                                        <option value="">Tất cả thương hiệu</option>
+                                        @if (ViewBag.Brands != null)
+                                        {
+                                            @foreach (var brand in ViewBag.Brands)
+                                            {
+                                                <option value="@brand.Id" 
+                                                        selected="@(ViewBag.SearchModel?.BrandId == brand.Id)">
+                                                    @brand.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="MinPrice">Giá từ (VNĐ)</label>
+                                    <input type="number" class="form-control" id="MinPrice" name="MinPrice" 
+                                           value="@ViewBag.SearchModel?.MinPrice" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="MaxPrice">Giá đến (VNĐ)</label>
+                                    <input type="number" class="form-control" id="MaxPrice" name="MaxPrice" 
+                                           value="@ViewBag.SearchModel?.MaxPrice" placeholder="1000000000">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search"></i> Tìm kiếm
+                                        </button>
+                                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                            <i class="fas fa-refresh"></i> Làm mới
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="InStock" name="InStock" 
+                                           value="true" @(ViewBag.SearchModel?.InStock == true ? "checked" : "")>
+                                    <label class="form-check-label" for="InStock">
+                                        Chỉ hiển thị xe còn hàng
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Quick Search -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="quickSearch" placeholder="Tìm kiếm nhanh...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="quickSearchBtn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a href="@Url.Action("InStock")" class="btn btn-success">
+                                <i class="fas fa-check-circle"></i> Xe còn hàng
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="row" id="searchResults">
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var product in Model)
+                            {
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                        {
+                                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 200px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                                <i class="fas fa-car fa-3x text-muted"></i>
+                                            </div>
+                                        }
+                                        <div class="card-body">
+                                            <h5 class="card-title">@product.Name</h5>
+                                            <p class="card-text">
+                                                <strong>SKU:</strong> @product.Sku<br>
+                                                <strong>Thương hiệu:</strong> @product.BrandName<br>
+                                                <strong>Giá:</strong> @product.Price.ToString("N0") VNĐ<br>
+                                                <strong>Tồn kho:</strong> 
+                                                <span class="badge @(product.StockQuantity > 0 ? "badge-success" : "badge-danger")">
+                                                    @product.StockQuantity xe
+                                                </span>
+                                            </p>
+                                            <p class="card-text text-muted small">@product.Description</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <a href="@Url.Action("Detail", new { id = product.Id })" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye"></i> Chi tiết
+                                            </a>
+                                            @if (product.StockQuantity > 0)
+                                            {
+                                                <span class="badge badge-success float-right">
+                                                    <i class="fas fa-check"></i> Còn hàng
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger float-right">
+                                                    <i class="fas fa-times"></i> Hết hàng
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                <div class="alert alert-info text-center">
+                                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                                    <h5>Không tìm thấy xe nào</h5>
+                                    <p>Vui lòng thử lại với từ khóa khác hoặc điều chỉnh bộ lọc.</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Quick search functionality
+            $('#quickSearchBtn').click(function() {
+                var query = $('#quickSearch').val();
+                if (query.trim() === '') {
+                    alert('Vui lòng nhập từ khóa tìm kiếm');
+                    return;
+                }
+                
+                $.get('@Url.Action("QuickSearch")', { query: query }, function(data) {
+                    if (data.success) {
+                        displayQuickSearchResults(data.data);
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+
+            function displayQuickSearchResults(results) {
+                var html = '';
+                if (results.length > 0) {
+                    results.forEach(function(product) {
+                        html += '<div class="col-md-4 mb-4">';
+                        html += '<div class="card h-100">';
+                        if (product.imageUrl) {
+                            html += '<img src="' + product.imageUrl + '" class="card-img-top" alt="' + product.name + '" style="height: 200px; object-fit: cover;">';
+                        } else {
+                            html += '<div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">';
+                            html += '<i class="fas fa-car fa-3x text-muted"></i>';
+                            html += '</div>';
+                        }
+                        html += '<div class="card-body">';
+                        html += '<h5 class="card-title">' + product.name + '</h5>';
+                        html += '<p class="card-text">';
+                        html += '<strong>SKU:</strong> ' + product.sku + '<br>';
+                        html += '<strong>Thương hiệu:</strong> ' + product.brandName + '<br>';
+                        html += '<strong>Giá:</strong> ' + product.price.toLocaleString() + ' VNĐ<br>';
+                        html += '<strong>Tồn kho:</strong> <span class="badge ' + (product.stockQuantity > 0 ? 'badge-success' : 'badge-danger') + '">' + product.stockQuantity + ' xe</span>';
+                        html += '</p>';
+                        html += '</div>';
+                        html += '<div class="card-footer">';
+                        html += '<a href="/VehicleSearch/Detail/' + product.id + '" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Chi tiết</a>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                    });
+                } else {
+                    html = '<div class="col-12"><div class="alert alert-info text-center"><i class="fas fa-info-circle fa-2x mb-3"></i><h5>Không tìm thấy kết quả</h5></div></div>';
+                }
+                $('#searchResults').html(html);
+            }
+        });
+    </script>
+}

@@ -1,0 +1,104 @@
+@model DataAccessLayer.Entities.DealerContract
+
+@{
+    ViewData["Title"] = "Chi tiết hợp đồng";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Chi tiết hợp đồng: @Model.ContractNumber</h2>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+        </a>
+    </div>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Msg"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Thông tin hợp đồng</h5>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tr>
+                    <th width="30%">Số hợp đồng:</th>
+                    <td><strong>@Model.ContractNumber</strong></td>
+                </tr>
+                <tr>
+                    <th>Đại lý:</th>
+                    <td>@Model.Dealer?.Name</td>
+                </tr>
+                <tr>
+                    <th>Ngày bắt đầu:</th>
+                    <td>@Model.StartDate.ToString("dd/MM/yyyy")</td>
+                </tr>
+                <tr>
+                    <th>Ngày kết thúc:</th>
+                    <td>@Model.EndDate.ToString("dd/MM/yyyy")</td>
+                </tr>
+                <tr>
+                    <th>Tỷ lệ hoa hồng:</th>
+                    <td>@Model.CommissionRate %</td>
+                </tr>
+                <tr>
+                    <th>Hạn mức tín dụng:</th>
+                    <td>@Model.CreditLimit.ToString("N0") VNĐ</td>
+                </tr>
+                <tr>
+                    <th>Công nợ hiện tại:</th>
+                    <td>
+                        <strong class="@(Model.OutstandingDebt > 0 ? "text-danger" : "text-success")">
+                            @Model.OutstandingDebt.ToString("N0") VNĐ
+                        </strong>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Trạng thái:</th>
+                    <td>
+                        <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">
+                            @Model.Status
+                        </span>
+                    </td>
+                </tr>
+                @if (Model.RenewalDate.HasValue)
+                {
+                    <tr>
+                        <th>Ngày gia hạn:</th>
+                        <td>@Model.RenewalDate.Value.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+                @if (!string.IsNullOrEmpty(Model.Terms))
+                {
+                    <tr>
+                        <th>Điều khoản:</th>
+                        <td style="white-space: pre-wrap;">@Model.Terms</td>
+                    </tr>
+                }
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <tr>
+                        <th>Ghi chú:</th>
+                        <td>@Model.Notes</td>
+                    </tr>
+                }
+                <tr>
+                    <th>Ngày tạo:</th>
+                    <td>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            </table>
+
+            <div class="mt-4">
+                <button onclick="window.print()" class="btn btn-secondary">
+                    <i class="fas fa-print"></i> In hợp đồng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,212 @@
+@model List<BusinessLayer.ViewModels.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Quản lý Tồn kho Sản phẩm";
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">Quản lý Tồn kho Sản phẩm</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="Index">
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <label class="form-label">Tìm kiếm</label>
+                        <input type="text" name="q" class="form-control" placeholder="Tên, SKU, mô tả..." value="@ViewBag.SearchQuery" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Thương hiệu</label>
+                        <select name="brandId" class="form-select">
+                            <option value="">-- Tất cả thương hiệu --</option>
+                            @foreach (var brand in ViewBag.Brands as List<DataAccessLayer.Entities.Brand>)
+                            {
+                                <option value="@brand.Id" selected="@(ViewBag.SelectedBrandId == brand.Id)">
+                                    @brand.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Danh sách sản phẩm</h5>
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fas fa-plus"></i> Thêm sản phẩm mới
+            </a>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>SKU</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Thương hiệu</th>
+                        <th>Giá</th>
+                        <th>Tồn kho</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center">Không tìm thấy sản phẩm</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+                                    {
+                                        <img src="@product.ImageUrl" alt="@product.Name" class="img-thumbnail" style="width: 60px; height: 45px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="text-muted" style="width: 60px; height: 45px; display: flex; align-items: center; justify-content: center; border: 1px solid #dee2e6; border-radius: 4px;">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td>@product.Sku</td>
+                                <td>@product.Name</td>
+                                <td>@product.BrandName</td>
+                                <td>@product.Price.ToString("N0") VNĐ</td>
+                                <td>
+                                    @if (product.StockQuantity <= 5)
+                                    {
+                                        <span class="badge bg-danger">@product.StockQuantity</span>
+                                    }
+                                    else if (product.StockQuantity <= 10)
+                                    {
+                                        <span class="badge bg-warning">@product.StockQuantity</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">@product.StockQuantity</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (product.IsActive)
+                                    {
+                                        <span class="badge bg-success">Đang bán</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Ngừng bán</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Actions">
+                                        <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateStockModal-@product.Id" title="Cập nhật kho">
+                                            <i class="fas fa-box"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@product.Id" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modals - Moved outside table for better performance -->
+@foreach (var product in Model)
+{
+    <!-- Modal for updating stock -->
+    <div class="modal fade" id="updateStockModal-@product.Id" tabindex="-1" aria-labelledby="updateStockModalLabel-@product.Id" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateStockModalLabel-@product.Id">Cập nhật Tồn kho - @product.Name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-action="UpdateStock" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@product.Id" />
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">SKU: <strong>@product.Sku</strong></label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tồn kho hiện tại: <strong>@product.StockQuantity</strong></label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockQuantity-@product.Id" class="form-label">Số lượng mới <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="stockQuantity-@product.Id" name="stockQuantity" value="@product.StockQuantity" min="0" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for deleting product -->
+    <div class="modal fade" id="deleteModal-@product.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@product.Id" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel-@product.Id">Xác nhận xóa sản phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa sản phẩm <strong>@product.Name</strong> (SKU: @product.Sku)?</p>
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> Hành động này không thể hoàn tác!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form asp-action="Delete" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

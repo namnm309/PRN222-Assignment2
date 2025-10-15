@@ -1,0 +1,279 @@
+@using BusinessLayer.Enums
+@{
+    UserRole? userRole = null;
+    var roleString = ViewData["UserRole"] as string;
+    if (!string.IsNullOrWhiteSpace(roleString))
+    {
+        if (System.Enum.TryParse<UserRole>(roleString, out var parsed))
+        {
+            userRole = parsed;
+        }
+    }
+}
+
+<!-- TỔNG QUAN - Common cho tất cả roles -->
+<div class="menu-section">
+    <div class="menu-title">TỔNG QUAN</div>
+    <a asp-page="/Dashboard/Index" class="menu-item">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+    </a>
+    <a asp-page="/Home/Index" class="menu-item">
+        <i class="fas fa-home"></i>
+        <span>Trang chủ</span>
+    </a>
+</div>
+
+@if (userRole == UserRole.DealerStaff)
+{
+    <!-- MENU CHO DEALER STAFF -->
+    <div class="menu-section">
+        <div class="menu-title">KINH DOANH</div>
+        <a asp-page="/Orders/Index" class="menu-item">
+            <i class="fas fa-file-invoice"></i>
+            <span>Quản lý đơn hàng</span>
+        </a>
+        <a asp-page="/Orders/CreateQuotation" class="menu-item">
+            <i class="fas fa-briefcase"></i>
+            <span>Tạo báo giá mới</span>
+        </a>
+        <a asp-page="/Customers/Index" class="menu-item">
+            <i class="fas fa-users"></i>
+            <span>Quản lý khách hàng</span>
+        </a>
+        <a asp-page="/TestDrive/Index" class="menu-item">
+            <i class="fas fa-calendar-check"></i>
+            <span>Lịch lái thử</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">DỊCH VỤ KHÁCH HÀNG</div>
+        <a asp-page="/VehicleSearch/Index" class="menu-item">
+            <i class="fas fa-search"></i>
+            <span>Tra cứu xe</span>
+        </a>
+    </div>
+}
+else if (userRole == UserRole.DealerManager)
+{
+    <!-- MENU CHO DEALER MANAGER -->
+    <div class="menu-section">
+        <div class="menu-title">QUẢN LÝ ĐẠI LÝ</div>
+        <a asp-page="/DealerReport/Index" class="menu-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Báo cáo doanh số</span>
+        </a>
+        <a asp-page="/DealerDebtReport/Index" class="menu-item">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Báo cáo công nợ</span>
+        </a>
+        <a asp-page="/UserManagement/Index" class="menu-item">
+            <i class="fas fa-users-cog"></i>
+            <span>Quản lý nhân viên</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">KINH DOANH</div>
+        <a asp-page="/Orders/Index" class="menu-item">
+            <i class="fas fa-file-invoice"></i>
+            <span>Quản lý đơn hàng</span>
+        </a>
+        <a asp-page="/Orders/CreateQuotation" class="menu-item">
+            <i class="fas fa-briefcase"></i>
+            <span>Tạo báo giá mới</span>
+        </a>
+        <a asp-page="/PurchaseOrder/Index" class="menu-item">
+            <i class="fas fa-box"></i>
+            <span>Đặt xe từ hãng</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-tags"></i>
+            <span>Quản lý khuyến mãi</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">KHÁCH HÀNG</div>
+        <a href="#customersSubmenu" class="menu-item" data-bs-toggle="collapse" aria-expanded="false">
+            <i class="fas fa-users"></i>
+            <span>Quản lý khách hàng</span>
+            <i class="fas fa-chevron-down ms-auto submenu-arrow"></i>
+        </a>
+        <div class="collapse submenu" id="customersSubmenu">
+            <a asp-page="/Customers/Index" class="submenu-item">
+                <i class="fas fa-list"></i>
+                <span>Danh sách khách hàng</span>
+            </a>
+            <a asp-page="/Customers/Create" class="submenu-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Thêm khách hàng</span>
+            </a>
+        </div>
+        <a asp-page="/TestDrive/Index" class="menu-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Lịch hẹn lái thử</span>
+        </a>
+        <a asp-page="/VehicleSearch/Index" class="menu-item">
+            <i class="fas fa-search"></i>
+            <span>Tra cứu xe</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">HỆ THỐNG</div>
+        <a href="#" class="menu-item">
+            <i class="fas fa-cog"></i>
+            <span>Cài đặt</span>
+        </a>
+    </div>
+}
+else if (userRole == UserRole.EVMStaff)
+{
+    <!-- MENU CHO EVM STAFF -->
+    <div class="menu-section">
+        <div class="menu-title">QUẢN LÝ SẢN PHẨM</div>
+        <a asp-page="/ProductManagement/Index" class="menu-item">
+            <i class="fas fa-car"></i>
+            <span>Quản lý sản phẩm</span>
+        </a>
+        <a asp-page="/ProductManagement/Create" class="menu-item">
+            <i class="fas fa-plus"></i>
+            <span>Thêm sản phẩm mới</span>
+        </a>
+        <a asp-page="/PricingManagement/Index" class="menu-item">
+            <i class="fas fa-dollar-sign"></i>
+            <span>Quản lý giá sỉ</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">ĐẶT HÀNG TỪ HÃNG</div>
+        <a asp-page="/PurchaseOrder/Index" class="menu-item">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Tất cả đơn hàng</span>
+        </a>
+        <a asp-page="/PurchaseOrder/Index" asp-route-status="0" class="menu-item">
+            <i class="fas fa-clock"></i>
+            <span>Chờ duyệt</span>
+        </a>
+        <a asp-page="/PurchaseOrder/Index" asp-route-status="1" class="menu-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Đã duyệt</span>
+        </a>
+        <a asp-page="/PurchaseOrder/Index" asp-route-status="3" class="menu-item">
+            <i class="fas fa-truck"></i>
+            <span>Đang vận chuyển</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">ĐẠI LÝ & ĐỐI TÁC</div>
+        <a href="#" class="menu-item">
+            <i class="fas fa-handshake"></i>
+            <span>Danh sách đại lý</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-file-contract"></i>
+            <span>Hợp đồng & chỉ tiêu</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-chart-area"></i>
+            <span>Doanh số theo khu vực</span>
+        </a>
+    </div>
+
+    <div class="menu-section">
+        <div class="menu-title">BÁO CÁO</div>
+        <a href="#" class="menu-item">
+            <i class="fas fa-warehouse"></i>
+            <span>Tồn kho & tiêu thụ</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Báo cáo doanh số</span>
+        </a>
+    </div>
+}
+else if (userRole == UserRole.Admin)
+{
+    <!-- MENU CHO ADMIN - Full quyền -->
+    <div class="menu-section">
+        <div class="menu-title">QUẢN LÝ SẢN PHẨM</div>
+        <a asp-page="/Brand/Index" class="menu-item">
+            <i class="fas fa-copyright"></i>
+            <span>Quản lý Thương hiệu</span>
+        </a>
+        <a asp-page="/ProductManagement/Index" class="menu-item">
+            <i class="fas fa-car"></i>
+            <span>Quản lý sản phẩm</span>
+        </a>
+        <a asp-page="/PricingManagement/Index" class="menu-item">
+            <i class="fas fa-dollar-sign"></i>
+            <span>Quản lý giá sỉ</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">ĐẶT HÀNG TỪ HÃNG</div>
+        <a asp-page="/PurchaseOrder/Index" class="menu-item">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Tất cả đơn hàng</span>
+        </a>
+        <a asp-page="/PurchaseOrder/Index" asp-route-status="0" class="menu-item">
+            <i class="fas fa-clock"></i>
+            <span>Chờ duyệt</span>
+        </a>
+        <a asp-page="/PurchaseOrder/Index" asp-route-status="1" class="menu-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Đã duyệt</span>
+        </a>
+        <a asp-page="/PurchaseOrder/Index" asp-route-status="3" class="menu-item">
+            <i class="fas fa-truck"></i>
+            <span>Đang vận chuyển</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">ĐẠI LÝ & ĐỐI TÁC</div>
+        <a asp-page="/Dealer/Index" class="menu-item">
+            <i class="fas fa-building"></i>
+            <span>Quản lý đại lý</span>
+        </a>
+        <a asp-page="/UserManagement/Index" class="menu-item">
+            <i class="fas fa-users"></i>
+            <span>Tài khoản đại lý</span>
+        </a>
+        <a asp-page="/ContractManagement/Index" class="menu-item">
+            <i class="fas fa-file-contract"></i>
+            <span>Hợp đồng & chỉ tiêu</span>
+        </a>
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">BÁO CÁO & PHÂN TÍCH</div>
+        <a asp-page="/SalesReport/Index" class="menu-item">
+            <i class="fas fa-chart-area"></i>
+            <span>Doanh số theo khu vực</span>
+        </a>
+        <a asp-page="/SalesReportByStaff/Index" class="menu-item">
+            <i class="fas fa-user-tie"></i>
+            <span>Doanh số theo nhân viên</span>
+        </a>
+        <a asp-page="/CustomerDebtReport/Index" class="menu-item">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Công nợ khách hàng</span>
+        </a>
+        <a asp-page="/InventoryReport/Index" class="menu-item">
+            <i class="fas fa-warehouse"></i>
+            <span>Tồn kho & tiêu thụ</span>
+        </a>
+        <a asp-page="/DemandForecast/Index" class="menu-item">
+            <i class="fas fa-robot"></i>
+            <span>AI dự đoán nhu cầu</span>
+        </a>
+    </div>
+}
+
+

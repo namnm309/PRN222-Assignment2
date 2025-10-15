@@ -1,0 +1,299 @@
+@model List<BusinessLayer.ViewModels.PurchaseOrderViewModel>
+@using BusinessLayer.Enums
+
+@{
+    ViewData["Title"] = "Đặt xe từ hãng";
+    Layout = "_DashboardLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-box me-2"></i>Đặt xe từ hãng</h2>
+    @if (ViewBag.UserRole.ToString() == "DealerManager" || ViewBag.UserRole.ToString() == "DealerStaff")
+    {
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Tạo đơn đặt mới
+        </a>
+    }
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Filter by Status -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Trạng thái</label>
+                <select name="status" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Tất cả --</option>
+                    @{
+                        var pendingValue = (int)PurchaseOrderStatus.Pending;
+                        var approvedValue = (int)PurchaseOrderStatus.Approved;
+                        var rejectedValue = (int)PurchaseOrderStatus.Rejected;
+                        var inTransitValue = (int)PurchaseOrderStatus.InTransit;
+                        var deliveredValue = (int)PurchaseOrderStatus.Delivered;
+                        var cancelledValue = (int)PurchaseOrderStatus.Cancelled;
+                        var currentStatus = ViewBag.Status?.ToString();
+                    }
+                    <option value="@pendingValue" selected="@(currentStatus == "Pending")">Chờ duyệt</option>
+                    <option value="@approvedValue" selected="@(currentStatus == "Approved")">Đã duyệt</option>
+                    <option value="@rejectedValue" selected="@(currentStatus == "Rejected")">Bị từ chối</option>
+                    <option value="@inTransitValue" selected="@(currentStatus == "InTransit")">Đang vận chuyển</option>
+                    <option value="@deliveredValue" selected="@(currentStatus == "Delivered")">Đã giao hàng</option>
+                    <option value="@cancelledValue" selected="@(currentStatus == "Cancelled")">Đã hủy</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Purchase Orders Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Sản phẩm</th>
+                        @if (ViewBag.UserRole.ToString() == "Admin" || ViewBag.UserRole.ToString() == "EVMStaff")
+                        {
+                            <th>Đại lý</th>
+                        }
+                        <th>Người đặt</th>
+                        <th>Số lượng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày đặt</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="@(ViewBag.UserRole.ToString() == "Admin" || ViewBag.UserRole.ToString() == "EVMStaff" ? "9" : "8")" class="text-center text-muted py-4">
+                                <i class="fas fa-box fa-2x mb-2 d-block"></i>
+                                Chưa có đơn đặt hàng nào
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@order.OrderNumber</strong>
+                                </td>
+                                <td>
+                                    <div>
+                                        <strong>@order.ProductName</strong>
+                                        <div class="small text-muted">@order.DealerName - @order.OrderNumber</div>
+                                    </div>
+                                </td>
+                                @if (ViewBag.UserRole.ToString() == "Admin" || ViewBag.UserRole.ToString() == "EVMStaff")
+                                {
+                                    <td>@order.DealerName</td>
+                                }
+                                <td>@order.RequestedByName</td>
+                                <td>@order.RequestedQuantity.ToString("N0")</td>
+                                <td>@order.TotalAmount.ToString("N0") VNĐ</td>
+                                <td>
+                                    @switch (order.Status)
+                                    {
+                                        case PurchaseOrderStatus.Pending:
+                                            <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                            break;
+                                        case PurchaseOrderStatus.Approved:
+                                            <span class="badge bg-success">Đã duyệt</span>
+                                            break;
+                                        case PurchaseOrderStatus.Rejected:
+                                            <span class="badge bg-danger">Bị từ chối</span>
+                                            break;
+                                        case PurchaseOrderStatus.InTransit:
+                                            <span class="badge bg-info">Đang vận chuyển</span>
+                                            break;
+                                        case PurchaseOrderStatus.Delivered:
+                                            <span class="badge bg-primary">Đã giao hàng</span>
+                                            break;
+                                        case PurchaseOrderStatus.Cancelled:
+                                            <span class="badge bg-secondary">Đã hủy</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>@order.RequestedDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Detail", new { id = order.Id })" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        
+                                        @if (ViewBag.UserRole.ToString() == "Admin" || ViewBag.UserRole.ToString() == "EVMStaff")
+                                        {
+                                            @if (order.Status == PurchaseOrderStatus.Pending)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-success" onclick="showQuickApproveModal('@order.Id', '@order.OrderNumber')" title="Duyệt nhanh">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="showQuickRejectModal('@order.Id', '@order.OrderNumber')" title="Từ chối">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            }
+                                            else if (order.Status == PurchaseOrderStatus.Approved)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-info" onclick="updateStatusQuick('@order.Id', @((int)PurchaseOrderStatus.InTransit))" title="Bắt đầu vận chuyển">
+                                                    <i class="fas fa-truck"></i>
+                                                </button>
+                                            }
+                                            else if (order.Status == PurchaseOrderStatus.InTransit)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="updateStatusQuick('@order.Id', @((int)PurchaseOrderStatus.Delivered))" title="Đã giao hàng">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Modals for Admin/EVM -->
+@if (ViewBag.UserRole.ToString() == "Admin" || ViewBag.UserRole.ToString() == "EVMStaff")
+{
+    <!-- Quick Approve Modal -->
+    <div class="modal fade" id="quickApproveModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="quickApproveForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="approveOrderId" name="id" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Duyệt đơn đặt hàng</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Xác nhận duyệt đơn đặt hàng <strong id="approveOrderNumber"></strong>?</p>
+                        <div class="mb-3">
+                            <label class="form-label">Ngày giao dự kiến (tùy chọn)</label>
+                            <input name="expectedDeliveryDate" type="date" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ghi chú (tùy chọn)</label>
+                            <textarea name="notes" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-success">Duyệt đơn</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Reject Modal -->
+    <div class="modal fade" id="quickRejectModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="quickRejectForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="rejectOrderId" name="id" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Từ chối đơn đặt hàng</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Từ chối đơn đặt hàng <strong id="rejectOrderNumber"></strong>?</p>
+                        <div class="mb-3">
+                            <label class="form-label">Lý do từ chối *</label>
+                            <textarea name="rejectReason" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Từ chối</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Auto refresh status when form changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.querySelector('select[name="status"]');
+            if (statusSelect) {
+                statusSelect.addEventListener('change', function() {
+                    this.form.submit();
+                });
+            }
+        });
+
+        function showQuickApproveModal(orderId, orderNumber) {
+            document.getElementById('approveOrderId').value = orderId;
+            document.getElementById('approveOrderNumber').textContent = orderNumber;
+            document.getElementById('quickApproveForm').action = '@Url.Action("Approve")';
+            new bootstrap.Modal(document.getElementById('quickApproveModal')).show();
+        }
+
+        function showQuickRejectModal(orderId, orderNumber) {
+            document.getElementById('rejectOrderId').value = orderId;
+            document.getElementById('rejectOrderNumber').textContent = orderNumber;
+            document.getElementById('quickRejectForm').action = '@Url.Action("Reject")';
+            new bootstrap.Modal(document.getElementById('quickRejectModal')).show();
+        }
+
+        function updateStatusQuick(orderId, status) {
+            if (confirm('Xác nhận cập nhật trạng thái đơn hàng?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("UpdateStatus")';
+                
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                
+                const idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.name = 'id';
+                idInput.value = orderId;
+                
+                const statusInput = document.createElement('input');
+                statusInput.type = 'hidden';
+                statusInput.name = 'status';
+                statusInput.value = status;
+                
+                form.appendChild(tokenInput);
+                form.appendChild(idInput);
+                form.appendChild(statusInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}

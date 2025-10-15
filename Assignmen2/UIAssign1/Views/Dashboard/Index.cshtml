@@ -1,0 +1,523 @@
+@using BusinessLayer.Enums
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_DashboardLayout";
+    var userRole = ViewBag.UserRole as UserRole?;
+    
+    string dashboardTitle = userRole switch
+    {
+        UserRole.DealerStaff => "Dashboard Nhân Viên Đại Lý",
+        UserRole.DealerManager => "Dashboard Quản Lý Đại Lý",
+        UserRole.EVMStaff => "Dashboard Nhân Viên EVM",
+        UserRole.Admin => "Dashboard Quản Trị Viên",
+        _ => "Dashboard"
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">@dashboardTitle</h2>
+        <p class="text-muted mb-0">Tổng quan hoạt động và số liệu thống kê</p>
+    </div>
+    <div>
+        <span class="text-muted">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+    </div>
+</div>
+
+
+@if (userRole == UserRole.DealerStaff)
+{
+    <!-- Dashboard cho Dealer Staff -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Đơn hàng tháng này</p>
+                            <h3 class="mb-0">45</h3>
+                        </div>
+                        <div class="fs-1 text-primary">📦</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">+12%</span>
+                        <small class="text-muted ms-1">so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Doanh thu tháng</p>
+                            <h3 class="mb-0">5.2 tỷ</h3>
+                        </div>
+                        <div class="fs-1 text-success">💰</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">+8%</span>
+                        <small class="text-muted ms-1">so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Lịch lái thử</p>
+                            <h3 class="mb-0">12</h3>
+                        </div>
+                        <div class="fs-1 text-warning">🚗</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-info">Tuần này</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Khách hàng mới</p>
+                            <h3 class="mb-0">28</h3>
+                        </div>
+                        <div class="fs-1 text-info">👥</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-primary">Tháng này</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Doanh số 7 ngày gần nhất</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center text-muted py-5">
+                        <p>📊 Biểu đồ doanh số sẽ được hiển thị tại đây</p>
+                        <small>(Tích hợp Chart.js hoặc ApexCharts)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Hoạt động gần đây</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0">
+                            <div class="d-flex align-items-start">
+                                <span class="badge bg-success me-2">✓</span>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0 small">Đơn hàng #DH-001 đã hoàn thành</p>
+                                    <small class="text-muted">5 phút trước</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex align-items-start">
+                                <span class="badge bg-primary me-2">📅</span>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0 small">Lịch lái thử VF 8 - Nguyễn Văn A</p>
+                                    <small class="text-muted">2 giờ trước</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex align-items-start">
+                                <span class="badge bg-warning me-2">⏳</span>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0 small">Đơn hàng #DH-002 chờ xác nhận</p>
+                                    <small class="text-muted">3 giờ trước</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (userRole == UserRole.DealerManager)
+{
+    <!-- Dashboard cho Dealer Manager -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Doanh số đại lý</p>
+                            <h3 class="mb-0">125 tỷ</h3>
+                        </div>
+                        <div class="fs-1 text-success">💰</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">+15%</span>
+                        <small class="text-muted ms-1">so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Nhân viên</p>
+                            <h3 class="mb-0">24</h3>
+                        </div>
+                        <div class="fs-1 text-primary">👥</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-info">Hoạt động</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Đơn hàng tháng</p>
+                            <h3 class="mb-0">156</h3>
+                        </div>
+                        <div class="fs-1 text-warning">📦</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">+22%</span>
+                        <small class="text-muted ms-1">tăng trưởng</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Khách hàng</p>
+                            <h3 class="mb-0">892</h3>
+                        </div>
+                        <div class="fs-1 text-info">👤</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-primary">Tổng số</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (userRole == UserRole.EVMStaff)
+{
+    <!-- Dashboard cho EVM Staff -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Sản phẩm</p>
+                            <h3 class="mb-0">48</h3>
+                        </div>
+                        <div class="fs-1 text-primary">🚗</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-info">Đang quản lý</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Tồn kho</p>
+                            <h3 class="mb-0">1,245</h3>
+                        </div>
+                        <div class="fs-1 text-warning">📦</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-warning">Toàn hệ thống</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Đại lý</p>
+                            <h3 class="mb-0">28</h3>
+                        </div>
+                        <div class="fs-1 text-info">🏢</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">Hoạt động</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Doanh số tháng</p>
+                            <h3 class="mb-0">85 tỷ</h3>
+                        </div>
+                        <div class="fs-1 text-success">💰</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">+18%</span>
+                        <small class="text-muted ms-1">tăng</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (userRole == UserRole.Admin)
+{
+    <!-- Dashboard cho Admin - Full Overview -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Tổng đại lý</p>
+                            <h3 class="mb-0">48</h3>
+                        </div>
+                        <div class="fs-1 text-primary">🏢</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">+3 mới</span>
+                        <small class="text-muted ms-1">trong quý</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Doanh số toàn quốc</p>
+                            <h3 class="mb-0">125 tỷ</h3>
+                        </div>
+                        <div class="fs-1 text-success">📈</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">+15%</span>
+                        <small class="text-muted ms-1">so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Tồn kho xe</p>
+                            <h3 class="mb-0">1,245</h3>
+                        </div>
+                        <div class="fs-1 text-warning">🚗</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-warning">Toàn hệ thống</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Sản phẩm</p>
+                            <h3 class="mb-0">24</h3>
+                        </div>
+                        <div class="fs-1 text-info">📦</div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-info">Dòng xe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Doanh số theo khu vực</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center text-muted py-5">
+                        <p>🗺️ Biểu đồ doanh số theo khu vực sẽ hiển thị tại đây</p>
+                        <small>(Map chart hoặc Bar chart theo miền)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Top đại lý tháng này</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0 d-flex justify-content-between">
+                            <div>
+                                <span class="badge bg-warning me-2">🥇</span>
+                                <strong>VinFast Hà Nội</strong>
+                            </div>
+                            <span class="text-primary fw-bold">12.5 tỷ</span>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between">
+                            <div>
+                                <span class="badge bg-secondary me-2">🥈</span>
+                                <strong>VinFast TP.HCM</strong>
+                            </div>
+                            <span class="text-primary fw-bold">10.2 tỷ</span>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between">
+                            <div>
+                                <span class="badge bg-danger me-2">🥉</span>
+                                <strong>VinFast Đà Nẵng</strong>
+                            </div>
+                            <span class="text-primary fw-bold">8.7 tỷ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    <div class="row g-3 mt-3">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Thông báo hệ thống</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-0">
+                    <strong>ℹ️ Thông báo:</strong> Trang Dashboard đang trong giai đoạn phát triển. Các biểu đồ và dữ liệu thực sẽ được cập nhật sau.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (userRole == UserRole.Admin || userRole == UserRole.EVMStaff)
+{
+    <div class="row g-3 mt-3">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">EVM Dashboard</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="me-3">
+                                    <i class="fas fa-chart-line fa-2x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Báo cáo doanh số</h6>
+                                    <p class="text-muted mb-0 small">Phân tích doanh số theo khu vực và đại lý</p>
+                                </div>
+                                <div>
+                                    <a asp-controller="EVMDashboard" asp-action="SalesReport" class="btn btn-outline-primary btn-sm">Xem</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="me-3">
+                                    <i class="fas fa-boxes fa-2x text-warning"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Quản lý tồn kho</h6>
+                                    <p class="text-muted mb-0 small">Giám sát tồn kho và tốc độ tiêu thụ</p>
+                                </div>
+                                <div>
+                                    <a asp-controller="EVMDashboard" asp-action="InventoryReport" class="btn btn-outline-warning btn-sm">Xem</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="me-3">
+                                    <i class="fas fa-brain fa-2x text-info"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">AI dự đoán nhu cầu</h6>
+                                    <p class="text-muted mb-0 small">Dự báo nhu cầu để lập kế hoạch sản xuất</p>
+                                </div>
+                                <div>
+                                    <a asp-controller="EVMDashboard" asp-action="DemandForecast" class="btn btn-outline-info btn-sm">Xem</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <div class="me-3">
+                                    <i class="fas fa-file-contract fa-2x text-danger"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Quản lý hợp đồng</h6>
+                                    <p class="text-muted mb-0 small">Quản lý hợp đồng, chỉ tiêu và công nợ</p>
+                                </div>
+                                <div>
+                                    <a asp-controller="EVMDashboard" asp-action="ContractManagement" class="btn btn-outline-danger btn-sm">Xem</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @* <div class="text-center mt-3">
+                        <a asp-controller="EVMDashboard" asp-action="Index" class="btn btn-primary">
+                            <i class="fas fa-tachometer-alt me-2"></i>Mở EVM Dashboard
+                        </a>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+}
