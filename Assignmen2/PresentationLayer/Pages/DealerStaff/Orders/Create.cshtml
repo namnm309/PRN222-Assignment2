@@ -1,0 +1,341 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.Orders.CreateModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Tạo đơn hàng / Báo giá";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-shopping-cart me-2 text-primary"></i>
+            Tạo đơn hàng / Báo giá
+        </h2>
+        <p class="text-muted mb-0">Tạo báo giá, đơn hàng, hợp đồng bán hàng</p>
+    </div>
+    <div>
+        <a asp-page="/DealerStaff/Orders/Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="post">
+                    <div class="row g-3">
+                        <!-- Order Type -->
+                        <div class="col-12">
+                            <h5 class="mb-3">
+                                <i class="fas fa-tag me-2"></i>
+                                Loại đơn hàng
+                            </h5>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Input.OrderType" class="form-label">Loại <span class="text-danger">*</span></label>
+                            <select asp-for="Input.OrderType" class="form-select" onchange="toggleOrderType()">
+                                <option value="">-- Chọn loại đơn hàng --</option>
+                                <option value="Quotation">Báo giá</option>
+                                <option value="Order">Đơn hàng</option>
+                                <option value="Contract">Hợp đồng bán hàng</option>
+                            </select>
+                            <span asp-validation-for="Input.OrderType" class="text-danger"></span>
+                        </div>
+
+                        <!-- Customer Selection -->
+                        <div class="col-12">
+                            <h5 class="mb-3 mt-4">
+                                <i class="fas fa-user me-2"></i>
+                                Khách hàng
+                            </h5>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.CustomerId" class="form-label">Khách hàng <span class="text-danger">*</span></label>
+                            <select asp-for="Input.CustomerId" class="form-select" onchange="loadCustomerInfo()">
+                                <option value="">-- Chọn khách hàng --</option>
+                                @if (Model.Customers != null)
+                                {
+                                    @foreach (var customer in Model.Customers)
+                                    {
+                                        <option value="@customer.Id">@customer.FullName (@customer.PhoneNumber)</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="Input.CustomerId" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Thao tác</label>
+                            <div>
+                                <a asp-page="/DealerStaff/Customers/Create" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-plus me-1"></i> Thêm khách hàng mới
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Product Selection -->
+                        <div class="col-12">
+                            <h5 class="mb-3 mt-4">
+                                <i class="fas fa-car me-2"></i>
+                                Sản phẩm
+                            </h5>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Input.ProductId" class="form-label">Xe điện <span class="text-danger">*</span></label>
+                            <select asp-for="Input.ProductId" class="form-select" onchange="loadProductInfo()">
+                                <option value="">-- Chọn xe điện --</option>
+                                @if (Model.Products != null)
+                                {
+                                    @foreach (var product in Model.Products)
+                                    {
+                                        <option value="@product.Id" data-price="@product.Price" data-stock="@product.StockQuantity">
+                                            @product.Name - @product.Brand?.Name (@product.Sku) - @product.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))
+                                        </option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="Input.ProductId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Pricing Information -->
+                        <div class="col-12">
+                            <h5 class="mb-3 mt-4">
+                                <i class="fas fa-dollar-sign me-2"></i>
+                                Thông tin giá
+                            </h5>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Input.Price" class="form-label">Giá bán <span class="text-danger">*</span></label>
+                            <input asp-for="Input.Price" type="number" step="0.01" class="form-control" placeholder="0" onchange="calculateTotal()">
+                            <span asp-validation-for="Input.Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Input.Discount" class="form-label">Giảm giá</label>
+                            <input asp-for="Input.Discount" type="number" step="0.01" class="form-control" placeholder="0" onchange="calculateTotal()">
+                            <span asp-validation-for="Input.Discount" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Thành tiền</label>
+                            <input type="text" id="finalAmount" class="form-control" readonly>
+                        </div>
+
+                        <!-- Payment Information -->
+                        <div class="col-12" id="paymentSection" style="display: none;">
+                            <h5 class="mb-3 mt-4">
+                                <i class="fas fa-credit-card me-2"></i>
+                                Thông tin thanh toán
+                            </h5>
+                        </div>
+
+                        <div class="col-md-6" id="paymentMethodDiv" style="display: none;">
+                            <label asp-for="Input.PaymentMethod" class="form-label">Phương thức thanh toán</label>
+                            <select asp-for="Input.PaymentMethod" class="form-select">
+                                <option value="">-- Chọn phương thức --</option>
+                                <option value="Cash">Tiền mặt</option>
+                                <option value="BankTransfer">Chuyển khoản</option>
+                                <option value="Installment">Trả góp</option>
+                            </select>
+                            <span asp-validation-for="Input.PaymentMethod" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6" id="paymentDueDateDiv" style="display: none;">
+                            <label asp-for="Input.PaymentDueDate" class="form-label">Hạn thanh toán</label>
+                            <input asp-for="Input.PaymentDueDate" type="date" class="form-control">
+                            <span asp-validation-for="Input.PaymentDueDate" class="text-danger"></span>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="col-12">
+                            <h5 class="mb-3 mt-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Thông tin bổ sung
+                            </h5>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Input.Description" class="form-label">Mô tả</label>
+                            <textarea asp-for="Input.Description" class="form-control" rows="3" placeholder="Mô tả về đơn hàng..."></textarea>
+                            <span asp-validation-for="Input.Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Input.Notes" class="form-label">Ghi chú</label>
+                            <textarea asp-for="Input.Notes" class="form-control" rows="2" placeholder="Ghi chú thêm..."></textarea>
+                            <span asp-validation-for="Input.Notes" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="col-12">
+                            <hr>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Tạo đơn hàng
+                                </button>
+                                <a asp-page="/DealerStaff/Orders/Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-1"></i> Hủy
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+        <!-- Order Summary -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="fas fa-receipt me-2"></i>
+                    Tóm tắt đơn hàng
+                </h6>
+            </div>
+            <div class="card-body">
+                <div id="orderSummary">
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                        <div>Chọn sản phẩm để xem tóm tắt</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Thao tác nhanh
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-page="/DealerStaff/VehicleQuery/Index" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-1"></i> Tìm xe điện
+                    </a>
+                    <a asp-page="/DealerStaff/Customers/Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-users me-1"></i> Quản lý khách hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Hướng dẫn
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Báo giá:</strong> Tạo báo giá cho khách hàng
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Đơn hàng:</strong> Xác nhận mua hàng
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        <strong>Hợp đồng:</strong> Ký kết hợp đồng bán hàng
+                    </li>
+                    <li class="mb-0">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Có thể tạo khách hàng mới nếu cần
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function toggleOrderType() {
+            const orderType = document.querySelector('select[name="Input.OrderType"]').value;
+            const paymentSection = document.getElementById('paymentSection');
+            const paymentMethodDiv = document.getElementById('paymentMethodDiv');
+            const paymentDueDateDiv = document.getElementById('paymentDueDateDiv');
+
+            if (orderType === 'Order' || orderType === 'Contract') {
+                paymentSection.style.display = 'block';
+                paymentMethodDiv.style.display = 'block';
+                paymentDueDateDiv.style.display = 'block';
+            } else {
+                paymentSection.style.display = 'none';
+                paymentMethodDiv.style.display = 'none';
+                paymentDueDateDiv.style.display = 'none';
+            }
+        }
+
+        function loadCustomerInfo() {
+            // TODO: Load customer information when selected
+        }
+
+        function loadProductInfo() {
+            const productSelect = document.querySelector('select[name="Input.ProductId"]');
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            
+            if (selectedOption.value) {
+                const price = selectedOption.dataset.price;
+                const stock = selectedOption.dataset.stock;
+                
+                document.querySelector('input[name="Input.Price"]').value = price;
+                calculateTotal();
+                updateOrderSummary();
+            }
+        }
+
+        function calculateTotal() {
+            const price = parseFloat(document.querySelector('input[name="Input.Price"]').value) || 0;
+            const discount = parseFloat(document.querySelector('input[name="Input.Discount"]').value) || 0;
+            const finalAmount = price - discount;
+            
+            document.getElementById('finalAmount').value = finalAmount.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+            
+            updateOrderSummary();
+        }
+
+        function updateOrderSummary() {
+            const productSelect = document.querySelector('select[name="Input.ProductId"]');
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            const price = parseFloat(document.querySelector('input[name="Input.Price"]').value) || 0;
+            const discount = parseFloat(document.querySelector('input[name="Input.Discount"]').value) || 0;
+            const finalAmount = price - discount;
+
+            if (selectedOption.value) {
+                const orderSummary = document.getElementById('orderSummary');
+                orderSummary.innerHTML = `
+                    <div class="mb-3">
+                        <div class="fw-bold">${selectedOption.textContent}</div>
+                        <div class="text-muted small">Giá: ${price.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</div>
+                        <div class="text-muted small">Giảm giá: ${discount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</div>
+                        <hr>
+                        <div class="fw-bold text-primary">Thành tiền: ${finalAmount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTotal();
+        });
+    </script>
+}

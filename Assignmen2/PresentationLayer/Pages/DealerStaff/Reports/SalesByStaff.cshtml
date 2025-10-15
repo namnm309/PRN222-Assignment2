@@ -1,0 +1,268 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.Reports.SalesByStaffModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Báo cáo doanh số theo nhân viên";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-chart-line me-2 text-primary"></i>
+            Báo cáo doanh số theo nhân viên
+        </h2>
+        <p class="text-muted mb-0">Thống kê doanh số bán hàng theo từng nhân viên</p>
+    </div>
+    <div>
+        <button type="button" class="btn btn-outline-primary" onclick="exportReport()">
+            <i class="fas fa-download me-1"></i> Xuất báo cáo
+        </button>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" name="fromDate" value="@Model.FromDate?.ToString("yyyy-MM-dd")" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Đến ngày</label>
+                <input type="date" name="toDate" value="@Model.ToDate?.ToString("yyyy-MM-dd")" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Nhân viên</label>
+                <select name="staffId" class="form-select">
+                    <option value="">Tất cả nhân viên</option>
+                    @if (Model.StaffList != null)
+                    {
+                        @foreach (var staff in Model.StaffList)
+                        {
+                            <option value="@staff.Id" selected="@(Model.StaffId == staff.Id)">@staff.FullName</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i> Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-muted small">Tổng doanh số</div>
+                <div class="h4 text-primary">@Model.TotalSales.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-muted small">Số đơn hàng</div>
+                <div class="h4 text-success">@Model.TotalOrders</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-muted small">Doanh số TB/đơn</div>
+                <div class="h4 text-info">@(Model.TotalOrders > 0 ? (Model.TotalSales / Model.TotalOrders).ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) : "0")</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-muted small">Nhân viên xuất sắc</div>
+                <div class="h4 text-warning">@(Model.TopPerformer?.FullName ?? "N/A")</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sales Chart -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Biểu đồ doanh số theo nhân viên
+                </h6>
+            </div>
+            <div class="card-body">
+                <canvas id="salesChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Staff Performance Table -->
+@if (Model.SalesData != null && Model.SalesData.Any())
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light">
+            <h6 class="mb-0">
+                <i class="fas fa-table me-2"></i>
+                Chi tiết doanh số theo nhân viên
+            </h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nhân viên</th>
+                            <th>Số đơn hàng</th>
+                            <th>Doanh số</th>
+                            <th>Doanh số TB/đơn</th>
+                            <th>Tỷ lệ hoàn thành</th>
+                            <th>Xếp hạng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SalesData)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                                            @item.StaffName.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">@item.StaffName</div>
+                                            <div class="text-muted small">@item.StaffEmail</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info fs-6">@item.OrderCount đơn</span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-primary">@item.TotalSales.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                </td>
+                                <td>
+                                    <div class="text-muted">@item.AverageOrderValue.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar @(item.CompletionRate >= 80 ? "bg-success" : item.CompletionRate >= 60 ? "bg-warning" : "bg-danger")" 
+                                             role="progressbar" style="width: @item.CompletionRate%">
+                                            @item.CompletionRate.ToString("F1")%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.Rank == 1)
+                                    {
+                                        <span class="badge bg-warning fs-6">🥇 #1</span>
+                                    }
+                                    else if (item.Rank == 2)
+                                    {
+                                        <span class="badge bg-secondary fs-6">🥈 #2</span>
+                                    }
+                                    else if (item.Rank == 3)
+                                    {
+                                        <span class="badge bg-warning fs-6">🥉 #3</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-dark">#@item.Rank</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">Không có dữ liệu</h5>
+        <p class="text-muted">Không có dữ liệu doanh số trong khoảng thời gian đã chọn</p>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sales Chart
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.SalesData?.Select(s => $"'{s.StaffName}'") ?? new string[0]))],
+                datasets: [{
+                    label: 'Doanh số (VNĐ)',
+                    data: [@string.Join(",", Model.SalesData?.Select(s => s.TotalSales) ?? new decimal[0])],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(255, 159, 64, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                }).format(value);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Doanh số: ' + new Intl.NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                }).format(context.parsed.y);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function exportReport() {
+            // TODO: Implement export functionality
+            alert('Chức năng xuất báo cáo sẽ được triển khai');
+        }
+    </script>
+}
