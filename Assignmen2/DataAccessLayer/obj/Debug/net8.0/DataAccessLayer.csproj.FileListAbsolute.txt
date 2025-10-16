@@ -13,21 +13,6 @@ E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\refi
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.pdb
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.genruntimeconfig.cache
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\ref\DataAccessLayer.dll
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.deps.json
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.runtimeconfig.json
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.dll
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.pdb
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.csproj.AssemblyReference.cache
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.AssemblyInfoInputs.cache
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.AssemblyInfo.cs
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.csproj.CoreCompileInputs.cache
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.sourcelink.json
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.dll
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\refint\DataAccessLayer.dll
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.pdb
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.genruntimeconfig.cache
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\ref\DataAccessLayer.dll
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.deps.json
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.runtimeconfig.json
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.dll
@@ -43,3 +28,18 @@ C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\De
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.pdb
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.genruntimeconfig.cache
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\ref\DataAccessLayer.dll
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.deps.json
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.runtimeconfig.json
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.dll
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.pdb
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.csproj.AssemblyReference.cache
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.AssemblyInfoInputs.cache
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.AssemblyInfo.cs
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.csproj.CoreCompileInputs.cache
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.sourcelink.json
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.dll
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\refint\DataAccessLayer.dll
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.pdb
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.genruntimeconfig.cache
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\ref\DataAccessLayer.dll

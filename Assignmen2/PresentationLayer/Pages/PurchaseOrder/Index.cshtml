@@ -40,7 +40,7 @@
                 <div class="text-warning mb-2">
                     <i class="fas fa-clock fa-2x"></i>
                 </div>
-                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Pending")</h4>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Pending)</h4>
                 <small class="text-muted">Chờ duyệt</small>
             </div>
         </div>
@@ -51,7 +51,7 @@
                 <div class="text-success mb-2">
                     <i class="fas fa-check-circle fa-2x"></i>
                 </div>
-                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Approved")</h4>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Approved)</h4>
                 <small class="text-muted">Đã duyệt</small>
             </div>
         </div>
@@ -62,7 +62,7 @@
                 <div class="text-info mb-2">
                     <i class="fas fa-truck fa-2x"></i>
                 </div>
-                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "InTransit")</h4>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.InTransit)</h4>
                 <small class="text-muted">Đang vận chuyển</small>
             </div>
         </div>
@@ -73,7 +73,7 @@
                 <div class="text-primary mb-2">
                     <i class="fas fa-check-double fa-2x"></i>
                 </div>
-                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Delivered")</h4>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Delivered)</h4>
                 <small class="text-muted">Đã giao</small>
             </div>
         </div>
@@ -84,7 +84,7 @@
                 <div class="text-danger mb-2">
                     <i class="fas fa-times-circle fa-2x"></i>
                 </div>
-                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Rejected")</h4>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Rejected)</h4>
                 <small class="text-muted">Từ chối</small>
             </div>
         </div>
@@ -95,7 +95,7 @@
                 <div class="text-secondary mb-2">
                     <i class="fas fa-ban fa-2x"></i>
                 </div>
-                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Cancelled")</h4>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Cancelled)</h4>
                 <small class="text-muted">Đã hủy</small>
             </div>
         </div>
@@ -179,22 +179,22 @@
                                 <td>
                                     @switch (order.Status)
                                     {
-                                        case "Pending":
+                                        case BusinessLayer.Enums.PurchaseOrderStatus.Pending:
                                             <span class="badge bg-warning text-dark">Chờ duyệt</span>
                                             break;
-                                        case "Approved":
+                                        case BusinessLayer.Enums.PurchaseOrderStatus.Approved:
                                             <span class="badge bg-success">Đã duyệt</span>
                                             break;
-                                        case "Rejected":
+                                        case BusinessLayer.Enums.PurchaseOrderStatus.Rejected:
                                             <span class="badge bg-danger">Từ chối</span>
                                             break;
-                                        case "InTransit":
+                                        case BusinessLayer.Enums.PurchaseOrderStatus.InTransit:
                                             <span class="badge bg-info">Đang vận chuyển</span>
                                             break;
-                                        case "Delivered":
+                                        case BusinessLayer.Enums.PurchaseOrderStatus.Delivered:
                                             <span class="badge bg-primary">Đã giao</span>
                                             break;
-                                        case "Cancelled":
+                                        case BusinessLayer.Enums.PurchaseOrderStatus.Cancelled:
                                             <span class="badge bg-secondary">Đã hủy</span>
                                             break;
                                     }
@@ -209,7 +209,7 @@
                                             <i class="fas fa-eye"></i>
                                         </button>
                                         
-                                        @if (order.Status == "Pending")
+                                        @if (order.Status == BusinessLayer.Enums.PurchaseOrderStatus.Pending)
                                         {
                                             <form method="post" asp-page-handler="Approve" asp-route-id="@order.Id" style="display: inline;">
                                                 <button type="submit" class="btn btn-success" title="Duyệt đơn hàng"
@@ -224,7 +224,7 @@
                                                 <i class="fas fa-times"></i>
                                             </button>
                                         }
-                                        @if (order.Status == "Approved")
+                                        @if (order.Status == BusinessLayer.Enums.PurchaseOrderStatus.Approved)
                                         {
                                             <form method="post" asp-page-handler="UpdateStatus" asp-route-id="@order.Id" asp-route-status="3" style="display: inline;">
                                                 <button type="submit" class="btn btn-info" title="Chuyển sang vận chuyển">
@@ -232,7 +232,7 @@
                                                 </button>
                                             </form>
                                         }
-                                        @if (order.Status == "InTransit")
+                                        @if (order.Status == BusinessLayer.Enums.PurchaseOrderStatus.InTransit)
                                         {
                                             <form method="post" asp-page-handler="UpdateStatus" asp-route-id="@order.Id" asp-route-status="4" style="display: inline;">
                                                 <button type="submit" class="btn btn-primary" title="Đánh dấu đã giao">
@@ -240,7 +240,7 @@
                                                 </button>
                                             </form>
                                         }
-                                        @if (order.Status == "Pending" || order.Status == "Approved")
+                                        @if (order.Status == BusinessLayer.Enums.PurchaseOrderStatus.Pending || order.Status == BusinessLayer.Enums.PurchaseOrderStatus.Approved)
                                         {
                                             <form method="post" asp-page-handler="Cancel" asp-route-id="@order.Id" style="display: inline;">
                                                 <button type="submit" class="btn btn-secondary" title="Hủy đơn hàng" 
@@ -299,22 +299,22 @@
                                 <strong>Trạng thái:</strong><br>
                                 @switch (order.Status)
                                 {
-                                    case "Pending":
+                                    case BusinessLayer.Enums.PurchaseOrderStatus.Pending:
                                         <span class="badge bg-warning text-dark">Chờ duyệt</span>
                                         break;
-                                    case "Approved":
+                                    case BusinessLayer.Enums.PurchaseOrderStatus.Approved:
                                         <span class="badge bg-success">Đã duyệt</span>
                                         break;
-                                    case "Rejected":
+                                    case BusinessLayer.Enums.PurchaseOrderStatus.Rejected:
                                         <span class="badge bg-danger">Từ chối</span>
                                         break;
-                                    case "InTransit":
+                                    case BusinessLayer.Enums.PurchaseOrderStatus.InTransit:
                                         <span class="badge bg-info">Đang vận chuyển</span>
                                         break;
-                                    case "Delivered":
+                                    case BusinessLayer.Enums.PurchaseOrderStatus.Delivered:
                                         <span class="badge bg-primary">Đã giao</span>
                                         break;
-                                    case "Cancelled":
+                                    case BusinessLayer.Enums.PurchaseOrderStatus.Cancelled:
                                         <span class="badge bg-secondary">Đã hủy</span>
                                         break;
                                 }
@@ -431,7 +431,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times me-2"></i>Đóng
                     </button>
-                    @if (order.Status == "Pending")
+                    @if (order.Status == BusinessLayer.Enums.PurchaseOrderStatus.Pending)
                     {
                         <form method="post" asp-page-handler="Approve" asp-route-id="@order.Id" style="display: inline;">
                             <button type="submit" class="btn btn-success">
@@ -446,7 +446,7 @@
 }
 
 <!-- Reject Modals -->
-@foreach (var order in Model.PurchaseOrders.Where(o => o.Status == "Pending"))
+@foreach (var order in Model.PurchaseOrders.Where(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Pending))
 {
     <div class="modal fade" id="rejectModal-@order.Id" tabindex="-1">
         <div class="modal-dialog">

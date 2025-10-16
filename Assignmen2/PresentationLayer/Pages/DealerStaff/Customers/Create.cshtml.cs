@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -61,37 +61,26 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
                 return Page();
             }
 
-            // Create customer entity
-            var customer = new Customer
-            {
-                FullName = Input.FullName,
-                Name = Input.Name,
-                PhoneNumber = Input.PhoneNumber,
-                Email = Input.Email,
-                Address = Input.Address,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            // TODO: Implement customer creation in service
-            // For now, we'll simulate success
             try
             {
-                // var result = await _customerService.CreateAsync(customer);
-                // if (result.Success)
-                // {
-                //     TempData["Success"] = "Tạo khách hàng thành công!";
-                //     return RedirectToPage("/DealerStaff/Customers/Index");
-                // }
-                // else
-                // {
-                //     ModelState.AddModelError("", result.Error ?? "Không thể tạo khách hàng");
-                //     return Page();
-                // }
+                // Create customer using service
+                var result = await _customerService.CreateAsync(
+                    Input.FullName,
+                    Input.Email ?? "",
+                    Input.PhoneNumber ?? "",
+                    Input.Address ?? ""
+                );
 
-                // Simulate success for now
-                TempData["Success"] = "Tạo khách hàng thành công!";
-                return RedirectToPage("/DealerStaff/Customers/Index");
+                if (result.Success)
+                {
+                    TempData["Success"] = "Tạo khách hàng thành công!";
+                    return RedirectToPage("/DealerStaff/Customers/Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.Error ?? "Không thể tạo khách hàng");
+                    return Page();
+                }
             }
             catch (Exception ex)
             {

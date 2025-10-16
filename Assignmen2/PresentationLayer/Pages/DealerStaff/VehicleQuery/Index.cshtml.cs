@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,11 +9,13 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
     {
         private readonly IProductService _productService;
         private readonly IBrandService _brandService;
+        private readonly IMappingService _mappingService;
 
-        public IndexModel(IProductService productService, IBrandService brandService)
+        public IndexModel(IProductService productService, IBrandService brandService, IMappingService mappingService)
         {
             _productService = productService;
             _brandService = brandService;
+            _mappingService = mappingService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -35,19 +37,19 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
 
-        public List<Product> Products { get; set; } = new();
-        public List<Brand> Brands { get; set; } = new();
+        public List<ProductResponse> Products { get; set; } = new();
+        public List<BrandResponse> Brands { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            // Get all brands for filter dropdown
+            // Get all brands for filter dropdown using service
             var brandsResult = await _brandService.GetAllAsync();
-            if (brandsResult.Success)
+            if (brandsResult.Success && brandsResult.Data != null)
             {
-                Brands = brandsResult.Data;
+                Brands = _mappingService.MapToBrandViewModels(brandsResult.Data);
             }
 
-            // Search products
+            // Search products using service
             var productsResult = await _productService.SearchAsync(
                 Search, 
                 BrandId, 
@@ -57,9 +59,10 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
                 true  // isActive - only active products
             );
 
-            if (productsResult.Success)
+            if (productsResult.Success && productsResult.Data != null)
             {
-                Products = productsResult.Data;
+                // Map entities to DTOs using mapping service
+                Products = _mappingService.MapToProductViewModels(productsResult.Data);
                 TotalItems = Products.Count;
                 TotalPages = (int)Math.Ceiling((double)TotalItems / PageSize);
 
@@ -68,6 +71,11 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
                     .Skip((CurrentPage - 1) * PageSize)
                     .Take(PageSize)
                     .ToList();
+            }
+            else
+            {
+                Products = new List<ProductResponse>();
+                TempData["Error"] = productsResult.Error ?? "Không thể tải danh sách sản phẩm";
             }
         }
     }

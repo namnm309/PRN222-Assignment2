@@ -1,0 +1,290 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.DashboardModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+            Dashboard
+        </h2>
+        <p class="text-muted mb-0">Tổng quan hoạt động</p>
+    </div>
+    <div class="text-muted">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+</div>
+
+<!-- Main Stats Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Đơn hàng hôm nay</p>
+                        <h3 class="mb-0">@Model.TodayOrders</h3>
+                        @if (Model.OrdersGrowth > 0)
+                        {
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up me-1"></i>+@Model.OrdersGrowth%
+                            </small>
+                        }
+                    </div>
+                    <div class="fs-1 text-primary">📦</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Doanh thu hôm nay</p>
+                        <h3 class="mb-0">@((Model.TodayRevenue / 1000000000).ToString("F1")) tỷ</h3>
+                        @if (Model.RevenueGrowth > 0)
+                        {
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up me-1"></i>+@Model.RevenueGrowth%
+                            </small>
+                        }
+                    </div>
+                    <div class="fs-1 text-success">💰</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Lịch lái thử hôm nay</p>
+                        <h3 class="mb-0">@Model.TodayTestDrives</h3>
+                        @if (Model.PendingTestDrives > 0)
+                        {
+                            <small class="text-warning">
+                                <i class="fas fa-clock me-1"></i>@Model.PendingTestDrives chờ duyệt
+                            </small>
+                        }
+                    </div>
+                    <div class="fs-1 text-warning">🚗</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1 small">Khách hàng mới</p>
+                        <h3 class="mb-0">@Model.NewCustomers</h3>
+                        <small class="text-info">
+                            <i class="fas fa-users me-1"></i>Tổng: @Model.TotalCustomers
+                        </small>
+                    </div>
+                    <div class="fs-1 text-info">👥</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts and Recent Activities -->
+<div class="row g-4">
+    <!-- Revenue Chart -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2 text-primary"></i>
+                    Doanh thu 7 ngày qua
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Status Chart -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2 text-success"></i>
+                    Trạng thái đơn hàng
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="orderStatusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="row g-4 mt-3">
+    <!-- Recent Orders -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-shopping-cart me-2 text-primary"></i>
+                    Đơn hàng gần đây
+                </h5>
+                <a href="/DealerStaff/Orders" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentOrders.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var order in Model.RecentOrders.Take(5))
+                        {
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">@order.OrderNumber</h6>
+                                        <p class="mb-1 text-muted">@order.CustomerName</p>
+                                        <small class="text-muted">@order.ProductName</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="fw-bold text-primary">@order.FinalAmount.ToString("N0") đ</div>
+                                        <span class="badge bg-@(order.Status == "Completed" ? "success" : "warning")">
+                                            @order.Status
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">Chưa có đơn hàng nào</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Test Drives -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-car me-2 text-warning"></i>
+                    Lịch lái thử
+                </h5>
+                <a href="/DealerStaff/TestDrives" class="btn btn-sm btn-outline-warning">Xem tất cả</a>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentTestDrives.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var testDrive in Model.RecentTestDrives.Take(5))
+                        {
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">@testDrive.CustomerName</h6>
+                                        <p class="mb-1 text-muted">@testDrive.ProductName</p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            @testDrive.ScheduledDate.ToString("dd/MM/yyyy HH:mm")
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-@(testDrive.Status.ToString() == "Confirmed" ? "success" : "warning")">
+                                            @testDrive.Status
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <i class="fas fa-calendar fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">Chưa có lịch lái thử nào</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.RevenueChartLabels)),
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: @Html.Raw(Json.Serialize(Model.RevenueChartData)),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return (value / 1000000).toFixed(0) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Order Status Chart
+        const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+        new Chart(orderStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.OrderStatusLabels)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(Model.OrderStatusData)),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+}

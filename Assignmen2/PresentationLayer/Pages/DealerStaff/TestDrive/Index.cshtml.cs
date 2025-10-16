@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,10 +8,12 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
     public class IndexModel : PageModel
     {
         private readonly ITestDriveService _testDriveService;
+        private readonly IMappingService _mappingService;
 
-        public IndexModel(ITestDriveService testDriveService)
+        public IndexModel(ITestDriveService testDriveService, IMappingService mappingService)
         {
             _testDriveService = testDriveService;
+            _mappingService = mappingService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -23,24 +25,28 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
         [BindProperty(SupportsGet = true)]
         public DateTime? ToDate { get; set; }
 
-        public List<DataAccessLayer.Entities.TestDrive> TestDrives { get; set; } = new();
+        public List<TestDriveResponse> TestDrives { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            // Get current dealer ID from session (you'll need to implement this)
+            // Get current dealer ID from session
             var dealerId = GetCurrentDealerId();
             
             if (dealerId.HasValue)
             {
                 var result = await _testDriveService.GetByDealerAsync(dealerId.Value);
-                if (result.Success)
+                if (result.Success && result.Data != null)
                 {
-                    TestDrives = result.Data;
+                    // Map entities to DTOs using mapping service
+                    TestDrives = _mappingService.MapToTestDriveViewModels(result.Data);
 
                     // Apply filters
                     if (!string.IsNullOrWhiteSpace(Status))
                     {
-                        TestDrives = TestDrives.Where(t => t.Status.ToString() == Status).ToList();
+                        if (Enum.TryParse<BusinessLayer.Enums.TestDriveStatus>(Status, out var statusEnum))
+                        {
+                            TestDrives = TestDrives.Where(t => t.Status == statusEnum).ToList();
+                        }
                     }
 
                     if (FromDate.HasValue)
@@ -56,13 +62,27 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
                     // Sort by scheduled date descending
                     TestDrives = TestDrives.OrderByDescending(t => t.ScheduledDate).ToList();
                 }
+                else
+                {
+                    TestDrives = new List<TestDriveResponse>();
+                    TempData["Error"] = result.Error ?? "Không thể tải danh sách lái thử";
+                }
+            }
+            else
+            {
+                TestDrives = new List<TestDriveResponse>();
+                TempData["Error"] = "Không xác định được đại lý hiện tại";
             }
         }
 
         private Guid? GetCurrentDealerId()
         {
-            // TODO: Implement getting current dealer ID from session/authentication
-            // For now, return null - you'll need to implement this based on your authentication system
+            // Get dealer ID from session
+            var dealerIdString = HttpContext.Session.GetString("DealerId");
+            if (Guid.TryParse(dealerIdString, out var dealerId))
+            {
+                return dealerId;
+            }
             return null;
         }
     }

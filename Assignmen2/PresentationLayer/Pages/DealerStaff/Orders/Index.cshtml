@@ -90,12 +90,12 @@
                                     <small class="text-muted">#@order.Id.ToString("N")[..8]</small>
                                 </td>
                                 <td>
-                                    <div>@order.Customer?.FullName</div>
-                                    <small class="text-muted">@order.Customer?.PhoneNumber</small>
+                                    <div>@order.CustomerName</div>
+                                    <small class="text-muted">@order.CustomerId</small>
                                 </td>
                                 <td>
-                                    <div>@order.Product?.Name</div>
-                                    <small class="text-muted">@order.Product?.Brand?.Name</small>
+                                    <div>@order.ProductName</div>
+                                    <small class="text-muted">@order.ProductId</small>
                                 </td>
                                 <td>
                                     <span class="badge bg-info">@order.Description</span>
