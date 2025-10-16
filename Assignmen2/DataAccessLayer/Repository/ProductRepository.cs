@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
@@ -16,22 +18,62 @@ namespace DataAccessLayer.Repository
         public Task<Product?> GetByIdAsync(Guid id)
             => _db.Product.Include(p => p.Brand).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
-        public Task<List<Product>> SearchAsync(string? q, Guid? brandId, decimal? minPrice, decimal? maxPrice, bool? inStock, bool? isActive)
+        public async Task<List<Product>> SearchAsync(string? q, Guid? brandId, decimal? minPrice, decimal? maxPrice, bool? inStock, bool? isActive)
         {
             var query = _db.Product.Include(p => p.Brand).AsNoTracking().AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(q))
-            {
-                var term = q.Trim().ToLower();
-                query = query.Where(x => x.Name.ToLower().Contains(term) || x.Sku.ToLower().Contains(term) || x.Description.ToLower().Contains(term));
-            }
+            // Apply database filters first (more efficient)
             if (brandId.HasValue) query = query.Where(x => x.BrandId == brandId.Value);
             if (minPrice.HasValue) query = query.Where(x => x.Price >= minPrice.Value);
             if (maxPrice.HasValue) query = query.Where(x => x.Price <= maxPrice.Value);
             if (inStock == true) query = query.Where(x => x.StockQuantity > 0);
             if (isActive.HasValue) query = query.Where(x => x.IsActive == isActive);
 
-            return query.OrderBy(x => x.Name).ToListAsync();
+            // Load to memory
+            var results = await query.ToListAsync();
+
+            // Apply text search with diacritics support in memory
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var normalizedSearch = NormalizeForSearch(q);
+                results = results.Where(x =>
+                    NormalizeForSearch(x.Name).Contains(normalizedSearch) ||
+                    NormalizeForSearch(x.Sku).Contains(normalizedSearch) ||
+                    NormalizeForSearch(x.Description ?? "").Contains(normalizedSearch)
+                ).ToList();
+            }
+
+            return results.OrderBy(x => x.Name).ToList();
+        }
+
+        private static string NormalizeForSearch(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            var normalized = input.ToLowerInvariant();
+            normalized = RemoveDiacritics(normalized);
+            return normalized.Trim();
+        }
+
+        private static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return string.Empty;
+
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
         public async Task<bool> UpdateStockAsync(Guid id, int newStockQuantity)

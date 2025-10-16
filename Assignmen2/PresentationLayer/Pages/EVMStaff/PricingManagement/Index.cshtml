@@ -1,0 +1,172 @@
+@page "/EVMStaff/PricingManagement"
+@model PresentationLayer.Pages.EVMStaff.PricingManagement.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Quản lý giá & Khuyến mãi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-tags me-2 text-primary"></i>
+            Quản lý giá & Khuyến mãi
+        </h2>
+        <p class="text-muted mb-0">Thiết lập giá theo đại lý và khu vực</p>
+    </div>
+    <a asp-page="./Create" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Tạo chính sách giá mới
+    </a>
+</div>
+
+<!-- Alert Messages -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Pricing Policies Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        @if (Model.PricingPolicies.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Loại chính sách</th>
+                            <th>Giá sỉ</th>
+                            <th>Giá lẻ</th>
+                            <th>Giảm giá</th>
+                            <th>Giá tối thiểu</th>
+                            <th>Hiệu lực</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var policy in Model.PricingPolicies)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>Sản phẩm #@policy.ProductId.ToString().Substring(0, 8)</strong>
+                                    @if (policy.DealerId.HasValue)
+                                    {
+                                        <br/><small class="text-muted">Đại lý: #@policy.DealerId.ToString().Substring(0, 8)</small>
+                                    }
+                                    @if (policy.RegionId.HasValue)
+                                    {
+                                        <br/><small class="text-muted">Khu vực: #@policy.RegionId.ToString().Substring(0, 8)</small>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">@policy.PolicyType</span>
+                                </td>
+                                <td><strong class="text-success">@policy.WholesalePrice.ToString("N0") đ</strong></td>
+                                <td><strong class="text-primary">@policy.RetailPrice.ToString("N0") đ</strong></td>
+                                <td>
+                                    @if (policy.DiscountRate > 0)
+                                    {
+                                        <span class="badge bg-danger">@policy.DiscountRate%</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>@policy.MinimumPrice.ToString("N0") đ</td>
+                                <td>
+                                    <small>
+                                        @policy.EffectiveDate.ToString("dd/MM/yyyy")
+                                        <br/>đến<br/>
+                                        @(policy.ExpiryDate?.ToString("dd/MM/yyyy") ?? "Không giới hạn")
+                                    </small>
+                                </td>
+                                <td>
+                                    @switch (policy.Status?.ToLower())
+                                    {
+                                        case "active":
+                                            <span class="badge bg-success">Đang áp dụng</span>
+                                            break;
+                                        case "inactive":
+                                            <span class="badge bg-secondary">Không hoạt động</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-warning text-dark">@policy.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-page="./Edit" asp-route-id="@policy.Id" 
+                                           class="btn btn-outline-primary" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#deleteModal-@policy.Id" 
+                                                title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-tags fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Chưa có chính sách giá</h5>
+                <p class="text-muted">Tạo chính sách giá mới để quản lý giá bán</p>
+                <a asp-page="./Create" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Tạo chính sách đầu tiên
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Delete Modals -->
+@foreach (var policy in Model.PricingPolicies)
+{
+    <div class="modal fade" id="deleteModal-@policy.Id" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa chính sách giá này?</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@policy.Id" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Xóa
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

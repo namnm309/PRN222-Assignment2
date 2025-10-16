@@ -1,0 +1,189 @@
+@page "/EVMStaff/ContractManagement"
+@model PresentationLayer.Pages.EVMStaff.ContractManagement.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Quản lý Hợp đồng & Chỉ tiêu";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-file-contract me-2 text-primary"></i>
+            Quản lý Hợp đồng & Chỉ tiêu
+        </h2>
+        <p class="text-muted mb-0">Theo dõi hợp đồng và chỉ tiêu doanh số đại lý</p>
+    </div>
+    <a asp-page="./Create" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Tạo hợp đồng mới
+    </a>
+</div>
+
+<!-- Alert Messages -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Filter Card -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-5">
+                <label class="form-label">Đại lý</label>
+                <select name="dealerId" class="form-select">
+                    <option value="">Tất cả đại lý</option>
+                    @* Load from service *@
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Trạng thái</label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="Active" selected="@(Model.Status == "Active")">Đang hoạt động</option>
+                    <option value="Expired" selected="@(Model.Status == "Expired")">Hết hạn</option>
+                    <option value="Terminated" selected="@(Model.Status == "Terminated")">Đã chấm dứt</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-2"></i>Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Contracts Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        @if (Model.Contracts.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Số hợp đồng</th>
+                            <th>Đại lý</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Hoa hồng (%)</th>
+                            <th>Hạn mức tín dụng</th>
+                            <th>Công nợ</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var contract in Model.Contracts)
+                        {
+                            <tr>
+                                <td><strong>@contract.ContractNumber</strong></td>
+                                <td>@contract.DealerName</td>
+                                <td><small>@contract.StartDate.ToString("dd/MM/yyyy")</small></td>
+                                <td><small>@contract.EndDate.ToString("dd/MM/yyyy")</small></td>
+                                <td><span class="badge bg-info">@contract.CommissionRate%</span></td>
+                                <td><strong class="text-success">@contract.CreditLimit.ToString("N0") đ</strong></td>
+                                <td>
+                                    @if (contract.OutstandingDebt > 0)
+                                    {
+                                        <strong class="text-danger">@contract.OutstandingDebt.ToString("N0") đ</strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">0 đ</span>
+                                    }
+                                </td>
+                                <td>
+                                    @switch (contract.Status?.ToLower())
+                                    {
+                                        case "active":
+                                            <span class="badge bg-success">Hoạt động</span>
+                                            break;
+                                        case "expired":
+                                            <span class="badge bg-warning text-dark">Hết hạn</span>
+                                            break;
+                                        case "terminated":
+                                            <span class="badge bg-danger">Đã chấm dứt</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary">@contract.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-page="./Detail" asp-route-id="@contract.Id" 
+                                           class="btn btn-outline-primary" title="Chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-page="./Edit" asp-route-id="@contract.Id" 
+                                           class="btn btn-outline-info" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-page="/EVMStaff/SalesTarget/Index" asp-route-contractId="@contract.Id" 
+                                           class="btn btn-outline-success" title="Chỉ tiêu">
+                                            <i class="fas fa-chart-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-file-contract fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Chưa có hợp đồng</h5>
+                <p class="text-muted">Tạo hợp đồng mới để quản lý đại lý</p>
+                <a asp-page="./Create" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Tạo hợp đồng đầu tiên
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Statistics Summary (Optional) -->
+@if (Model.Contracts.Any())
+{
+    <div class="row g-4 mt-3">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted small">Tổng hợp đồng</h6>
+                    <h3 class="fw-bold text-primary">@Model.Contracts.Count</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted small">Hợp đồng đang hoạt động</h6>
+                    <h3 class="fw-bold text-success">@Model.Contracts.Count(c => c.Status == "Active")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted small">Tổng công nợ</h6>
+                    <h3 class="fw-bold text-danger">@Model.Contracts.Sum(c => c.OutstandingDebt).ToString("N0") đ</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

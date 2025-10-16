@@ -1,0 +1,269 @@
+@page "/EVMStaff/SalesReport"
+@model PresentationLayer.Pages.EVMStaff.SalesReport.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Báo cáo doanh số";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-chart-line me-2 text-primary"></i>
+            Báo cáo doanh số
+        </h2>
+        <p class="text-muted mb-0">Theo dõi doanh số theo khu vực và đại lý</p>
+    </div>
+    <button class="btn btn-success" onclick="window.print()">
+        <i class="fas fa-print me-2"></i>In báo cáo
+    </button>
+</div>
+
+<!-- Filter Card -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-2">
+                <label class="form-label">Loại báo cáo</label>
+                <select name="reportType" class="form-select" onchange="this.form.submit()">
+                    <option value="region" selected="@(Model.ReportType == "region")">Theo khu vực</option>
+                    <option value="dealer" selected="@(Model.ReportType == "dealer")">Theo đại lý</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" name="fromDate" value="@Model.FromDate?.ToString("yyyy-MM-dd")" class="form-control">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Đến ngày</label>
+                <input type="date" name="toDate" value="@Model.ToDate?.ToString("yyyy-MM-dd")" class="form-control">
+            </div>
+
+            @if (Model.ReportType == "region")
+            {
+                <div class="col-md-3">
+                    <label class="form-label">Khu vực</label>
+                    <select name="regionId" class="form-select">
+                        <option value="">Tất cả khu vực</option>
+                        @foreach (var region in Model.Regions)
+                        {
+                            <option value="@region.Id" selected="@(Model.RegionId == region.Id)">
+                                @region.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-3">
+                    <label class="form-label">Đại lý</label>
+                    <select name="dealerId" class="form-select">
+                        <option value="">Tất cả đại lý</option>
+                        @foreach (var dealer in Model.Dealers)
+                        {
+                            <option value="@dealer.Id" selected="@(Model.DealerId == dealer.Id)">
+                                @dealer.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+            }
+
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-2"></i>Lọc báo cáo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1 small">Tổng doanh thu</h6>
+                        <h4 class="mb-0 fw-bold text-success">@Model.TotalRevenue.ToString("N0") đ</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-shopping-cart fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1 small">Tổng đơn hàng</h6>
+                        <h4 class="mb-0 fw-bold text-primary">@Model.TotalOrders</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-car fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1 small">Tổng sản phẩm</h6>
+                        <h4 class="mb-0 fw-bold text-info">@Model.TotalProducts</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 60px; height: 60px;">
+                            <i class="fas fa-chart-bar fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="text-muted mb-1 small">Giá trị TB/đơn</h6>
+                        <h4 class="mb-0 fw-bold text-warning">@Model.AverageOrderValue.ToString("N0") đ</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Tables -->
+<div class="row g-4">
+    <!-- Revenue by Group -->
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-dollar-sign me-2"></i>
+                    Doanh thu theo @(Model.ReportType == "region" ? "khu vực" : "đại lý")
+                </h5>
+            </div>
+            <div class="card-body">
+                @if (Model.RevenueByGroup.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>@(Model.ReportType == "region" ? "Khu vực" : "Đại lý")</th>
+                                    <th class="text-end">Doanh thu</th>
+                                    <th class="text-end">% Tổng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RevenueByGroup.OrderByDescending(x => x.Value))
+                                {
+                                    var percentage = Model.TotalRevenue > 0 ? (item.Value / Model.TotalRevenue) * 100 : 0;
+                                    <tr>
+                                        <td><strong>@item.Key</strong></td>
+                                        <td class="text-end">
+                                            <strong class="text-success">@item.Value.ToString("N0") đ</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="badge bg-success">@percentage.ToString("F1")%</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                        <p class="text-muted mb-0">Không có dữ liệu</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Count by Group -->
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-shopping-cart me-2"></i>
+                    Số đơn hàng theo @(Model.ReportType == "region" ? "khu vực" : "đại lý")
+                </h5>
+            </div>
+            <div class="card-body">
+                @if (Model.OrderCountByGroup.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>@(Model.ReportType == "region" ? "Khu vực" : "Đại lý")</th>
+                                    <th class="text-end">Số đơn</th>
+                                    <th class="text-end">% Tổng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderCountByGroup.OrderByDescending(x => x.Value))
+                                {
+                                    var percentage = Model.TotalOrders > 0 ? ((decimal)item.Value / Model.TotalOrders) * 100 : 0;
+                                    <tr>
+                                        <td><strong>@item.Key</strong></td>
+                                        <td class="text-end">
+                                            <strong class="text-primary">@item.Value</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="badge bg-primary">@percentage.ToString("F1")%</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
+                        <p class="text-muted mb-0">Không có dữ liệu</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style media="print">
+    .btn, .card-header { display: none; }
+    .card { border: 1px solid #dee2e6 !important; }
+</style>
+

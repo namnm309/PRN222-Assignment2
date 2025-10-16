@@ -133,18 +133,26 @@ else if (userRole == UserRole.EVMStaff)
 {
     <!-- MENU CHO EVM STAFF -->
     <div class="menu-section">
-        <div class="menu-title">QUẢN LÝ SẢN PHẨM</div>
-        <a asp-page="/ProductManagement/Index" class="menu-item">
-            <i class="fas fa-car"></i>
-            <span>Quản lý sản phẩm</span>
+        <div class="menu-title">EVM STAFF DASHBOARD</div>
+        <a asp-page="/EVMStaff/Dashboard/Index" class="menu-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Tổng quan EVM</span>
         </a>
-        <a asp-page="/ProductManagement/Create" class="menu-item">
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">QUẢN LÝ SẢN PHẨM</div>
+        <a asp-page="/EVMStaff/ProductManagement/Index" class="menu-item">
+            <i class="fas fa-car"></i>
+            <span>Danh mục xe</span>
+        </a>
+        <a asp-page="/EVMStaff/ProductManagement/Create" class="menu-item">
             <i class="fas fa-plus"></i>
             <span>Thêm sản phẩm mới</span>
         </a>
-        <a asp-page="/PricingManagement/Index" class="menu-item">
+        <a asp-page="/EVMStaff/PricingManagement/Index" class="menu-item">
             <i class="fas fa-dollar-sign"></i>
-            <span>Quản lý giá sỉ</span>
+            <span>Quản lý giá & khuyến mãi</span>
         </a>
     </div>
     
@@ -170,29 +178,33 @@ else if (userRole == UserRole.EVMStaff)
     
     <div class="menu-section">
         <div class="menu-title">ĐẠI LÝ & ĐỐI TÁC</div>
-        <a href="#" class="menu-item">
-            <i class="fas fa-handshake"></i>
-            <span>Danh sách đại lý</span>
+        <a asp-page="/EVMStaff/UserManagement/Index" class="menu-item">
+            <i class="fas fa-users-cog"></i>
+            <span>Quản lý tài khoản đại lý</span>
         </a>
-        <a href="#" class="menu-item">
+        <a asp-page="/EVMStaff/ContractManagement/Index" class="menu-item">
             <i class="fas fa-file-contract"></i>
             <span>Hợp đồng & chỉ tiêu</span>
         </a>
-        <a href="#" class="menu-item">
+        <a asp-page="/EVMStaff/SalesReport/Index" asp-route-reporttype="region" class="menu-item">
             <i class="fas fa-chart-area"></i>
             <span>Doanh số theo khu vực</span>
+        </a>
+        <a asp-page="/EVMStaff/SalesReport/Index" asp-route-reporttype="dealer" class="menu-item">
+            <i class="fas fa-store"></i>
+            <span>Doanh số theo đại lý</span>
         </a>
     </div>
 
     <div class="menu-section">
-        <div class="menu-title">BÁO CÁO</div>
-        <a href="#" class="menu-item">
+        <div class="menu-title">KHO & PHÂN BỔ</div>
+        <a asp-page="/EVMStaff/InventoryManagement/Index" class="menu-item">
             <i class="fas fa-warehouse"></i>
-            <span>Tồn kho & tiêu thụ</span>
+            <span>Quản lý tồn kho</span>
         </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Báo cáo doanh số</span>
+        <a asp-page="/EVMStaff/InventoryManagement/Index" asp-route-view="transactions" class="menu-item">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Lịch sử phân bổ</span>
         </a>
     </div>
 }

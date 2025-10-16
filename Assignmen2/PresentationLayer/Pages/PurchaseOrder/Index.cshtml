@@ -1,0 +1,482 @@
+@page
+@model PresentationLayer.Pages.EVMStaff.PurchaseOrderManagement.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Quản lý đơn hàng từ hãng";
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-shopping-cart me-2 text-primary"></i>
+            Quản lý đơn hàng từ hãng
+        </h2>
+        <p class="text-muted mb-0">Quản lý đơn đặt hàng từ các đại lý</p>
+    </div>
+</div>
+
+<!-- Alert Messages -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Statistics Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-warning mb-2">
+                    <i class="fas fa-clock fa-2x"></i>
+                </div>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Pending")</h4>
+                <small class="text-muted">Chờ duyệt</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-success mb-2">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Approved")</h4>
+                <small class="text-muted">Đã duyệt</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-info mb-2">
+                    <i class="fas fa-truck fa-2x"></i>
+                </div>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "InTransit")</h4>
+                <small class="text-muted">Đang vận chuyển</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-primary mb-2">
+                    <i class="fas fa-check-double fa-2x"></i>
+                </div>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Delivered")</h4>
+                <small class="text-muted">Đã giao</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-danger mb-2">
+                    <i class="fas fa-times-circle fa-2x"></i>
+                </div>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Rejected")</h4>
+                <small class="text-muted">Từ chối</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="text-secondary mb-2">
+                    <i class="fas fa-ban fa-2x"></i>
+                </div>
+                <h4 class="mb-0">@Model.PurchaseOrders.Count(o => o.Status == "Cancelled")</h4>
+                <small class="text-muted">Đã hủy</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Tabs -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a asp-page="./Index" class="btn @(Model.Status == null ? "btn-primary" : "btn-outline-primary")">
+                <i class="fas fa-list"></i> Tất cả
+            </a>
+            <a asp-page="./Index" asp-route-status="0" class="btn @(Model.Status == 0 ? "btn-warning" : "btn-outline-warning")">
+                <i class="fas fa-clock"></i> Chờ duyệt
+            </a>
+            <a asp-page="./Index" asp-route-status="1" class="btn @(Model.Status == 1 ? "btn-success" : "btn-outline-success")">
+                <i class="fas fa-check-circle"></i> Đã duyệt
+            </a>
+            <a asp-page="./Index" asp-route-status="2" class="btn @(Model.Status == 2 ? "btn-danger" : "btn-outline-danger")">
+                <i class="fas fa-times-circle"></i> Từ chối
+            </a>
+            <a asp-page="./Index" asp-route-status="3" class="btn @(Model.Status == 3 ? "btn-info" : "btn-outline-info")">
+                <i class="fas fa-truck"></i> Đang vận chuyển
+            </a>
+            <a asp-page="./Index" asp-route-status="4" class="btn @(Model.Status == 4 ? "btn-primary" : "btn-outline-primary")">
+                <i class="fas fa-check-double"></i> Đã giao
+            </a>
+            <a asp-page="./Index" asp-route-status="5" class="btn @(Model.Status == 5 ? "btn-secondary" : "btn-outline-secondary")">
+                <i class="fas fa-ban"></i> Đã hủy
+            </a>
+        </div>
+
+        <!-- Search -->
+        <form method="get" class="row g-2">
+            <input type="hidden" name="status" value="@Model.Status" />
+            <div class="col-md-10">
+                <input type="text" name="search" value="@Model.Search" 
+                       class="form-control" placeholder="Tìm kiếm theo mã đơn, đại lý, sản phẩm...">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i> Tìm
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Purchase Orders Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        @if (Model.PurchaseOrders.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1"></i>Mã đơn</th>
+                            <th><i class="fas fa-store me-1"></i>Đại lý</th>
+                            <th><i class="fas fa-box me-1"></i>Sản phẩm</th>
+                            <th><i class="fas fa-cubes me-1"></i>Số lượng</th>
+                            <th><i class="fas fa-dollar-sign me-1"></i>Tổng tiền</th>
+                            <th><i class="fas fa-calendar me-1"></i>Ngày đặt</th>
+                            <th><i class="fas fa-info-circle me-1"></i>Trạng thái</th>
+                            <th style="width: 200px;"><i class="fas fa-cogs me-1"></i>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.PurchaseOrders)
+                        {
+                            <tr>
+                                <td><span class="badge bg-secondary">@order.OrderNumber</span></td>
+                                <td>
+                                    <strong>@order.DealerName</strong>
+                                </td>
+                                <td>@order.ProductName</td>
+                                <td><span class="badge bg-info">@order.Quantity</span></td>
+                                <td><strong class="text-primary">@order.TotalAmount.ToString("N0") đ</strong></td>
+                                <td><small>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</small></td>
+                                <td>
+                                    @switch (order.Status)
+                                    {
+                                        case "Pending":
+                                            <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                            break;
+                                        case "Approved":
+                                            <span class="badge bg-success">Đã duyệt</span>
+                                            break;
+                                        case "Rejected":
+                                            <span class="badge bg-danger">Từ chối</span>
+                                            break;
+                                        case "InTransit":
+                                            <span class="badge bg-info">Đang vận chuyển</span>
+                                            break;
+                                        case "Delivered":
+                                            <span class="badge bg-primary">Đã giao</span>
+                                            break;
+                                        case "Cancelled":
+                                            <span class="badge bg-secondary">Đã hủy</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <!-- Nút xem chi tiết - luôn hiển thị -->
+                                        <button type="button" class="btn btn-outline-info" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#viewModal-@order.Id" 
+                                                title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        
+                                        @if (order.Status == "Pending")
+                                        {
+                                            <form method="post" asp-page-handler="Approve" asp-route-id="@order.Id" style="display: inline;">
+                                                <button type="submit" class="btn btn-success" title="Duyệt đơn hàng"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn duyệt đơn hàng @order.OrderNumber?')">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                            <button type="button" class="btn btn-danger" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#rejectModal-@order.Id" 
+                                                    title="Từ chối đơn hàng">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        }
+                                        @if (order.Status == "Approved")
+                                        {
+                                            <form method="post" asp-page-handler="UpdateStatus" asp-route-id="@order.Id" asp-route-status="3" style="display: inline;">
+                                                <button type="submit" class="btn btn-info" title="Chuyển sang vận chuyển">
+                                                    <i class="fas fa-truck"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        @if (order.Status == "InTransit")
+                                        {
+                                            <form method="post" asp-page-handler="UpdateStatus" asp-route-id="@order.Id" asp-route-status="4" style="display: inline;">
+                                                <button type="submit" class="btn btn-primary" title="Đánh dấu đã giao">
+                                                    <i class="fas fa-check-double"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        @if (order.Status == "Pending" || order.Status == "Approved")
+                                        {
+                                            <form method="post" asp-page-handler="Cancel" asp-route-id="@order.Id" style="display: inline;">
+                                                <button type="submit" class="btn btn-secondary" title="Hủy đơn hàng" 
+                                                        onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Không có đơn hàng nào</h5>
+                <p class="text-muted">Chưa có đơn đặt hàng từ đại lý</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- View Detail Modals -->
+@foreach (var order in Model.PurchaseOrders)
+{
+    <div class="modal fade" id="viewModal-@order.Id" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-eye me-2"></i>Chi tiết đơn hàng
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Thông tin cơ bản -->
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Thông tin đơn hàng
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Mã đơn hàng:</strong><br>
+                                <span class="badge bg-secondary">@order.OrderNumber</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Ngày đặt:</strong><br>
+                                <small>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Trạng thái:</strong><br>
+                                @switch (order.Status)
+                                {
+                                    case "Pending":
+                                        <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                        break;
+                                    case "Approved":
+                                        <span class="badge bg-success">Đã duyệt</span>
+                                        break;
+                                    case "Rejected":
+                                        <span class="badge bg-danger">Từ chối</span>
+                                        break;
+                                    case "InTransit":
+                                        <span class="badge bg-info">Đang vận chuyển</span>
+                                        break;
+                                    case "Delivered":
+                                        <span class="badge bg-primary">Đã giao</span>
+                                        break;
+                                    case "Cancelled":
+                                        <span class="badge bg-secondary">Đã hủy</span>
+                                        break;
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Thông tin đại lý -->
+                        <div class="col-md-6">
+                            <h6 class="text-success mb-3">
+                                <i class="fas fa-store me-2"></i>Thông tin đại lý
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Tên đại lý:</strong><br>
+                                <span class="badge bg-info">@order.DealerName</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Người yêu cầu:</strong><br>
+                                <small>@order.RequestedByName</small>
+                            </div>
+                            @if (!string.IsNullOrEmpty(order.ApprovedByName))
+                            {
+                                <div class="mb-2">
+                                    <strong>Người duyệt:</strong><br>
+                                    <small>@order.ApprovedByName</small>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Thông tin sản phẩm -->
+                        <div class="col-12">
+                            <h6 class="text-warning mb-3">
+                                <i class="fas fa-box me-2"></i>Thông tin sản phẩm
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <strong>Tên sản phẩm:</strong><br>
+                                        <span>@order.ProductName</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Số lượng:</strong><br>
+                                        <span class="badge bg-primary">@order.Quantity</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-2">
+                                        <strong>Đơn giá:</strong><br>
+                                        <span class="text-primary fw-bold">@order.UnitPrice.ToString("N0") đ</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Tổng tiền:</strong><br>
+                                        <span class="text-success fw-bold fs-5">@order.TotalAmount.ToString("N0") đ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin bổ sung -->
+                        @if (!string.IsNullOrEmpty(order.Reason) || !string.IsNullOrEmpty(order.Notes))
+                        {
+                            <div class="col-12">
+                                <h6 class="text-secondary mb-3">
+                                    <i class="fas fa-sticky-note me-2"></i>Thông tin bổ sung
+                                </h6>
+                                @if (!string.IsNullOrEmpty(order.Reason))
+                                {
+                                    <div class="mb-2">
+                                        <strong>Lý do đặt hàng:</strong><br>
+                                        <small class="text-muted">@order.Reason</small>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(order.Notes))
+                                {
+                                    <div class="mb-2">
+                                        <strong>Ghi chú:</strong><br>
+                                        <small class="text-muted">@order.Notes</small>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <!-- Thông tin giao hàng -->
+                        @if (order.ExpectedDeliveryDate.HasValue || order.ActualDeliveryDate.HasValue)
+                        {
+                            <div class="col-12">
+                                <h6 class="text-info mb-3">
+                                    <i class="fas fa-truck me-2"></i>Thông tin giao hàng
+                                </h6>
+                                <div class="row">
+                                    @if (order.ExpectedDeliveryDate.HasValue)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <strong>Ngày giao dự kiến:</strong><br>
+                                                <small>@order.ExpectedDeliveryDate.Value.ToString("dd/MM/yyyy")</small>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (order.ActualDeliveryDate.HasValue)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <strong>Ngày giao thực tế:</strong><br>
+                                                <small>@order.ActualDeliveryDate.Value.ToString("dd/MM/yyyy")</small>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Đóng
+                    </button>
+                    @if (order.Status == "Pending")
+                    {
+                        <form method="post" asp-page-handler="Approve" asp-route-id="@order.Id" style="display: inline;">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check me-2"></i>Duyệt ngay
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Reject Modals -->
+@foreach (var order in Model.PurchaseOrders.Where(o => o.Status == "Pending"))
+{
+    <div class="modal fade" id="rejectModal-@order.Id" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Từ chối đơn hàng</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post" asp-page-handler="Reject" asp-route-id="@order.Id">
+                    <div class="modal-body">
+                        <p>Bạn có chắc chắn muốn từ chối đơn hàng <strong>@order.OrderNumber</strong>?</p>
+                        <div class="mb-3">
+                            <label class="form-label">Lý do từ chối <span class="text-danger">*</span></label>
+                            <textarea name="rejectReason" class="form-control" rows="3" required 
+                                      placeholder="Nhập lý do từ chối đơn hàng..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-times me-2"></i>Từ chối
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
