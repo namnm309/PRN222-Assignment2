@@ -44,5 +44,51 @@ namespace DataAccessLayer.Repository
             if (user == null) return false;
             return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
         }
+
+        public async Task<List<Users>> GetAllAsync()
+        {
+            return await _dbContext.Users
+                .Include(u => u.Dealer)
+                .ToListAsync();
+        }
+
+        public async Task<Users> GetByIdAsync(Guid id)
+        {
+            return await _dbContext.Users
+                .Include(u => u.Dealer)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<bool> UpdateAsync(Users user)
+        {
+            try
+            {
+                user.UpdatedAt = DateTime.UtcNow;
+                _dbContext.Users.Update(user);
+                var result = await _dbContext.SaveChangesAsync();
+                return result > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            try
+            {
+                var user = await _dbContext.Users.FindAsync(id);
+                if (user == null) return false;
+
+                _dbContext.Users.Remove(user);
+                var result = await _dbContext.SaveChangesAsync();
+                return result > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

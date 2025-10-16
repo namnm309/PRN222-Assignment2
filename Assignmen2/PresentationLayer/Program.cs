@@ -77,6 +77,56 @@ namespace PresentationLayer
 
             var app = builder.Build();
 
+            // Seed dữ liệu mặc định cho tài khoản EVMStaff
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<AppDbContext>();
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    
+                    // Đảm bảo database đã được tạo
+                    context.Database.Migrate();
+                    
+                    // Kiểm tra và tạo tài khoản EVMStaff mặc định
+                    var evmStaffEmail = "evm.staff@vinfast.com";
+                    var existingEVMStaff = context.Users.FirstOrDefault(u => u.Email == evmStaffEmail);
+                    
+                    if (existingEVMStaff == null)
+                    {
+                        var evmStaffUser = new DataAccessLayer.Entities.Users
+                        {
+                            Id = Guid.NewGuid(),
+                            FullName = "EVM Staff",
+                            Email = evmStaffEmail,
+                            PasswordHash = BCrypt.Net.BCrypt.HashPassword("evmstaff123"),
+                            PhoneNumber = "0900000001",
+                            Address = "VinFast HQ, Hanoi",
+                            Role = DataAccessLayer.Enum.UserRole.EVMStaff,
+                            DealerId = null, // EVMStaff không thuộc dealer nào
+                            IsActive = true,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow
+                        };
+                        
+                        context.Users.Add(evmStaffUser);
+                        context.SaveChanges();
+                        
+                        logger.LogInformation("✅ Tạo tài khoản EVMStaff mặc định thành công: {Email}", evmStaffEmail);
+                    }
+                    else
+                    {
+                        logger.LogInformation("ℹ️ Tài khoản EVMStaff đã tồn tại: {Email}", evmStaffEmail);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "❌ Lỗi khi seed tài khoản EVMStaff mặc định");
+                }
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {

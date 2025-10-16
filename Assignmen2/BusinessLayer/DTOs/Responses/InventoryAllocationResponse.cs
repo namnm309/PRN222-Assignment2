@@ -10,9 +10,11 @@ namespace BusinessLayer.DTOs.Responses
 		public int AllocatedQuantity { get; set; }
 		public int AvailableQuantity { get; set; }
 		public int ReservedQuantity { get; set; }
+		public int ActualQuantity { get; set; }
 		public int MinimumStock { get; set; }
 		public int MaximumStock { get; set; }
 		public DateTime LastRestockDate { get; set; }
+		public DateTime AllocationDate { get; set; }
 		public DateTime? NextRestockDate { get; set; }
 		public string Status { get; set; } = "Active";
 		public string Priority { get; set; } = "Normal";

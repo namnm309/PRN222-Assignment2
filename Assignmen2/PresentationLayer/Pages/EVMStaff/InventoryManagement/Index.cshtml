@@ -1,0 +1,532 @@
+@page "/EVMStaff/InventoryManagement"
+@model PresentationLayer.Pages.EVMStaff.InventoryManagement.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Quản lý tồn kho";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-warehouse me-2 text-primary"></i>
+            Quản lý tồn kho
+        </h2>
+        <p class="text-muted mb-0">Theo dõi tồn kho tổng và điều phối cho đại lý</p>
+    </div>
+    <a asp-page="./Allocate" class="btn btn-primary">
+        <i class="fas fa-truck me-2"></i>Điều phối tồn kho
+    </a>
+</div>
+
+<!-- Alert Messages -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link @(Model.View == "allocations" ? "active" : "")" 
+           href="?view=allocations">
+            <i class="fas fa-boxes me-2"></i>Phân bổ tồn kho
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link @(Model.View == "transactions" ? "active" : "")" 
+           href="?view=transactions">
+            <i class="fas fa-history me-2"></i>Lịch sử giao dịch
+        </a>
+    </li>
+</ul>
+
+@if (Model.View == "allocations")
+{
+    <!-- Allocations View -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            @if (Model.Allocations.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="fas fa-box me-1"></i>Sản phẩm</th>
+                                <th><i class="fas fa-store me-1"></i>Đại lý</th>
+                                <th><i class="fas fa-cubes me-1"></i>Số lượng phân bổ</th>
+                                <th><i class="fas fa-check-circle me-1"></i>Số lượng thực tế</th>
+                                <th><i class="fas fa-star me-1"></i>Ưu tiên</th>
+                                <th><i class="fas fa-info-circle me-1"></i>Trạng thái</th>
+                                <th><i class="fas fa-calendar me-1"></i>Ngày phân bổ</th>
+                                <th style="width: 120px;"><i class="fas fa-cogs me-1"></i>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var allocation in Model.Allocations)
+                            {
+                                <tr>
+                                    <td><strong>@allocation.ProductName</strong></td>
+                                    <td>@allocation.DealerName</td>
+                                    <td><span class="badge bg-primary">@allocation.AllocatedQuantity</span></td>
+                                    <td><span class="badge bg-info">@allocation.ActualQuantity</span></td>
+                                    <td>
+                                        @switch (allocation.Priority?.ToLower())
+                                        {
+                                            case "high":
+                                                <span class="badge bg-danger">Cao</span>
+                                                break;
+                                            case "medium":
+                                                <span class="badge bg-warning text-dark">Trung bình</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">Thấp</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @switch (allocation.Status?.ToLower())
+                                        {
+                                            case "completed":
+                                                <span class="badge bg-success">Hoàn thành</span>
+                                                break;
+                                            case "pending":
+                                                <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@allocation.Status</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        <small>@allocation.AllocationDate.ToString("dd/MM/yyyy")</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button type="button" class="btn btn-outline-info" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#allocationModal-@allocation.Id" 
+                                                    title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#updateModal-@allocation.Id" 
+                                                    title="Cập nhật">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-boxes fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có phân bổ tồn kho</h5>
+                    <p class="text-muted">Bắt đầu điều phối tồn kho cho các đại lý</p>
+                    <a asp-page="./Allocate" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Điều phối ngay
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <!-- Transactions View -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            @if (Model.Transactions.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="fas fa-calendar me-1"></i>Ngày GD</th>
+                                <th><i class="fas fa-exchange-alt me-1"></i>Loại giao dịch</th>
+                                <th><i class="fas fa-box me-1"></i>Sản phẩm</th>
+                                <th><i class="fas fa-store me-1"></i>Đại lý</th>
+                                <th><i class="fas fa-cubes me-1"></i>Số lượng</th>
+                                <th><i class="fas fa-user me-1"></i>Người xử lý</th>
+                                <th><i class="fas fa-info-circle me-1"></i>Trạng thái</th>
+                                <th style="width: 120px;"><i class="fas fa-cogs me-1"></i>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in Model.Transactions)
+                            {
+                                <tr>
+                                    <td><small>@transaction.TransactionDate.ToString("dd/MM/yyyy HH:mm")</small></td>
+                                    <td>
+                                        @switch (transaction.TransactionType?.ToLower())
+                                        {
+                                            case "in":
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-arrow-down"></i> Nhập kho
+                                                </span>
+                                                break;
+                                            case "out":
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-arrow-up"></i> Xuất kho
+                                                </span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@transaction.TransactionType</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td><strong>@transaction.ProductName</strong></td>
+                                    <td>@transaction.DealerName</td>
+                                    <td><strong>@transaction.Quantity</strong></td>
+                                    <td><small>@transaction.ProcessedByUserName</small></td>
+                                    <td>
+                                        @switch (transaction.Status?.ToLower())
+                                        {
+                                            case "completed":
+                                                <span class="badge bg-success">Hoàn thành</span>
+                                                break;
+                                            case "pending":
+                                                <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@transaction.Status</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-outline-info" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#transactionModal-@transaction.Id" 
+                                                title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có giao dịch</h5>
+                    <p class="text-muted">Lịch sử giao dịch tồn kho sẽ hiển thị tại đây</p>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<!-- Allocation Detail Modals -->
+@foreach (var allocation in Model.Allocations)
+{
+    <div class="modal fade" id="allocationModal-@allocation.Id" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-boxes me-2"></i>Chi tiết phân bổ tồn kho
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Thông tin sản phẩm -->
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-box me-2"></i>Thông tin sản phẩm
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Tên sản phẩm:</strong><br>
+                                <span class="badge bg-primary">@allocation.ProductName</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Số lượng phân bổ:</strong><br>
+                                <span class="badge bg-success fs-6">@allocation.AllocatedQuantity</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Số lượng thực tế:</strong><br>
+                                <span class="badge bg-info fs-6">@allocation.ActualQuantity</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Số lượng có sẵn:</strong><br>
+                                <span class="badge bg-warning fs-6">@allocation.AvailableQuantity</span>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin đại lý -->
+                        <div class="col-md-6">
+                            <h6 class="text-success mb-3">
+                                <i class="fas fa-store me-2"></i>Thông tin đại lý
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Tên đại lý:</strong><br>
+                                <span class="badge bg-info">@allocation.DealerName</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Ngày phân bổ:</strong><br>
+                                <small>@allocation.AllocationDate.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                            @if (allocation.NextRestockDate.HasValue)
+                            {
+                                <div class="mb-2">
+                                    <strong>Ngày nhập kho tiếp theo:</strong><br>
+                                    <small>@allocation.NextRestockDate.Value.ToString("dd/MM/yyyy")</small>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Thông tin quản lý -->
+                        <div class="col-12">
+                            <h6 class="text-warning mb-3">
+                                <i class="fas fa-cogs me-2"></i>Thông tin quản lý
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <strong>Ưu tiên:</strong><br>
+                                        @switch (allocation.Priority?.ToLower())
+                                        {
+                                            case "high":
+                                                <span class="badge bg-danger">Cao</span>
+                                                break;
+                                            case "medium":
+                                                <span class="badge bg-warning text-dark">Trung bình</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">Thấp</span>
+                                                break;
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <strong>Trạng thái:</strong><br>
+                                        @switch (allocation.Status?.ToLower())
+                                        {
+                                            case "completed":
+                                                <span class="badge bg-success">Hoàn thành</span>
+                                                break;
+                                            case "pending":
+                                                <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@allocation.Status</span>
+                                                break;
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <strong>Kích hoạt:</strong><br>
+                                        @if (allocation.IsActive)
+                                        {
+                                            <span class="badge bg-success">Có</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Không</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin kho -->
+                        <div class="col-12">
+                            <h6 class="text-info mb-3">
+                                <i class="fas fa-warehouse me-2"></i>Thông tin kho
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 border rounded">
+                                        <div class="text-primary mb-1">
+                                            <i class="fas fa-boxes fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-1">@allocation.AllocatedQuantity</h5>
+                                        <small class="text-muted">Phân bổ</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 border rounded">
+                                        <div class="text-success mb-1">
+                                            <i class="fas fa-check-circle fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-1">@allocation.AvailableQuantity</h5>
+                                        <small class="text-muted">Có sẵn</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 border rounded">
+                                        <div class="text-info mb-1">
+                                            <i class="fas fa-cubes fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-1">@allocation.ActualQuantity</h5>
+                                        <small class="text-muted">Thực tế</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 border rounded">
+                                        <div class="text-warning mb-1">
+                                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-1">@allocation.MinimumStock</h5>
+                                        <small class="text-muted">Tối thiểu</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        @if (!string.IsNullOrEmpty(allocation.Notes))
+                        {
+                            <div class="col-12">
+                                <h6 class="text-secondary mb-3">
+                                    <i class="fas fa-sticky-note me-2"></i>Ghi chú
+                                </h6>
+                                <div class="alert alert-light">
+                                    <small>@allocation.Notes</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Transaction Detail Modals -->
+@foreach (var transaction in Model.Transactions)
+{
+    <div class="modal fade" id="transactionModal-@transaction.Id" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-history me-2"></i>Chi tiết giao dịch tồn kho
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Thông tin giao dịch -->
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-exchange-alt me-2"></i>Thông tin giao dịch
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Loại giao dịch:</strong><br>
+                                @switch (transaction.TransactionType?.ToLower())
+                                {
+                                    case "in":
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-arrow-down"></i> Nhập kho
+                                        </span>
+                                        break;
+                                    case "out":
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-arrow-up"></i> Xuất kho
+                                        </span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">@transaction.TransactionType</span>
+                                        break;
+                                }
+                            </div>
+                            <div class="mb-2">
+                                <strong>Ngày giao dịch:</strong><br>
+                                <small>@transaction.TransactionDate.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Số lượng:</strong><br>
+                                <span class="badge bg-primary fs-6">@transaction.Quantity</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Trạng thái:</strong><br>
+                                @switch (transaction.Status?.ToLower())
+                                {
+                                    case "completed":
+                                        <span class="badge bg-success">Hoàn thành</span>
+                                        break;
+                                    case "pending":
+                                        <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">@transaction.Status</span>
+                                        break;
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Thông tin sản phẩm và đại lý -->
+                        <div class="col-md-6">
+                            <h6 class="text-success mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Thông tin liên quan
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Sản phẩm:</strong><br>
+                                <span class="badge bg-info">@transaction.ProductName</span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Đại lý:</strong><br>
+                                <span class="badge bg-warning">@transaction.DealerName</span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(transaction.RelatedDealerName))
+                            {
+                                <div class="mb-2">
+                                    <strong>Đại lý liên quan:</strong><br>
+                                    <span class="badge bg-secondary">@transaction.RelatedDealerName</span>
+                                </div>
+                            }
+                            <div class="mb-2">
+                                <strong>Người xử lý:</strong><br>
+                                <small>@transaction.ProcessedByUserName</small>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin bổ sung -->
+                        @if (!string.IsNullOrEmpty(transaction.Reason))
+                        {
+                            <div class="col-12">
+                                <h6 class="text-warning mb-3">
+                                    <i class="fas fa-sticky-note me-2"></i>Lý do giao dịch
+                                </h6>
+                                <div class="alert alert-light">
+                                    <small>@transaction.Reason</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

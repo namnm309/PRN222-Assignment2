@@ -103,5 +103,105 @@ namespace BusinessLayer.Services
             return (user, null);
         }
 
+        public async Task<(bool Success, string Error, List<Users> Data)> GetAllUsersAsync()
+        {
+            try
+            {
+                var users = await _authRepository.GetAllAsync();
+                return (true, null, users);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi tải danh sách người dùng: {ex.Message}", null);
+            }
+        }
+
+        public async Task<(bool Success, string Error, Users Data)> GetUserByIdAsync(Guid id)
+        {
+            try
+            {
+                var user = await _authRepository.GetByIdAsync(id);
+                if (user == null)
+                {
+                    return (false, "Không tìm thấy người dùng", null);
+                }
+                return (true, null, user);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi tải thông tin người dùng: {ex.Message}", null);
+            }
+        }
+
+        public async Task<(bool Success, string Error)> ToggleUserStatusAsync(Guid id, bool isActive)
+        {
+            try
+            {
+                var user = await _authRepository.GetByIdAsync(id);
+                if (user == null)
+                {
+                    return (false, "Không tìm thấy người dùng");
+                }
+
+                user.IsActive = isActive;
+                var success = await _authRepository.UpdateAsync(user);
+                
+                if (!success)
+                {
+                    return (false, "Không thể cập nhật trạng thái người dùng");
+                }
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi cập nhật trạng thái: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Error)> UpdateUserAsync(Users user)
+        {
+            try
+            {
+                var success = await _authRepository.UpdateAsync(user);
+                
+                if (!success)
+                {
+                    return (false, "Không thể cập nhật thông tin người dùng");
+                }
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi cập nhật người dùng: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Error)> DeleteUserAsync(Guid id)
+        {
+            try
+            {
+                var user = await _authRepository.GetByIdAsync(id);
+                if (user == null)
+                {
+                    return (false, "Không tìm thấy người dùng");
+                }
+
+                var success = await _authRepository.DeleteAsync(id);
+                
+                if (!success)
+                {
+                    return (false, "Không thể xóa người dùng");
+                }
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi xóa người dùng: {ex.Message}");
+            }
+        }
+
     }
 }
