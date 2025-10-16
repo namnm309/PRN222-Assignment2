@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -11,22 +11,25 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
         private readonly IOrderService _orderService;
         private readonly ICustomerService _customerService;
         private readonly IProductService _productService;
+        private readonly IMappingService _mappingService;
 
         public CreateModel(
             IOrderService orderService,
             ICustomerService customerService,
-            IProductService productService)
+            IProductService productService,
+            IMappingService mappingService)
         {
             _orderService = orderService;
             _customerService = customerService;
             _productService = productService;
+            _mappingService = mappingService;
         }
 
         [BindProperty]
         public InputModel Input { get; set; } = new();
 
-        public List<Customer> Customers { get; set; } = new();
-        public List<Product> Products { get; set; } = new();
+        public List<CustomerResponse> Customers { get; set; } = new();
+        public List<ProductResponse> Products { get; set; } = new();
 
         public class InputModel
         {
@@ -66,18 +69,18 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
 
         public async Task OnGetAsync(Guid? customerId = null, Guid? productId = null)
         {
-            // Load customers
+            // Load customers using service
             var customersResult = await _customerService.GetAllAsync();
-            if (customersResult.Success)
+            if (customersResult.Success && customersResult.Data != null)
             {
-                Customers = customersResult.Data;
+                Customers = _mappingService.MapToCustomerViewModels(customersResult.Data);
             }
 
-            // Load products
+            // Load products using service
             var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
-            if (productsResult.Success)
+            if (productsResult.Success && productsResult.Data != null)
             {
-                Products = productsResult.Data;
+                Products = _mappingService.MapToProductViewModels(productsResult.Data);
             }
 
             // Pre-select if parameters provided
@@ -89,7 +92,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
             if (productId.HasValue)
             {
                 Input.ProductId = productId.Value;
-                // Load product price
+                // Load product price using service
                 var productResult = await _productService.GetAsync(productId.Value);
                 if (productResult.Success && productResult.Data != null)
                 {
@@ -107,7 +110,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 return Page();
             }
 
-            // Get current dealer ID (you'll need to implement this)
+            // Get current dealer ID from session
             var dealerId = GetCurrentDealerId();
             if (!dealerId.HasValue)
             {
@@ -116,7 +119,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 return Page();
             }
 
-            // Get current sales person ID (you'll need to implement this)
+            // Get current sales person ID from session
             var salesPersonId = GetCurrentSalesPersonId();
 
             try
@@ -154,33 +157,41 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
 
         private async Task LoadDataAsync()
         {
-            // Load customers
+            // Load customers using service
             var customersResult = await _customerService.GetAllAsync();
-            if (customersResult.Success)
+            if (customersResult.Success && customersResult.Data != null)
             {
-                Customers = customersResult.Data;
+                Customers = _mappingService.MapToCustomerViewModels(customersResult.Data);
             }
 
-            // Load products
+            // Load products using service
             var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
-            if (productsResult.Success)
+            if (productsResult.Success && productsResult.Data != null)
             {
-                Products = productsResult.Data;
+                Products = _mappingService.MapToProductViewModels(productsResult.Data);
             }
         }
 
         private Guid? GetCurrentDealerId()
         {
-            // TODO: Implement getting current dealer ID from session/authentication
-            // For now, return a dummy ID - you'll need to implement this based on your authentication system
-            return Guid.NewGuid();
+            // Get dealer ID from session
+            var dealerIdString = HttpContext.Session.GetString("DealerId");
+            if (Guid.TryParse(dealerIdString, out var dealerId))
+            {
+                return dealerId;
+            }
+            return null;
         }
 
         private Guid? GetCurrentSalesPersonId()
         {
-            // TODO: Implement getting current sales person ID from session/authentication
-            // For now, return a dummy ID - you'll need to implement this based on your authentication system
-            return Guid.NewGuid();
+            // Get user ID from session
+            var userIdString = HttpContext.Session.GetString("UserId");
+            if (Guid.TryParse(userIdString, out var userId))
+            {
+                return userId;
+            }
+            return null;
         }
     }
 }

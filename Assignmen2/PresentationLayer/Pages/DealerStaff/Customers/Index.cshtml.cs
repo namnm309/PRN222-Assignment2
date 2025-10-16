@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,10 +8,12 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
     public class IndexModel : PageModel
     {
         private readonly ICustomerService _customerService;
+        private readonly IMappingService _mappingService;
 
-        public IndexModel(ICustomerService customerService)
+        public IndexModel(ICustomerService customerService, IMappingService mappingService)
         {
             _customerService = customerService;
+            _mappingService = mappingService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -30,15 +32,16 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
 
-        public List<Customer> Customers { get; set; } = new();
+        public List<CustomerResponse> Customers { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            // Get all customers
+            // Get all customers using service
             var result = await _customerService.GetAllAsync();
-            if (result.Success)
+            if (result.Success && result.Data != null)
             {
-                Customers = result.Data;
+                // Map entities to DTOs using mapping service
+                Customers = _mappingService.MapToCustomerViewModels(result.Data);
 
                 // Apply search filter
                 if (!string.IsNullOrWhiteSpace(Search))
@@ -47,8 +50,8 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
                     Customers = Customers.Where(c => 
                         c.FullName.ToLower().Contains(searchLower) ||
                         (c.Name != null && c.Name.ToLower().Contains(searchLower)) ||
-                        (c.Email != null && c.Email.ToLower().Contains(searchLower)) ||
-                        (c.PhoneNumber != null && c.PhoneNumber.Contains(Search))
+                        c.Email.ToLower().Contains(searchLower) ||
+                        c.PhoneNumber.Contains(Search)
                     ).ToList();
                 }
 
@@ -77,6 +80,11 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
                     .Skip((CurrentPage - 1) * PageSize)
                     .Take(PageSize)
                     .ToList();
+            }
+            else
+            {
+                Customers = new List<CustomerResponse>();
+                TempData["Error"] = result.Error ?? "Không thể tải danh sách khách hàng";
             }
         }
     }

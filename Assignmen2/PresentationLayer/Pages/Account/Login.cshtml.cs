@@ -67,6 +67,10 @@ namespace PresentationLayer.Pages.Account
             {
                 return RedirectToPage("/EVMStaff/Dashboard/Index"); // Admin cũng có thể truy cập EVM Staff Dashboard
             }
+            else if (result.User.Role == DataAccessLayer.Enum.UserRole.DealerStaff)
+            {
+                return RedirectToPage("/DealerStaff/Dashboard");
+            }
             else
             {
                 return RedirectToPage("/Dashboard/Index");

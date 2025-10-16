@@ -94,7 +94,7 @@
                                     @foreach (var product in Model.Products)
                                     {
                                         <option value="@product.Id" data-price="@product.Price" data-stock="@product.StockQuantity">
-                                            @product.Name - @product.Brand?.Name (@product.Sku) - @product.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))
+                                            @product.Name - @product.BrandName (@product.Sku) - @product.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))
                                         </option>
                                     }
                                 }

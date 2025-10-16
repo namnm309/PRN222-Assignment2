@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj": {}
+    "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj": {
+    "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj",
+        "projectUniqueName": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj",
         "projectName": "BusinessLayer",
-        "projectPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj",
-        "packagesPath": "C:\\Users\\TUF\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\obj\\",
+        "projectPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj",
+        "packagesPath": "C:\\Users\\Tus\\.nuget\\packages\\",
+        "outputPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\TUF\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Tus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,8 +32,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj": {
-                "projectPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj"
+              "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj": {
+                "projectPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj"
               }
             }
           }
@@ -75,24 +75,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj": {
+    "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
+        "projectUniqueName": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
         "projectName": "DataAccessLayer",
-        "projectPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
-        "packagesPath": "C:\\Users\\TUF\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\obj\\",
+        "projectPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
+        "packagesPath": "C:\\Users\\Tus\\.nuget\\packages\\",
+        "outputPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\TUF\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Tus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -217,24 +217,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj": {
+    "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj",
+        "projectUniqueName": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj",
         "projectName": "PresentationLayer",
-        "projectPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj",
-        "packagesPath": "C:\\Users\\TUF\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\obj\\",
+        "projectPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\PresentationLayer.csproj",
+        "packagesPath": "C:\\Users\\Tus\\.nuget\\packages\\",
+        "outputPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\TUF\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Tus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -249,8 +249,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj": {
-                "projectPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj"
+              "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj": {
+                "projectPath": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\BusinessLayer.csproj"
               }
             }
           }
@@ -295,7 +295,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
