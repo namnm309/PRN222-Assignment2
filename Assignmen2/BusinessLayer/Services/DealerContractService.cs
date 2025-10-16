@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repository;
@@ -64,6 +65,54 @@ namespace BusinessLayer.Services
 
             var ok = await _repo.CreateAsync(contract);
             return ok ? (true, null, contract) : (false, "Không thể tạo hợp đồng", null);
+        }
+
+        public async Task<(bool Success, string Error, List<DealerContract> Data)> GetAllContractsAsync(Guid? dealerId = null, string status = null)
+        {
+            try
+            {
+                var contracts = await _repo.GetAllAsync(dealerId);
+                
+                // Filter by status if provided
+                if (!string.IsNullOrEmpty(status))
+                {
+                    contracts = contracts.Where(c => c.Status == status).ToList();
+                }
+                
+                return (true, null, contracts);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi tải danh sách hợp đồng: {ex.Message}", null);
+            }
+        }
+
+        public async Task<(bool Success, string Error)> UpdateContractStatusAsync(Guid contractId, string status)
+        {
+            try
+            {
+                var contract = await _repo.GetByIdAsync(contractId);
+                if (contract == null)
+                {
+                    return (false, "Không tìm thấy hợp đồng");
+                }
+
+                contract.Status = status;
+                contract.UpdatedAt = DateTime.UtcNow;
+                
+                var success = await _repo.UpdateAsync(contract);
+                
+                if (!success)
+                {
+                    return (false, "Không thể cập nhật trạng thái hợp đồng");
+                }
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi cập nhật trạng thái: {ex.Message}");
+            }
         }
     }
 }

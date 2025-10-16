@@ -185,11 +185,10 @@ namespace BusinessLayer.Profiles
 
             // PricingPolicy mappings
             CreateMap<PricingPolicy, PricingPolicyResponse>()
-                .ForMember(dest => dest.ValidFrom, opt => opt.MapFrom(src => src.EffectiveDate))
-                .ForMember(dest => dest.ValidTo, opt => opt.MapFrom(src => src.ExpiryDate));
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty))
+                .ForMember(dest => dest.DealerName, opt => opt.MapFrom(src => src.Dealer != null ? src.Dealer.Name : string.Empty))
+                .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.Region != null ? src.Region.Name : string.Empty));
             CreateMap<PricingPolicyResponse, PricingPolicy>()
-                .ForMember(dest => dest.EffectiveDate, opt => opt.MapFrom(src => src.ValidFrom))
-                .ForMember(dest => dest.ExpiryDate, opt => opt.MapFrom(src => src.ValidTo))
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
 

@@ -17,6 +17,8 @@ namespace BusinessLayer.Services
             return p == null ? (false, "Không tìm thấy", null) : (true, null, p);
         }
 
+        public Task<(bool Success, string Error, Product Data)> GetByIdAsync(Guid id) => GetAsync(id);
+
         public Task<(bool Success, string Error, List<Product> Data)> SearchAsync(string? q, Guid? brandId, decimal? minPrice, decimal? maxPrice, bool? inStock, bool? isActive = true)
             => Execute(q, brandId, minPrice, maxPrice, inStock, isActive);
 

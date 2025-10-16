@@ -2,6 +2,7 @@ using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PurchaseOrderEntity = DataAccessLayer.Entities.PurchaseOrder;
 
 namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
 {
@@ -23,7 +24,7 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
         [BindProperty(SupportsGet = true)]
         public DateTime? FromDate { get; set; }
 
-        public List<PurchaseOrder> PurchaseOrders { get; set; } = new();
+        public List<PurchaseOrderEntity> PurchaseOrders { get; set; } = new();
 
         public async Task OnGetAsync()
         {

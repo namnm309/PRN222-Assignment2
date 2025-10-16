@@ -1,0 +1,242 @@
+@page "/EVMStaff/ProductManagement/Edit/{id:guid}"
+@model PresentationLayer.Pages.EVMStaff.ProductManagement.EditModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Chỉnh sửa sản phẩm";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-primary"></i>
+            Chỉnh sửa sản phẩm
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin sản phẩm</p>
+    </div>
+    <a asp-page="./Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Thông tin sản phẩm
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Input.Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row g-3">
+                        <!-- SKU -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.Sku" class="form-label">
+                                <i class="fas fa-barcode me-1"></i>
+                                SKU <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.Sku" class="form-control" placeholder="VF9-2024-001">
+                            <span asp-validation-for="Input.Sku" class="text-danger small"></span>
+                            <div class="form-text">Mã định danh duy nhất cho sản phẩm</div>
+                        </div>
+
+                        <!-- Brand -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.BrandId" class="form-label">
+                                <i class="fas fa-copyright me-1"></i>
+                                Thương hiệu <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="Input.BrandId" class="form-select">
+                                <option value="">-- Chọn thương hiệu --</option>
+                                @foreach (var brand in Model.Brands)
+                                {
+                                    <option value="@brand.Id">@brand.Name (@brand.Country)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Input.BrandId" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="col-12">
+                            <label asp-for="Input.Name" class="form-label">
+                                <i class="fas fa-car me-1"></i>
+                                Tên sản phẩm <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.Name" class="form-control" placeholder="VinFast VF 9 Plus">
+                            <span asp-validation-for="Input.Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label asp-for="Input.Description" class="form-label">
+                                <i class="fas fa-align-left me-1"></i>
+                                Mô tả <span class="text-danger">*</span>
+                            </label>
+                            <textarea asp-for="Input.Description" class="form-control" rows="4" 
+                                      placeholder="Mô tả chi tiết sản phẩm: tính năng, công nghệ, ưu điểm..."></textarea>
+                            <span asp-validation-for="Input.Description" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.Price" class="form-label">
+                                <i class="fas fa-dollar-sign me-1"></i>
+                                Giá (VNĐ) <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.Price" type="number" class="form-control" 
+                                   placeholder="1500000000" step="1000">
+                            <span asp-validation-for="Input.Price" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Stock Quantity -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.StockQuantity" class="form-label">
+                                <i class="fas fa-warehouse me-1"></i>
+                                Số lượng tồn kho <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.StockQuantity" type="number" class="form-control" 
+                                   placeholder="50" min="0">
+                            <span asp-validation-for="Input.StockQuantity" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Current Image -->
+                        @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
+                        {
+                            <div class="col-12">
+                                <label class="form-label">
+                                    <i class="fas fa-image me-1"></i>
+                                    Hình ảnh hiện tại
+                                </label>
+                                <div>
+                                    <img src="@Model.CurrentImageUrl" alt="Current Image" 
+                                         class="img-thumbnail" style="max-height: 200px;">
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Image Upload -->
+                        <div class="col-12">
+                            <label asp-for="Input.ImageFile" class="form-label">
+                                <i class="fas fa-image me-1"></i>
+                                Thay đổi hình ảnh sản phẩm
+                            </label>
+                            <input asp-for="Input.ImageFile" type="file" class="form-control" 
+                                   accept="image/*" onchange="previewImage(this)">
+                            <span asp-validation-for="Input.ImageFile" class="text-danger small"></span>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> 
+                                Chấp nhận: JPG, PNG, GIF, WEBP. Tối đa 5MB. Để trống nếu không muốn thay đổi.
+                            </div>
+                            <div id="imagePreview" class="mt-2" style="display: none;">
+                                <img id="preview" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                            </div>
+                        </div>
+
+                        <!-- Or Image URL -->
+                        <div class="col-12">
+                            <label asp-for="Input.ImageUrl" class="form-label">
+                                <i class="fas fa-link me-1"></i>
+                                Hoặc URL hình ảnh
+                            </label>
+                            <input asp-for="Input.ImageUrl" class="form-control" 
+                                   placeholder="https://example.com/image.jpg">
+                            <span asp-validation-for="Input.ImageUrl" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Is Active -->
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input asp-for="Input.IsActive" class="form-check-input" type="checkbox" checked>
+                                <label asp-for="Input.IsActive" class="form-check-label">
+                                    <i class="fas fa-toggle-on me-1"></i>
+                                    Kích hoạt sản phẩm (cho phép bán)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Cập nhật sản phẩm
+                        </button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Hướng dẫn
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>SKU</strong> phải là duy nhất
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Giá</strong> nên nhập chính xác
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Tồn kho</strong> có thể điều chỉnh sau
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <strong>Hình ảnh</strong> tối đa 5MB
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Lưu ý
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="small mb-0">
+                    Sau khi tạo sản phẩm, bạn có thể:
+                </p>
+                <ul class="small mb-0">
+                    <li>Điều phối tồn kho cho đại lý</li>
+                    <li>Thiết lập giá theo khu vực</li>
+                    <li>Tạo khuyến mãi cho sản phẩm</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}
+

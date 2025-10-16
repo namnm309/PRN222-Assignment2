@@ -13,6 +13,8 @@ namespace BusinessLayer.DTOs.Responses
 		public Guid? RelatedDealerId { get; set; }
 		public Guid ProcessedByUserId { get; set; }
 		public DateTime CreatedAt { get; set; }
+		public DateTime TransactionDate { get; set; }
+		public string Status { get; set; } = "Completed";
 		public string ProductName { get; set; } = string.Empty;
 		public string DealerName { get; set; } = string.Empty;
 		public string? RelatedDealerName { get; set; }

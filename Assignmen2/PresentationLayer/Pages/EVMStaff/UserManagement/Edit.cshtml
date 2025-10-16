@@ -1,0 +1,201 @@
+@page "/EVMStaff/UserManagement/Edit/{id:guid}"
+@model PresentationLayer.Pages.EVMStaff.UserManagement.EditModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Chỉnh sửa thông tin người dùng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-user-edit me-2 text-primary"></i>
+            Chỉnh sửa thông tin người dùng
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin @Model.User?.FullName</p>
+    </div>
+    <a asp-page="./Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Thông tin người dùng
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" asp-for="Input.Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row g-3">
+                        <!-- Full Name -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.FullName" class="form-label">
+                                <i class="fas fa-user me-1"></i>
+                                Họ và tên <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.FullName" class="form-control" placeholder="Nguyễn Văn A">
+                            <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.Email" class="form-label">
+                                <i class="fas fa-envelope me-1"></i>
+                                Email <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.Email" type="email" class="form-control" placeholder="user@example.com">
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.PhoneNumber" class="form-label">
+                                <i class="fas fa-phone me-1"></i>
+                                Số điện thoại
+                            </label>
+                            <input asp-for="Input.PhoneNumber" class="form-control" placeholder="0901234567">
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.Address" class="form-label">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                Địa chỉ
+                            </label>
+                            <input asp-for="Input.Address" class="form-control" placeholder="123 Đường ABC, Quận XYZ">
+                            <span asp-validation-for="Input.Address" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Role (Read-only) -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-user-tag me-1"></i>
+                                Vai trò
+                            </label>
+                            <div class="form-control-plaintext">
+                                @if (Model.User?.Role == BusinessLayer.Enums.UserRole.DealerManager)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-user-tie"></i> Dealer Manager
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">
+                                        <i class="fas fa-user"></i> Dealer Staff
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Dealer (Read-only) -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-store me-1"></i>
+                                Đại lý
+                            </label>
+                            <div class="form-control-plaintext">
+                                @if (!string.IsNullOrEmpty(Model.User?.DealerName))
+                                {
+                                    <span class="badge bg-info">@Model.User.DealerName</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Is Active -->
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input asp-for="Input.IsActive" class="form-check-input" type="checkbox">
+                                <label asp-for="Input.IsActive" class="form-check-label">
+                                    <i class="fas fa-toggle-on me-1"></i>
+                                    Kích hoạt tài khoản
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Cập nhật thông tin
+                        </button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Info Sidebar -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Thông tin bổ sung
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <div class="avatar-circle bg-primary text-white mx-auto mb-2" style="width: 60px; height: 60px; font-size: 24px;">
+                        @Model.User?.FullName?.Substring(0, 1).ToUpper()
+                    </div>
+                    <h6 class="mb-0">@Model.User?.FullName</h6>
+                    <small class="text-muted">@Model.User?.Email</small>
+                </div>
+
+                <hr>
+
+                <div class="mb-2">
+                    <small class="text-muted">Ngày tạo:</small><br>
+                    <small>@Model.User?.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                </div>
+
+                <div class="mb-2">
+                    <small class="text-muted">Cập nhật lần cuối:</small><br>
+                    <small>@Model.User?.UpdatedAt?.ToString("dd/MM/yyyy HH:mm")</small>
+                </div>
+
+                <div class="mb-0">
+                    <small class="text-muted">Trạng thái:</small><br>
+                    @if (Model.User?.IsActive == true)
+                    {
+                        <span class="badge bg-success">Hoạt động</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Vô hiệu</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+.avatar-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+</style>

@@ -1,0 +1,62 @@
+@* Menu cho EVM Staff - Include vào _DashboardMenu.cshtml *@
+
+<div class="menu-section">
+    <div class="menu-title">QUẢN LÝ SẢN PHẨM</div>
+    <a asp-page="/EVMStaff/ProductManagement/Index" class="menu-item">
+        <i class="fas fa-car"></i>
+        <span>Quản lý danh mục xe</span>
+    </a>
+    <a asp-page="/EVMStaff/ProductManagement/Create" class="menu-item">
+        <i class="fas fa-plus-circle"></i>
+        <span>Thêm sản phẩm mới</span>
+    </a>
+</div>
+
+<div class="menu-section">
+    <div class="menu-title">QUẢN LÝ TỒN KHO</div>
+    <a asp-page="/EVMStaff/InventoryManagement/Index" class="menu-item">
+        <i class="fas fa-warehouse"></i>
+        <span>Tồn kho tổng</span>
+    </a>
+    <a asp-page="/EVMStaff/InventoryManagement/Allocate" class="menu-item">
+        <i class="fas fa-truck"></i>
+        <span>Điều phối cho đại lý</span>
+    </a>
+</div>
+
+<div class="menu-section">
+    <div class="menu-title">GIÁ & KHUYẾN MÃI</div>
+    <a asp-page="/EVMStaff/PricingManagement/Index" class="menu-item">
+        <i class="fas fa-tags"></i>
+        <span>Quản lý giá</span>
+    </a>
+    <a asp-page="/EVMStaff/PricingManagement/Create" class="menu-item">
+        <i class="fas fa-plus"></i>
+        <span>Tạo chính sách giá</span>
+    </a>
+</div>
+
+<div class="menu-section">
+    <div class="menu-title">QUẢN LÝ ĐẠI LÝ</div>
+    <a asp-page="/EVMStaff/UserManagement/Index" class="menu-item">
+        <i class="fas fa-users-cog"></i>
+        <span>Tài khoản đại lý</span>
+    </a>
+    <a asp-page="/EVMStaff/ContractManagement/Index" class="menu-item">
+        <i class="fas fa-file-contract"></i>
+        <span>Hợp đồng & chỉ tiêu</span>
+    </a>
+</div>
+
+<div class="menu-section">
+    <div class="menu-title">BÁO CÁO & PHÂN TÍCH</div>
+    <a asp-page="/EVMStaff/SalesReport/Index" class="menu-item">
+        <i class="fas fa-chart-line"></i>
+        <span>Doanh số theo khu vực</span>
+    </a>
+    <a asp-page="/EVMStaff/SalesReport/Index" asp-route-reportType="dealer" class="menu-item">
+        <i class="fas fa-building"></i>
+        <span>Doanh số theo đại lý</span>
+    </a>
+</div>
+

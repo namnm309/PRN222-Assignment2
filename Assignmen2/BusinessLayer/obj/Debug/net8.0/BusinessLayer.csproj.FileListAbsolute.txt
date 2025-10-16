@@ -30,3 +30,19 @@ E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\refint\BusinessLayer.dll
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.pdb
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\ref\BusinessLayer.dll
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\bin\Debug\net8.0\BusinessLayer.deps.json
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\bin\Debug\net8.0\BusinessLayer.dll
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\bin\Debug\net8.0\BusinessLayer.pdb
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\bin\Debug\net8.0\DataAccessLayer.dll
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\bin\Debug\net8.0\DataAccessLayer.pdb
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.csproj.AssemblyReference.cache
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.AssemblyInfoInputs.cache
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.AssemblyInfo.cs
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.csproj.CoreCompileInputs.cache
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.sourcelink.json
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\Business.EA331CBA.Up2Date
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.dll
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\refint\BusinessLayer.dll
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\BusinessLayer.pdb
+C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\BusinessLayer\obj\Debug\net8.0\ref\BusinessLayer.dll

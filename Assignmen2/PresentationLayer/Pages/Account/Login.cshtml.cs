@@ -58,8 +58,19 @@ namespace PresentationLayer.Pages.Account
 
             TempData["LoginMessage"] = "Đăng nhập thành công";
 
-            // Redirect vào Dashboard thay vì Homepage
-            return RedirectToPage("/Dashboard/Index");
+            // Redirect dựa trên role
+            if (result.User.Role == DataAccessLayer.Enum.UserRole.EVMStaff)
+            {
+                return RedirectToPage("/EVMStaff/Dashboard/Index");
+            }
+            else if (result.User.Role == DataAccessLayer.Enum.UserRole.Admin)
+            {
+                return RedirectToPage("/EVMStaff/Dashboard/Index"); // Admin cũng có thể truy cập EVM Staff Dashboard
+            }
+            else
+            {
+                return RedirectToPage("/Dashboard/Index");
+            }
         }
     }
 }
