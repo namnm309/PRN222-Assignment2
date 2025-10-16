@@ -1,7 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BusinessLayer.Services;
 using BusinessLayer.DTOs.Requests;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BusinessLayer.Enums;
@@ -58,6 +61,31 @@ namespace PresentationLayer.Pages.Account
 
             TempData["LoginMessage"] = "Đăng nhập thành công";
 
+            // Đăng nhập Cookie Authentication để [Authorize] hoạt động
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, result.User.Id.ToString()),
+                new Claim(ClaimTypes.Name, result.User.FullName ?? result.User.Email),
+                new Claim(ClaimTypes.Email, result.User.Email ?? string.Empty),
+                new Claim(ClaimTypes.Role, result.User.Role.ToString())
+            };
+
+            if (result.User.DealerId.HasValue)
+            {
+                claims.Add(new Claim("DealerId", result.User.DealerId.Value.ToString()));
+            }
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
+                });
+
             // Redirect dựa trên role
             if (result.User.Role == DataAccessLayer.Enum.UserRole.EVMStaff)
             {
@@ -69,6 +97,11 @@ namespace PresentationLayer.Pages.Account
             }
             else
             {
+                // Dealer role -> điều hướng về khu vực phù hợp
+                if (result.User.Role == DataAccessLayer.Enum.UserRole.DealerManager)
+                {
+                    return RedirectToPage("/DealerManager/Index");
+                }
                 return RedirectToPage("/Dashboard/Index");
             }
         }

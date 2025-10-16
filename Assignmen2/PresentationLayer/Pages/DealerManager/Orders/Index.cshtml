@@ -1,0 +1,251 @@
+@page
+@model PresentationLayer.Pages.DealerManager.Orders.IndexModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+<div class="container-fluid">
+	<!-- Header -->
+	<div class="d-flex align-items-center justify-content-between mb-4">
+		<div>
+			<h3 class="mb-1 fw-bold"><i class="fas fa-file-invoice me-2 text-primary"></i>Quản lý đơn hàng</h3>
+			<p class="text-muted mb-0">Danh sách đơn hàng và báo giá của đại lý</p>
+		</div>
+		<a class="btn btn-primary shadow-sm" asp-page="/DealerManager/Orders/Create">
+			<i class="fas fa-plus me-2"></i>Tạo báo giá mới
+		</a>
+	</div>
+
+	<!-- Search & Filters -->
+	<div class="card border-0 shadow-sm mb-4">
+		<div class="card-body">
+			<form method="get" class="row g-3">
+				<div class="col-md-5">
+					<label class="form-label small fw-semibold">
+						<i class="fas fa-search me-1"></i>Tìm kiếm
+					</label>
+					<input class="form-control" name="Search" value="@Model.Search" placeholder="Tìm theo mã, ghi chú, khách hàng..." />
+				</div>
+				<div class="col-md-3">
+					<label class="form-label small fw-semibold">
+						<i class="fas fa-filter me-1"></i>Trạng thái
+					</label>
+					<select class="form-select" name="StatusFilter">
+						<option value="">-- Tất cả trạng thái --</option>
+						<option value="Pending" selected="@(Model.StatusFilter=="Pending")">Pending</option>
+						<option value="Confirmed" selected="@(Model.StatusFilter=="Confirmed")">Confirmed</option>
+						<option value="Delivered" selected="@(Model.StatusFilter=="Delivered")">Delivered</option>
+						<option value="Completed" selected="@(Model.StatusFilter=="Completed")">Completed</option>
+						<option value="Canceled" selected="@(Model.StatusFilter=="Canceled")">Canceled</option>
+					</select>
+				</div>
+				<div class="col-md-2 align-self-end">
+					<button class="btn btn-primary w-100" type="submit">
+						<i class="fas fa-filter me-1"></i>Lọc
+					</button>
+				</div>
+				<div class="col-md-2 align-self-end">
+					<a asp-page="/DealerManager/Orders/Index" class="btn btn-outline-secondary w-100">
+						<i class="fas fa-sync me-1"></i>Làm mới
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Orders List -->
+	<div class="card border-0 shadow-sm">
+		<div class="card-header bg-white border-0 py-3">
+			<div class="d-flex align-items-center justify-content-between">
+				<h5 class="mb-0"><i class="fas fa-list me-2"></i>Danh sách đơn hàng</h5>
+				<span class="badge bg-primary fs-6">@Model.Items.Count đơn hàng</span>
+			</div>
+		</div>
+		<div class="card-body p-0">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle mb-0">
+					<thead class="table-light">
+						<tr>
+							<th class="ps-4">Mã đơn hàng</th>
+							<th>Khách hàng</th>
+							<th>Sản phẩm</th>
+							<th class="text-end">Giá bán</th>
+							<th class="text-end">Giảm giá</th>
+							<th class="text-end">Thành tiền</th>
+							<th>Trạng thái</th>
+							<th>Ngày tạo</th>
+							<th class="text-center pe-4">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (Model.Items.Count == 0)
+						{
+							<tr>
+								<td colspan="9" class="text-center py-5 text-muted">
+									<i class="fas fa-file-invoice fs-1 mb-3 d-block opacity-25"></i>
+									<div>Chưa có đơn hàng nào</div>
+									<a asp-page="/DealerManager/Orders/Create" class="btn btn-sm btn-primary mt-3">
+										<i class="fas fa-plus me-1"></i>Tạo đơn hàng đầu tiên
+									</a>
+								</td>
+							</tr>
+						}
+						@foreach (var item in Model.Items)
+						{
+							var total = item.Price - item.Discount;
+							var statusInfo = item.Status.ToString() switch
+							{
+								"Pending" => ("warning", "clock", "Chờ xử lý"),
+								"Confirmed" => ("info", "check-circle", "Đã xác nhận"),
+								"Delivered" => ("primary", "truck", "Đã giao"),
+								"Completed" => ("success", "check-double", "Hoàn thành"),
+								"Canceled" => ("danger", "times-circle", "Đã hủy"),
+								_ => ("secondary", "question", "N/A")
+							};
+							<tr>
+								<td class="ps-4">
+									<div class="d-flex align-items-center">
+										<div class="bg-primary bg-opacity-10 p-2 rounded me-2">
+											<i class="fas fa-file-invoice text-primary"></i>
+										</div>
+										<div>
+											<div class="fw-semibold">@item.Code</div>
+											<small class="text-muted">Order</small>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="fw-semibold">@(item.CustomerName ?? "N/A")</div>
+									<small class="text-muted">@(item.CustomerPhone ?? "-")</small>
+								</td>
+							<td>
+								<div>@(item.ProductName ?? "N/A")</div>
+								<small class="text-muted">SKU: @(item.ProductSku ?? "-")</small>
+							</td>
+							<td class="text-end">
+									<div>@item.Price.ToString("N0")</div>
+									<small class="text-muted">VND</small>
+								</td>
+								<td class="text-end">
+									<div class="text-danger">-@item.Discount.ToString("N0")</div>
+									<small class="text-muted">VND</small>
+								</td>
+								<td class="text-end">
+									<div class="fw-bold text-success">@total.ToString("N0")</div>
+									<small class="text-muted">VND</small>
+								</td>
+								<td>
+									<span class="badge bg-@statusInfo.Item1-subtle text-@statusInfo.Item1">
+										<i class="fas fa-@statusInfo.Item2 me-1"></i>@statusInfo.Item3
+									</span>
+								</td>
+								<td>
+									<i class="fas fa-calendar text-muted me-1"></i>
+									@item.CreatedAt.ToString("dd/MM/yyyy")
+								</td>
+								<td class="text-center pe-4">
+									<div class="btn-group" role="group">
+										<a asp-page="/DealerManager/Orders/Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+											<i class="fas fa-eye"></i>
+										</a>
+										<button class="btn btn-sm btn-outline-secondary" title="In đơn" onclick="window.print()">
+											<i class="fas fa-print"></i>
+										</button>
+										@if (item.Status.ToString() == "Pending")
+										{
+											<button class="btn btn-sm btn-outline-success" title="Thanh toán" data-bs-toggle="modal" data-bs-target="#paymentModal" data-order-id="@item.Id" data-order-total="@total">
+												<i class="fas fa-credit-card"></i>
+											</button>
+										}
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		@if (Model.Items.Count > 0)
+		{
+			<div class="card-footer bg-white border-0 py-3">
+				<div class="d-flex align-items-center justify-content-between">
+					<div class="text-muted small">
+						Hiển thị <strong>@Model.Items.Count</strong> đơn hàng
+					</div>
+					<div class="text-end">
+						<small class="text-muted">Tổng giá trị:</small>
+						<strong class="text-success ms-2">@Model.Items.Sum(i => i.Price - i.Discount).ToString("N0") VND</strong>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="paymentModalLabel">
+					<i class="fas fa-credit-card me-2 text-success"></i>Xác nhận thanh toán
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="post" asp-page-handler="ProcessPayment">
+				<div class="modal-body">
+					<input type="hidden" id="paymentOrderId" name="OrderId" />
+					<div class="alert alert-info">
+						<i class="fas fa-info-circle me-2"></i>
+						Bạn có chắc chắn muốn xác nhận thanh toán cho đơn hàng này?
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<strong>Mã đơn hàng:</strong><br />
+							<span id="paymentOrderNumber" class="text-primary"></span>
+						</div>
+						<div class="col-6">
+							<strong>Tổng tiền:</strong><br />
+							<span id="paymentTotal" class="text-success fw-bold"></span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-success">
+						<i class="fas fa-check me-1"></i>Xác nhận thanh toán
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<style>
+	.table tbody tr {
+		transition: background-color 0.2s ease;
+	}
+	
+	.table tbody tr:hover {
+		background-color: rgba(102, 126, 234, 0.05);
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const paymentModal = document.getElementById('paymentModal');
+		if (paymentModal) {
+			paymentModal.addEventListener('show.bs.modal', function (event) {
+				const button = event.relatedTarget;
+				const orderId = button.getAttribute('data-order-id');
+				const orderTotal = button.getAttribute('data-order-total');
+				
+				document.getElementById('paymentOrderId').value = orderId;
+				document.getElementById('paymentOrderNumber').textContent = '#' + orderId.substring(0, 8);
+				document.getElementById('paymentTotal').textContent = new Intl.NumberFormat('vi-VN').format(orderTotal) + ' VND';
+			});
+		}
+	});
+</script>
+

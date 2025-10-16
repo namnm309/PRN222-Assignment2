@@ -58,5 +58,59 @@ namespace BusinessLayer.Services
 
             return customers;
         }
+
+        public async Task<(bool Success, string? Error)> ProcessPaymentAsync(Guid orderId, decimal amount, string method, string? note = null)
+        {
+            if (amount <= 0)
+            {
+                return (false, "Số tiền thanh toán phải lớn hơn 0");
+            }
+
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null)
+            {
+                return (false, "Không tìm thấy đơn hàng");
+            }
+
+            // Hiện tại chưa có bảng Payment, tạm thời cập nhật PaymentStatus theo số tiền thanh toán
+            // Giả định FinalAmount là tổng nợ (chưa trừ), nếu amount >= FinalAmount => Paid, else Partial
+            if (amount >= order.FinalAmount)
+            {
+                order.PaymentStatus = "Paid";
+                order.PaymentMethod = method;
+            }
+            else
+            {
+                order.PaymentStatus = "Partial";
+                order.PaymentMethod = method;
+            }
+
+            order.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return (true, null);
+        }
+
+        public async Task<(bool Success, string? Error)> ExtendPaymentAsync(Guid orderId, DateTime newDueDate, string? reason = null)
+        {
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null)
+            {
+                return (false, "Không tìm thấy đơn hàng");
+            }
+
+            if (newDueDate.Date <= DateTime.UtcNow.Date)
+            {
+                return (false, "Ngày gia hạn phải sau ngày hiện tại");
+            }
+
+            order.PaymentDueDate = newDueDate;
+            if (order.PaymentStatus == "Overdue")
+            {
+                order.PaymentStatus = "Pending"; // reset về chờ thanh toán sau khi gia hạn
+            }
+            order.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return (true, null);
+        }
     }
 }

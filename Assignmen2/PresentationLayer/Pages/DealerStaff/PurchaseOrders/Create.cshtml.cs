@@ -69,6 +69,11 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
                     Input.UnitPrice = productResult.Data.Price;
                 }
             }
+            else
+            {
+                // Reset unit price if no product selected
+                Input.UnitPrice = 0;
+            }
 
             // Set default values
             Input.RequestedQuantity = 1;
@@ -137,16 +142,70 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
 
         private Guid? GetCurrentDealerId()
         {
-            // TODO: Implement getting current dealer ID from session/authentication
-            // For now, return a dummy ID - you'll need to implement this based on your authentication system
-            return Guid.NewGuid();
+            // Get dealer ID from session or authentication context
+            if (HttpContext.Session.GetString("DealerId") != null)
+            {
+                return Guid.Parse(HttpContext.Session.GetString("DealerId")!);
+            }
+            
+            // Fallback: try to get from user claims
+            var dealerIdClaim = User.FindFirst("DealerId");
+            if (dealerIdClaim != null && Guid.TryParse(dealerIdClaim.Value, out var dealerId))
+            {
+                return dealerId;
+            }
+            
+            return null;
         }
 
         private Guid? GetCurrentUserId()
         {
-            // TODO: Implement getting current user ID from session/authentication
-            // For now, return a dummy ID - you'll need to implement this based on your authentication system
-            return Guid.NewGuid();
+            // Get user ID from authentication context
+            var userIdClaim = User.FindFirst("UserId") ?? User.FindFirst("sub");
+            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out var userId))
+            {
+                return userId;
+            }
+            
+            return null;
+        }
+
+        public async Task<IActionResult> OnGetGetProductStockAsync(Guid productId)
+        {
+            try
+            {
+                var productResult = await _productService.GetAsync(productId);
+                if (!productResult.Success || productResult.Data == null)
+                {
+                    return new JsonResult(new { success = false, message = "Không tìm thấy sản phẩm" });
+                }
+
+                var product = productResult.Data;
+                var hasStock = product.StockQuantity > 0;
+                var minimumStock = 5; // You can make this configurable
+                var availableQuantity = product.StockQuantity;
+                var allocatedQuantity = 0; // TODO: Calculate from orders
+                var reservedQuantity = 0; // TODO: Calculate from reservations
+
+                var message = hasStock 
+                    ? $"Có sẵn {availableQuantity} xe trong kho"
+                    : "Không còn xe trong kho";
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    hasStock = hasStock,
+                    availableQuantity = availableQuantity,
+                    minimumStock = minimumStock,
+                    allocatedQuantity = allocatedQuantity,
+                    reservedQuantity = reservedQuantity,
+                    message = message
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = $"Lỗi: {ex.Message}" });
+            }
         }
     }
 }

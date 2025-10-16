@@ -1,0 +1,197 @@
+@page
+@model PresentationLayer.Pages.DealerManager.PurchaseOrders.IndexModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Đặt xe từ hãng";
+}
+
+<div class="container-fluid">
+	<!-- Header -->
+	<div class="d-flex align-items-center justify-content-between mb-4">
+		<div>
+			<h3 class="mb-1 fw-bold"><i class="fas fa-box me-2 text-success"></i>Đặt xe từ hãng</h3>
+			<p class="text-muted mb-0">Quản lý đơn đặt hàng từ nhà sản xuất</p>
+		</div>
+		<a class="btn btn-success shadow-sm" asp-page="/DealerManager/PurchaseOrders/Create">
+			<i class="fas fa-plus me-2"></i>Tạo đơn đặt mới
+		</a>
+	</div>
+
+	<!-- Filters -->
+	<div class="card border-0 shadow-sm mb-4">
+		<div class="card-body">
+			<form method="get" class="row g-3 align-items-end">
+				<div class="col-md-4">
+					<label class="form-label small fw-semibold">
+						<i class="fas fa-filter me-1"></i>Trạng thái
+					</label>
+					<select class="form-select" name="StatusFilter">
+						<option value="">-- Tất cả trạng thái --</option>
+						<option value="0" selected="@(Model.StatusFilter=="0")">
+							<i class="fas fa-clock"></i> Pending (Chờ duyệt)
+						</option>
+						<option value="1" selected="@(Model.StatusFilter=="1")">
+							<i class="fas fa-check"></i> Approved (Đã duyệt)
+						</option>
+						<option value="2" selected="@(Model.StatusFilter=="2")">
+							<i class="fas fa-times"></i> Rejected (Từ chối)
+						</option>
+						<option value="3" selected="@(Model.StatusFilter=="3")">
+							<i class="fas fa-truck"></i> InTransit (Đang vận chuyển)
+						</option>
+						<option value="4" selected="@(Model.StatusFilter=="4")">
+							<i class="fas fa-check-double"></i> Delivered (Đã giao)
+						</option>
+						<option value="5" selected="@(Model.StatusFilter=="5")">
+							<i class="fas fa-ban"></i> Cancelled (Đã hủy)
+						</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-primary w-100" type="submit">
+						<i class="fas fa-filter me-1"></i>Lọc
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Purchase Orders List -->
+	<div class="card border-0 shadow-sm">
+		<div class="card-header bg-white border-0 py-3">
+			<div class="d-flex align-items-center justify-content-between">
+				<h5 class="mb-0"><i class="fas fa-list me-2"></i>Danh sách đơn đặt hàng</h5>
+				<span class="badge bg-success fs-6">@Model.PurchaseOrders.Count đơn</span>
+			</div>
+		</div>
+		<div class="card-body p-0">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle mb-0">
+					<thead class="table-light">
+						<tr>
+							<th class="ps-4">Mã đơn</th>
+							<th>Sản phẩm</th>
+							<th>Người đặt</th>
+							<th class="text-center">Số lượng</th>
+							<th class="text-end">Đơn giá</th>
+							<th class="text-end">Tổng tiền</th>
+							<th>Trạng thái</th>
+							<th>Ngày đặt</th>
+							<th class="text-center pe-4">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (Model.PurchaseOrders.Count == 0)
+						{
+							<tr>
+								<td colspan="9" class="text-center py-5 text-muted">
+									<i class="fas fa-box-open fs-1 mb-3 d-block opacity-25"></i>
+									<div>Chưa có đơn đặt hàng nào</div>
+									<a asp-page="/DealerManager/PurchaseOrders/Create" class="btn btn-sm btn-success mt-3">
+										<i class="fas fa-plus me-1"></i>Tạo đơn đặt đầu tiên
+									</a>
+								</td>
+							</tr>
+						}
+						@foreach (var po in Model.PurchaseOrders)
+						{
+							var total = po.Quantity * po.UnitPrice;
+							var statusInfo = po.Status.ToString() switch
+							{
+								"Pending" => ("warning", "clock", "Chờ duyệt"),
+								"Approved" => ("success", "check-circle", "Đã duyệt"),
+								"Rejected" => ("danger", "times-circle", "Từ chối"),
+								"InTransit" => ("info", "truck", "Vận chuyển"),
+								"Delivered" => ("primary", "check-double", "Đã giao"),
+								"Cancelled" => ("secondary", "ban", "Đã hủy"),
+								_ => ("secondary", "question", "N/A")
+							};
+							<tr>
+								<td class="ps-4">
+									<div class="d-flex align-items-center">
+										<div class="bg-success bg-opacity-10 p-2 rounded me-2">
+											<i class="fas fa-box text-success"></i>
+										</div>
+										<div>
+											<div class="fw-semibold">#@po.Id.ToString("N").Substring(0, 8).ToUpper()</div>
+											<small class="text-muted">PO</small>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="fw-semibold">@po.ProductName</div>
+									<small class="text-muted">@po.DealerName</small>
+								</td>
+								<td>
+									<div class="d-flex align-items-center">
+										<div class="avatar-circle bg-primary text-white me-2" style="width: 32px; height: 32px; font-size: 12px;">
+											@(string.IsNullOrEmpty(po.RequestedByName) ? "?" : po.RequestedByName.Substring(0, 1).ToUpper())
+										</div>
+										<span>@po.RequestedByName</span>
+									</div>
+								</td>
+								<td class="text-center">
+									<span class="badge bg-info-subtle text-info fs-6">@po.Quantity</span>
+								</td>
+								<td class="text-end">
+									<div class="fw-semibold">@po.UnitPrice.ToString("N0")</div>
+									<small class="text-muted">VND</small>
+								</td>
+								<td class="text-end">
+									<div class="fw-bold text-success">@total.ToString("N0")</div>
+									<small class="text-muted">VND</small>
+								</td>
+								<td>
+									<span class="badge bg-@statusInfo.Item1-subtle text-@statusInfo.Item1">
+										<i class="fas fa-@statusInfo.Item2 me-1"></i>@statusInfo.Item3
+									</span>
+								</td>
+								<td>
+									<i class="fas fa-calendar text-muted me-1"></i>
+									@po.CreatedAt.ToString("dd/MM/yyyy")
+								</td>
+								<td class="text-center pe-4">
+									<a asp-page="/DealerManager/PurchaseOrders/Detail" asp-route-id="@po.Id" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+										<i class="fas fa-eye"></i>
+									</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		@if (Model.PurchaseOrders.Count > 0)
+		{
+			<div class="card-footer bg-white border-0 py-3">
+				<div class="d-flex align-items-center justify-content-between">
+					<div class="text-muted small">
+						Hiển thị <strong>@Model.PurchaseOrders.Count</strong> đơn đặt hàng
+					</div>
+					<div class="text-end">
+						<small class="text-muted">Tổng giá trị:</small>
+						<strong class="text-success ms-2">@Model.PurchaseOrders.Sum(po => po.Quantity * po.UnitPrice).ToString("N0") VND</strong>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<style>
+	.avatar-circle {
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 700;
+	}
+	
+	.table tbody tr {
+		transition: background-color 0.2s ease;
+	}
+	
+	.table tbody tr:hover {
+		background-color: rgba(67, 233, 123, 0.05);
+	}
+</style>

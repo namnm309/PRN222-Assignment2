@@ -86,7 +86,6 @@ E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\st
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.build.json.cache
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.development.json
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\Presenta.9C561136.Up2Date
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.dll
 E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\refint\PresentationLayer.dll
@@ -279,3 +278,4 @@ C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.pdb
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.genruntimeconfig.cache
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\ref\PresentationLayer.dll
+E:\FPT\Kì 7\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

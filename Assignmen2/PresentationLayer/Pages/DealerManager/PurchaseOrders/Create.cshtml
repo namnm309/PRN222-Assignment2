@@ -1,0 +1,336 @@
+@page
+@model PresentationLayer.Pages.DealerManager.PurchaseOrders.CreateModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Tạo đơn đặt hàng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-truck me-2 text-primary"></i>
+            Tạo đơn đặt hàng
+        </h2>
+        <p class="text-muted mb-0">Đặt xe từ hãng theo nhu cầu bán hàng</p>
+    </div>
+    <div>
+        <a asp-page="/DealerManager/PurchaseOrders/Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="post">
+                    <div class="row g-3">
+                        <!-- Product Selection -->
+                        <div class="col-12">
+                            <h5 class="mb-3">
+                                <i class="fas fa-car me-2"></i>
+                                Chọn sản phẩm
+                            </h5>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Input.ProductId" class="form-label"><strong>Sản phẩm</strong></label>
+                            <select asp-for="Input.ProductId" class="form-select" id="productSelect" onchange="updateProductInfo()">
+                                <option value="">-- Chọn sản phẩm --</option>
+                                @if (Model.Products != null)
+                                {
+                                    @foreach (var product in Model.Products)
+                                    {
+                                        <option value="@product.Id" 
+                                                data-name="@product.Name" 
+                                                data-sku="@product.Sku" 
+                                                data-brand="@product.Brand?.Name"
+                                                data-price="@product.Price"
+                                                data-stock="@product.StockQuantity">
+                                            @product.Name (@product.Brand?.Name - @product.Sku) - @product.Price.ToString("N0") VNĐ
+                                        </option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="Input.ProductId" class="text-danger"></span>
+                            <div id="productInfo" class="mt-2 text-muted small"></div>
+                        </div>
+
+                        <!-- Order Information -->
+                        <div class="col-12">
+                            <h5 class="mb-3 mt-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Thông tin đơn hàng
+                            </h5>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="Input.Quantity" class="form-label"><strong>Số lượng</strong></label>
+                                <input asp-for="Input.Quantity" class="form-control" type="number" min="1" max="1000" onchange="updateProductInfo()" />
+                                <span asp-validation-for="Input.Quantity" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.UnitPrice" class="form-label"><strong>Đơn giá (VNĐ)</strong></label>
+                                <input asp-for="Input.UnitPrice" class="form-control" type="number" step="0.01" min="0" readonly style="background-color: #f8f9fa; cursor: not-allowed;" />
+                                <span asp-validation-for="Input.UnitPrice" class="text-danger"></span>
+                                <div class="form-text">Đơn giá được tự động tính theo sản phẩm và số lượng</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Thành tiền</strong></label>
+                            <div class="alert alert-info" id="totalAmountDisplay">0 VNĐ</div>
+                        </div>
+
+                        <!-- Expected Delivery -->
+                        <div class="col-md-6">
+                            <label asp-for="Input.ExpectedDeliveryDate" class="form-label">Ngày giao hàng dự kiến</label>
+                            <input asp-for="Input.ExpectedDeliveryDate" type="date" class="form-control">
+                            <span asp-validation-for="Input.ExpectedDeliveryDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Reason" class="form-label"><strong>Lý do đặt hàng</strong></label>
+                            <textarea asp-for="Input.Reason" class="form-control" rows="3" placeholder="VD: Bổ sung tồn kho, đáp ứng nhu cầu khách hàng..."></textarea>
+                            <span asp-validation-for="Input.Reason" class="text-danger"></span>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="col-12">
+                            <h5 class="mb-3 mt-4">
+                                <i class="fas fa-comment me-2"></i>
+                                Thông tin bổ sung
+                            </h5>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Notes" class="form-label">Ghi chú</label>
+                            <textarea asp-for="Input.Notes" class="form-control" rows="3" placeholder="Ghi chú thêm (tùy chọn)"></textarea>
+                            <span asp-validation-for="Input.Notes" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="col-12">
+                            <hr>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Tạo đơn đặt hàng
+                                </button>
+                                <a asp-page="/DealerManager/PurchaseOrders/Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-1"></i> Hủy
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+        <!-- Order Summary -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="fas fa-receipt me-2"></i>
+                    Tóm tắt đơn hàng
+                </h6>
+            </div>
+            <div class="card-body">
+                <div id="orderSummary">
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                        <div>Chọn sản phẩm để xem tóm tắt</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Inventory -->
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">
+                    <i class="fas fa-boxes me-2"></i>
+                    Tồn kho hiện tại
+                </h6>
+            </div>
+            <div class="card-body">
+                <div id="inventoryInfo">
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-info-circle fa-2x mb-2"></i>
+                        <div>Chọn sản phẩm để xem tồn kho</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Hướng dẫn</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Chọn sản phẩm cần đặt từ danh sách
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Nhập số lượng và đơn giá theo thỏa thuận với hãng
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Ghi rõ lý do đặt hàng để dễ duyệt
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Đơn hàng cần được Admin/EVM Staff duyệt
+                    </li>
+                    <li>
+                        <i class="fas fa-info-circle text-info me-2"></i>
+                        Liên hệ Admin nếu cần hỗ trợ
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function updateProductInfo() {
+            const select = document.getElementById('productSelect');
+            const productInfo = document.getElementById('productInfo');
+            const unitPriceInput = document.querySelector('input[name="Input.UnitPrice"]');
+            const quantityInput = document.querySelector('input[name="Input.Quantity"]');
+            
+            if (select.value) {
+                const option = select.options[select.selectedIndex];
+                const name = option.getAttribute('data-name');
+                const sku = option.getAttribute('data-sku');
+                const brand = option.getAttribute('data-brand');
+                const price = parseFloat(option.getAttribute('data-price'));
+                const stock = option.getAttribute('data-stock');
+                const quantity = parseInt(quantityInput.value) || 1;
+                
+                productInfo.innerHTML = `
+                    <strong>${name}</strong><br>
+                    Thương hiệu: ${brand} | SKU: ${sku}<br>
+                    Tồn kho hiện tại: <span class="badge bg-info">${stock} xe</span>
+                `;
+                
+                // Auto-calculate unit price based on product price (not quantity)
+                unitPriceInput.value = price.toFixed(0);
+                
+                calculateTotal();
+                updateInventoryInfo();
+            } else {
+                productInfo.innerHTML = '';
+                unitPriceInput.value = '';
+                calculateTotal();
+                updateInventoryInfo();
+            }
+        }
+
+        function calculateTotal() {
+            const quantity = parseInt(document.querySelector('input[name="Input.Quantity"]').value) || 0;
+            const unitPrice = parseFloat(document.querySelector('input[name="Input.UnitPrice"]').value) || 0;
+            const total = quantity * unitPrice;
+            
+            document.getElementById('totalAmountDisplay').textContent = total.toLocaleString('vi-VN') + ' VNĐ';
+            
+            updateOrderSummary();
+        }
+
+        function updateOrderSummary() {
+            const productSelect = document.getElementById('productSelect');
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+            const quantity = parseInt(document.querySelector('input[name="Input.Quantity"]').value) || 0;
+            const unitPrice = parseFloat(document.querySelector('input[name="Input.UnitPrice"]').value) || 0;
+            const total = quantity * unitPrice;
+
+            if (selectedOption.value) {
+                const orderSummary = document.getElementById('orderSummary');
+                orderSummary.innerHTML = `
+                    <div class="mb-3">
+                        <div class="fw-bold">${selectedOption.textContent}</div>
+                        <div class="text-muted small">Số lượng: ${quantity} xe</div>
+                        <div class="text-muted small">Giá nhập: ${unitPrice.toLocaleString('vi-VN')} VNĐ</div>
+                        <hr>
+                        <div class="fw-bold text-primary">Thành tiền: ${total.toLocaleString('vi-VN')} VNĐ</div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateInventoryInfo() {
+            const productSelect = document.getElementById('productSelect');
+            const inventoryInfo = document.getElementById('inventoryInfo');
+            
+            if (productSelect.value) {
+                inventoryInfo.innerHTML = `
+                    <div class="text-center text-info">
+                        <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+                        <div>Đang tải thông tin tồn kho...</div>
+                    </div>
+                `;
+                
+                // Load inventory info via AJAX
+                fetch(`/DealerManager/PurchaseOrders/Create?handler=GetProductStock&productId=${productSelect.value}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            inventoryInfo.innerHTML = `
+                                <div class="text-center">
+                                    <div class="fw-bold text-success mb-2">
+                                        <i class="fas fa-warehouse"></i> ${data.message}
+                                    </div>
+                                    <div class="small text-muted">
+                                        Tồn kho: ${data.availableQuantity} xe<br>
+                                        Tối thiểu: ${data.minimumStock} xe
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            inventoryInfo.innerHTML = `
+                                <div class="text-center text-danger">
+                                    <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
+                                    <div>${data.message}</div>
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        inventoryInfo.innerHTML = `
+                            <div class="text-center text-danger">
+                                <i class="fas fa-times-circle fa-2x mb-2"></i>
+                                <div>Không thể tải thông tin tồn kho</div>
+                            </div>
+                        `;
+                    });
+            } else {
+                inventoryInfo.innerHTML = `
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-info-circle fa-2x mb-2"></i>
+                        <div>Chọn sản phẩm để xem tồn kho</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Set minimum date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.querySelector('input[name="Input.ExpectedDeliveryDate"]');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.setAttribute('min', today);
+            }
+            calculateTotal();
+        });
+    </script>
+}
+
