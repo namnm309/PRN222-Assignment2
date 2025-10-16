@@ -1,0 +1,56 @@
+@page
+@model PresentationLayer.Pages.EVMStaff.DealerManagement.IndexModel
+@{
+    ViewData["Title"] = "Quản lý đại lý";
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+}
+
+<h2>Quản lý đại lý</h2>
+
+<div class="mb-3">
+    <a class="btn btn-primary" asp-page="/EVMStaff/DealerManagement/Create">Thêm đại lý</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Mã đại lý</th>
+            <th>Tên đại lý</th>
+            <th>Khu vực</th>
+            <th>Liên hệ</th>
+            <th>Điện thoại</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var d in Model.Dealers)
+    {
+        <tr>
+            <td>@d.Code</td>
+            <td>@d.Name</td>
+            <td>@d.RegionName</td>
+            <td>@d.ContactPerson (@d.Email)</td>
+            <td>@d.PhoneNumber</td>
+            <td>@(d.IsActive ? "Active" : "Inactive")</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-secondary" asp-page="/EVMStaff/DealerManagement/Edit" asp-route-id="@d.Id">Sửa</a>
+                <form method="post" asp-page-handler="Delete" asp-route-id="@d.Id" class="d-inline" onsubmit="return confirm('Xóa đại lý này?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+    </table>
+
+

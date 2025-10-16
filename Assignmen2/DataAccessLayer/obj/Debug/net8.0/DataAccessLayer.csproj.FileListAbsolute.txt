@@ -43,3 +43,18 @@ C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\De
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.pdb
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.genruntimeconfig.cache
 C:\Users\TUF\Desktop\Github\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\ref\DataAccessLayer.dll
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.deps.json
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.runtimeconfig.json
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.dll
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\bin\Debug\net8.0\DataAccessLayer.pdb
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.AssemblyInfo.cs
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.sourcelink.json
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.dll
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\refint\DataAccessLayer.dll
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.pdb
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\DataAccessLayer.genruntimeconfig.cache
+C:\Users\ADMIN\Documents\FPT\Semester 7(FA25)\PRN222\assignment2(clonenewest)\PRN222-Assignment2\Assignmen2\DataAccessLayer\obj\Debug\net8.0\ref\DataAccessLayer.dll

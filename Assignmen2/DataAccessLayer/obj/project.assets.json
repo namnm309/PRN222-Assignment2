@@ -5143,23 +5143,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\TUF\\.nuget\\packages\\": {},
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
+      "projectUniqueName": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
       "projectName": "DataAccessLayer",
-      "projectPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
-      "packagesPath": "C:\\Users\\TUF\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\obj\\",
+      "projectPath": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\DataAccessLayer.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\TUF\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5284,7 +5284,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,93 +1,93 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\",
+  "WorkspaceRootPath": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\businesslayer\\services\\authenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\businesslayer\\services\\authenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|solutionrelative:businesslayer\\services\\authenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\usermanagement\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\usermanagement\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\evmstaff\\usermanagement\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\contractmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\contractmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\evmstaff\\contractmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\pricingmanagement\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\pricingmanagement\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\evmstaff\\pricingmanagement\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\businesslayer\\services\\brandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\businesslayer\\services\\brandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|solutionrelative:businesslayer\\services\\brandservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\pricingmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\pricingmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\evmstaff\\pricingmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\salesreport\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\evmstaff\\salesreport\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\evmstaff\\salesreport\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\inventoryallocation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\inventoryallocation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\entities\\inventoryallocation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\inventorytransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\inventorytransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\entities\\inventorytransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\dealer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\dealer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\entities\\dealer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\promotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\promotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\entities\\promotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\brand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\entities\\brand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\entities\\brand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\presentationlayer\\pages\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{22083C12-B451-4F61-A506-4A3D6FAF4B41}|PresentationLayer\\PresentationLayer.csproj|solutionrelative:presentationlayer\\pages\\dashboard\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\businesslayer\\mapping\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\businesslayer\\mapping\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|solutionrelative:businesslayer\\mapping\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\businesslayer\\services\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\businesslayer\\services\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|solutionrelative:businesslayer\\services\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\businesslayer\\services\\dealerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\businesslayer\\services\\dealerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{82A76D4F-4B2A-4182-B46D-22A5161D415E}|BusinessLayer\\BusinessLayer.csproj|solutionrelative:businesslayer\\services\\dealerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\enum\\purchaseorderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\enum\\purchaseorderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\enum\\purchaseorderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\tuf\\desktop\\github\\prn222-assignment2\\assignmen2\\dataaccesslayer\\enum\\orderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\admin\\documents\\fpt\\semester 7(fa25)\\prn222\\assignment2(clonenewest)\\prn222-assignment2\\assignmen2\\dataaccesslayer\\enum\\orderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1913414D-E384-4F20-BBAC-39B9EEECB343}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\enum\\orderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -101,15 +101,35 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 12,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Index.cshtml.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\UserManagement\\Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\UserManagement\\Index.cshtml.cs",
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\EVMStaff\\UserManagement\\Index.cshtml.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\UserManagement\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\UserManagement\\Index.cshtml.cs",
               "RelativeToolTip": "PresentationLayer\\Pages\\EVMStaff\\UserManagement\\Index.cshtml.cs",
               "ViewState": "AgIAAD4AAAAAAAAAAADwv1AAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -119,9 +139,9 @@
               "$type": "Document",
               "DocumentIndex": 5,
               "Title": "Index.cshtml.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
               "RelativeToolTip": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
               "ViewState": "AgIAAD4AAAAAAAAAAAAIwEoAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -131,9 +151,9 @@
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\ContractManagement\\Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\ContractManagement\\Index.cshtml",
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\EVMStaff\\ContractManagement\\Index.cshtml",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\ContractManagement\\Index.cshtml",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\ContractManagement\\Index.cshtml",
               "RelativeToolTip": "PresentationLayer\\Pages\\EVMStaff\\ContractManagement\\Index.cshtml",
               "ViewState": "AgIAAFYAAAAAAAAAAAAIwGAAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -143,9 +163,9 @@
               "$type": "Document",
               "DocumentIndex": 7,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml",
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml",
               "RelativeToolTip": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml",
               "ViewState": "AgIAAE8AAAAAAAAAAAAIwFkAAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -155,9 +175,9 @@
               "$type": "Document",
               "DocumentIndex": 8,
               "Title": "Index.cshtml.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\SalesReport\\Index.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\SalesReport\\Index.cshtml.cs",
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\EVMStaff\\SalesReport\\Index.cshtml.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\SalesReport\\Index.cshtml.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\SalesReport\\Index.cshtml.cs",
               "RelativeToolTip": "PresentationLayer\\Pages\\EVMStaff\\SalesReport\\Index.cshtml.cs",
               "ViewState": "AgIAAJcAAAAAAAAAAAAIwKEAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -167,9 +187,9 @@
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.json",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.json",
               "RelativeDocumentMoniker": "PresentationLayer\\appsettings.json",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.json",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\appsettings.json",
               "RelativeToolTip": "PresentationLayer\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
@@ -179,9 +199,9 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
               "RelativeDocumentMoniker": "PresentationLayer\\Program.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
               "RelativeToolTip": "PresentationLayer\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -191,11 +211,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "AuthenService.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\AuthenService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\AuthenService.cs",
               "RelativeDocumentMoniker": "BusinessLayer\\Services\\AuthenService.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\AuthenService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\AuthenService.cs",
               "RelativeToolTip": "BusinessLayer\\Services\\AuthenService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAsAAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAuwAsAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-16T00:27:25.097Z",
               "EditorCaption": ""
@@ -204,9 +224,9 @@
               "$type": "Document",
               "DocumentIndex": 9,
               "Title": "InventoryAllocation.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryAllocation.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryAllocation.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Entities\\InventoryAllocation.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryAllocation.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryAllocation.cs",
               "RelativeToolTip": "DataAccessLayer\\Entities\\InventoryAllocation.cs",
               "ViewState": "AgIAAAoAAAAAAAAAAAAzwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -216,9 +236,9 @@
               "$type": "Document",
               "DocumentIndex": 10,
               "Title": "InventoryTransaction.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryTransaction.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryTransaction.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Entities\\InventoryTransaction.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryTransaction.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\InventoryTransaction.cs",
               "RelativeToolTip": "DataAccessLayer\\Entities\\InventoryTransaction.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -228,9 +248,9 @@
               "$type": "Document",
               "DocumentIndex": 11,
               "Title": "Dealer.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Dealer.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Dealer.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Entities\\Dealer.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Dealer.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Dealer.cs",
               "RelativeToolTip": "DataAccessLayer\\Entities\\Dealer.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -240,9 +260,9 @@
               "$type": "Document",
               "DocumentIndex": 6,
               "Title": "BrandService.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\BrandService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\BrandService.cs",
               "RelativeDocumentMoniker": "BusinessLayer\\Services\\BrandService.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\BrandService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\BrandService.cs",
               "RelativeToolTip": "BusinessLayer\\Services\\BrandService.cs",
               "ViewState": "AgIAABIAAAAAAAAAAADwvxsAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -252,9 +272,9 @@
               "$type": "Document",
               "DocumentIndex": 12,
               "Title": "Promotion.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Promotion.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Promotion.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Entities\\Promotion.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Promotion.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Promotion.cs",
               "RelativeToolTip": "DataAccessLayer\\Entities\\Promotion.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -264,9 +284,9 @@
               "$type": "Document",
               "DocumentIndex": 14,
               "Title": "Order.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Order.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Order.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Entities\\Order.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Order.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Order.cs",
               "RelativeToolTip": "DataAccessLayer\\Entities\\Order.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -276,9 +296,9 @@
               "$type": "Document",
               "DocumentIndex": 15,
               "Title": "Brand.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Brand.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Brand.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Entities\\Brand.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Brand.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Brand.cs",
               "RelativeToolTip": "DataAccessLayer\\Entities\\Brand.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -288,9 +308,9 @@
               "$type": "Document",
               "DocumentIndex": 13,
               "Title": "Product.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Product.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Product.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Entities\\Product.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Product.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Entities\\Product.cs",
               "RelativeToolTip": "DataAccessLayer\\Entities\\Product.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -300,9 +320,9 @@
               "$type": "Document",
               "DocumentIndex": 16,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
               "RelativeToolTip": "PresentationLayer\\Pages\\Dashboard\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -312,9 +332,9 @@
               "$type": "Document",
               "DocumentIndex": 17,
               "Title": "AutoMapperProfile.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
               "RelativeDocumentMoniker": "BusinessLayer\\Mapping\\AutoMapperProfile.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Mapping\\AutoMapperProfile.cs",
               "RelativeToolTip": "BusinessLayer\\Mapping\\AutoMapperProfile.cs",
               "ViewState": "AgIAAGoAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -324,9 +344,9 @@
               "$type": "Document",
               "DocumentIndex": 18,
               "Title": "IOrderService.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\IOrderService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\IOrderService.cs",
               "RelativeDocumentMoniker": "BusinessLayer\\Services\\IOrderService.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\IOrderService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\IOrderService.cs",
               "RelativeToolTip": "BusinessLayer\\Services\\IOrderService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -336,9 +356,9 @@
               "$type": "Document",
               "DocumentIndex": 19,
               "Title": "DealerService.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\DealerService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\DealerService.cs",
               "RelativeDocumentMoniker": "BusinessLayer\\Services\\DealerService.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\DealerService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\BusinessLayer\\Services\\DealerService.cs",
               "RelativeToolTip": "BusinessLayer\\Services\\DealerService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -348,9 +368,9 @@
               "$type": "Document",
               "DocumentIndex": 20,
               "Title": "PurchaseOrderStatus.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\PurchaseOrderStatus.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\PurchaseOrderStatus.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Enum\\PurchaseOrderStatus.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\PurchaseOrderStatus.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\PurchaseOrderStatus.cs",
               "RelativeToolTip": "DataAccessLayer\\Enum\\PurchaseOrderStatus.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -360,9 +380,9 @@
               "$type": "Document",
               "DocumentIndex": 21,
               "Title": "OrderStatus.cs",
-              "DocumentMoniker": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\OrderStatus.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\OrderStatus.cs",
               "RelativeDocumentMoniker": "DataAccessLayer\\Enum\\OrderStatus.cs",
-              "ToolTip": "C:\\Users\\TUF\\Desktop\\Github\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\OrderStatus.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\Documents\\FPT\\Semester 7(FA25)\\PRN222\\assignment2(clonenewest)\\PRN222-Assignment2\\Assignmen2\\DataAccessLayer\\Enum\\OrderStatus.cs",
               "RelativeToolTip": "DataAccessLayer\\Enum\\OrderStatus.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -373,9 +393,9 @@
               "DocumentIndex": 22,
               "Title": "Microsoft.NET.Sdk.StaticWebAssets.targets",
               "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk.StaticWebAssets\\targets\\Microsoft.NET.Sdk.StaticWebAssets.targets",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk.StaticWebAssets\\targets\\Microsoft.NET.Sdk.StaticWebAssets.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk.StaticWebAssets\\targets\\Microsoft.NET.Sdk.StaticWebAssets.targets",
               "ToolTip": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk.StaticWebAssets\\targets\\Microsoft.NET.Sdk.StaticWebAssets.targets",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk.StaticWebAssets\\targets\\Microsoft.NET.Sdk.StaticWebAssets.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk.StaticWebAssets\\targets\\Microsoft.NET.Sdk.StaticWebAssets.targets",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
               "WhenOpened": "2025-10-15T17:32:06.371Z"
             }

@@ -68,7 +68,7 @@ namespace PresentationLayer.Pages.Base
         /// </summary>
         protected bool IsAdmin()
         {
-            return CurrentUserRole == UserRole.Admin;
+            return CurrentUserRole == UserRole.Admin || CurrentUserRole == UserRole.EVMStaff;
         }
 
         /// <summary>
@@ -77,6 +77,14 @@ namespace PresentationLayer.Pages.Base
         protected bool IsEVMStaff()
         {
             return CurrentUserRole == UserRole.EVMStaff || CurrentUserRole == UserRole.Admin;
+        }
+
+        /// <summary>
+        /// Check xem user có thuộc nhóm Dealer (DealerStaff hoặc DealerManager) không
+        /// </summary>
+        protected bool IsDealer()
+        {
+            return CurrentUserRole == UserRole.DealerStaff || CurrentUserRole == UserRole.DealerManager;
         }
     }
 }
