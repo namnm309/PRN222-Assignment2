@@ -32,10 +32,11 @@
                 <label class="form-label">Trạng thái</label>
                 <select name="status" class="form-select">
                     <option value="">Tất cả trạng thái</option>
-                    <option value="Pending" selected="@(Model.StatusFilter == "Pending")">Chờ xử lý</option>
-                    <option value="Completed" selected="@(Model.StatusFilter == "Completed")">Hoàn thành</option>
-                    <option value="Canceled" selected="@(Model.StatusFilter == "Canceled")">Đã hủy</option>
+                    <option value="Quoted" selected="@(Model.StatusFilter == "Quoted")">Báo giá</option>
+                    <option value="Confirmed" selected="@(Model.StatusFilter == "Confirmed")">Đã xác nhận</option>
                     <option value="Delivered" selected="@(Model.StatusFilter == "Delivered")">Đã giao</option>
+                    <option value="Contract" selected="@(Model.StatusFilter == "Contract")">Hợp đồng</option>
+                    <option value="Canceled" selected="@(Model.StatusFilter == "Canceled")">Đã hủy</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -109,13 +110,21 @@
                                 </td>
                                 <td>
                                     <span class="badge @(order.Status switch {
-                                        "Pending" => "bg-warning",
-                                        "Completed" => "bg-success",
-                                        "Canceled" => "bg-danger",
+                                        "Quoted" => "bg-info",
+                                        "Confirmed" => "bg-success",
                                         "Delivered" => "bg-primary",
+                                        "Contract" => "bg-success",
+                                        "Canceled" => "bg-danger",
                                         _ => "bg-secondary"
                                     })">
-                                        @order.Status
+                                        @(order.Status switch {
+                                            "Quoted" => "Báo giá",
+                                            "Confirmed" => "Đã xác nhận",
+                                            "Delivered" => "Đã giao xe",
+                                            "Contract" => "Hợp đồng",
+                                            "Canceled" => "Đã hủy",
+                                            _ => order.Status
+                                        })
                                     </span>
                                 </td>
                                 <td>

@@ -272,10 +272,10 @@ E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.build.json.cache
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.development.json
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\Presenta.9C561136.Up2Date
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.dll
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\refint\PresentationLayer.dll
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.pdb
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\PresentationLayer.genruntimeconfig.cache
 E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\ref\PresentationLayer.dll
+E:\FPT Material\Project\PRN222\PRN222_Assignment2\PRN222-Assignment2\Assignmen2\PresentationLayer\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
