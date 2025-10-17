@@ -47,7 +47,7 @@ namespace BusinessLayer.Services
                     .ThenInclude(p => p.Brand)
                     .Where(o => o.DealerId == dealerId);
 
-                // Apply search filter
+                // Apply search filter - tìm kiếm theo mã đơn hàng, tên khách hàng, tên sản phẩm
                 if (!string.IsNullOrWhiteSpace(search))
                 {
                     var searchTerm = search.Trim().ToLower();
@@ -57,17 +57,13 @@ namespace BusinessLayer.Services
                         o.Product.Name.ToLower().Contains(searchTerm));
                 }
 
-                // Apply status filter
+                // Apply status filter - lọc theo trạng thái đơn hàng
                 if (!string.IsNullOrWhiteSpace(status))
                 {
                     query = query.Where(o => o.Status == status);
                 }
 
-                // Apply order type filter (using Description field)
-                if (!string.IsNullOrWhiteSpace(orderType))
-                {
-                    query = query.Where(o => o.Description == orderType);
-                }
+                // Bỏ orderType filter - không còn sử dụng
 
                 // Get total count
                 var totalCount = await query.CountAsync();
@@ -284,6 +280,34 @@ namespace BusinessLayer.Services
             order.UpdatedAt = DateTime.UtcNow;
             var ok = await _repo.UpdateAsync(order);
             return ok ? (true, null, order) : (false, "Không thể cập nhật đơn hàng", null);
+        }
+
+        public async Task<(bool Success, string Error)> DeleteOrderAsync(Guid orderId)
+        {
+            try
+            {
+                var order = await _repo.GetByIdAsync(orderId);
+                if (order == null)
+                    return (false, "Không tìm thấy đơn hàng");
+
+                // Kiểm tra trạng thái đơn hàng - chỉ cho phép xóa các đơn hàng chưa giao
+                if (order.Status == "Delivered" || order.Status == "Contract")
+                    return (false, "Không thể xóa đơn hàng đã giao hoặc đã có hợp đồng");
+
+                // Thực hiện xóa mềm (soft delete) bằng cách đánh dấu là Canceled
+                order.Status = "Canceled";
+                order.UpdatedAt = DateTime.UtcNow;
+                order.Notes = string.IsNullOrWhiteSpace(order.Notes) 
+                    ? $"Đơn hàng bị xóa bởi DealerStaff vào {DateTime.Now:dd/MM/yyyy HH:mm}"
+                    : $"{order.Notes}\n[DELETED] Đơn hàng bị xóa bởi DealerStaff vào {DateTime.Now:dd/MM/yyyy HH:mm}";
+
+                var ok = await _repo.UpdateAsync(order);
+                return ok ? (true, null) : (false, "Không thể xóa đơn hàng");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi xóa đơn hàng: {ex.Message}");
+            }
         }
     }
 }
