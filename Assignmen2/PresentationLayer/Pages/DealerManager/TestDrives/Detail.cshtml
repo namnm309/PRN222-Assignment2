@@ -1,0 +1,63 @@
+@page "{id:guid}"
+@model PresentationLayer.Pages.DealerManager.TestDrives.DetailModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Chi tiết lái thử";
+}
+
+<div class="container-fluid">
+	<nav aria-label="breadcrumb" class="mb-3">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a asp-page="/DealerManager/TestDrives/Index">Lái thử</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
+		</ol>
+	</nav>
+
+	<div class="row">
+		<div class="col-lg-8">
+			<div class="card shadow-sm">
+				<div class="card-header d-flex align-items-center">
+					<i class="fas fa-id-card me-2"></i>
+					<span>Thông tin phiếu lái thử</span>
+				</div>
+				<div class="card-body">
+					<dl class="row mb-0">
+						<dt class="col-sm-3">Khách hàng</dt>
+						<dd class="col-sm-9">@Model.Item?.CustomerName</dd>
+						<dt class="col-sm-3">Xe</dt>
+						<dd class="col-sm-9">@Model.Item?.ProductName</dd>
+						<dt class="col-sm-3">Trạng thái</dt>
+						<dd class="col-sm-9">
+							<span class="badge bg-info text-dark">@Model.Item?.StatusName</span>
+						</dd>
+					</dl>
+				</div>
+				<div class="card-footer d-flex flex-wrap gap-2">
+					<form method="post" asp-page-handler="Confirm" class="d-inline">
+						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
+						<button type="submit" class="btn btn-info text-white"><i class="fas fa-check me-1"></i> Xác nhận</button>
+					</form>
+					<form method="post" asp-page-handler="CompleteSuccess" class="d-inline">
+						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
+						<button type="submit" class="btn btn-success"><i class="fas fa-flag-checkered me-1"></i> Hoàn tất (đạt)</button>
+					</form>
+					<form method="post" asp-page-handler="CompleteFail" class="d-inline">
+						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
+						<button type="submit" class="btn btn-secondary"><i class="fas fa-times me-1"></i> Hoàn tất (trượt)</button>
+					</form>
+					<form method="post" asp-page-handler="Cancel" class="d-inline">
+						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
+						<button type="submit" class="btn btn-danger"><i class="fas fa-ban me-1"></i> Hủy</button>
+					</form>
+					@if (Model.CanCreateCustomer)
+					{
+						<a class="btn btn-outline-success" asp-page="/DealerManager/Customers/CreateFromTestDrive" asp-route-id="@Model.Item!.Id"><i class="fas fa-user-plus me-1"></i> Tạo khách hàng</a>
+					}
+					<a class="btn btn-outline-secondary" asp-page="/DealerManager/TestDrives/Index">Quay lại</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

@@ -1,0 +1,39 @@
+@* KpiCard partial for Dashboard KPI cards
+   Parameters: Title, Value, Unit, IconClass, GradientClass, ProgressPercent, SubText *@
+@{
+	var title = ViewData["Title"] as string ?? "KPI";
+	var value = ViewData["Value"] as string ?? "0";
+	var unit = ViewData["Unit"] as string ?? "";
+	var iconClass = ViewData["IconClass"] as string ?? "fas fa-circle";
+	var gradientClass = ViewData["GradientClass"] as string ?? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+	var progressPercent = ViewData["ProgressPercent"] as int? ?? 0;
+	var subText = ViewData["SubText"] as string ?? "";
+}
+
+<div class="card border-0 shadow-sm h-100" style="background: @gradientClass;">
+	<div class="card-body text-white">
+		<div class="d-flex justify-content-between align-items-start mb-3">
+			<div>
+				<div class="small opacity-75">@title</div>
+				<h3 class="mb-0 mt-2 fw-bold">@value</h3>
+				@if (!string.IsNullOrEmpty(unit))
+				{
+					<div class="small mt-1">@unit</div>
+				}
+			</div>
+			<div class="p-3 bg-white bg-opacity-25 rounded-circle">
+				<i class="@iconClass fs-4"></i>
+			</div>
+		</div>
+		@if (progressPercent > 0)
+		{
+			<div class="progress" style="height: 4px;">
+				<div class="progress-bar bg-white" role="progressbar" style="width: @(progressPercent)%"></div>
+			</div>
+		}
+		@if (!string.IsNullOrEmpty(subText))
+		{
+			<div class="small mt-2 opacity-75">@Html.Raw(subText)</div>
+		}
+	</div>
+</div>

@@ -1,0 +1,53 @@
+@page
+@model PresentationLayer.Pages.EVMStaff.BrandManagement.IndexModel
+@{
+    ViewData["Title"] = "Quản lý thương hiệu";
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+}
+
+<h2>Quản lý thương hiệu</h2>
+
+<div class="mb-3">
+    <a class="btn btn-primary" asp-page="/EVMStaff/BrandManagement/Create">Thêm thương hiệu</a>
+    <a class="btn btn-secondary" asp-page="/EVMStaff/ProductManagement/Index">Quản lý sản phẩm</a>
+    </div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên thương hiệu</th>
+            <th>Quốc gia</th>
+            <th>Trạng thái</th>
+            <th>Mô tả</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var b in Model.Brands)
+    {
+        <tr>
+            <td>@b.Name</td>
+            <td>@b.Country</td>
+            <td>@(b.IsActive ? "Active" : "Inactive")</td>
+            <td>@b.Description</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-secondary" asp-page="/EVMStaff/BrandManagement/Edit" asp-route-id="@b.Id">Sửa</a>
+                <form method="post" asp-page-handler="Delete" asp-route-id="@b.Id" class="d-inline" onsubmit="return confirm('Xóa thương hiệu này?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+    </table>
+
+

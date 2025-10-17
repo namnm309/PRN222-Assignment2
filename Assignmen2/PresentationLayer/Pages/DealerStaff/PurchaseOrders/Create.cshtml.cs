@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using BusinessLayer.DTOs.Responses;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -10,19 +10,17 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IProductService _productService;
-        private readonly IMappingService _mappingService;
 
-        public CreateModel(IPurchaseOrderService purchaseOrderService, IProductService productService, IMappingService mappingService)
+        public CreateModel(IPurchaseOrderService purchaseOrderService, IProductService productService)
         {
             _purchaseOrderService = purchaseOrderService;
             _productService = productService;
-            _mappingService = mappingService;
         }
 
         [BindProperty]
         public InputModel Input { get; set; } = new();
 
-        public List<ProductResponse> Products { get; set; } = new();
+        public List<Product> Products { get; set; } = new();
 
         public class InputModel
         {
@@ -53,23 +51,28 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
 
         public async Task OnGetAsync(Guid? productId = null)
         {
-            // Load available products using service
+            // Load available products
             var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
-            if (productsResult.Success && productsResult.Data != null)
+            if (productsResult.Success)
             {
-                Products = _mappingService.MapToProductViewModels(productsResult.Data);
+                Products = productsResult.Data;
             }
 
             // Pre-select product if provided
             if (productId.HasValue)
             {
                 Input.ProductId = productId.Value;
-                // Load product price using service
+                // Load product price
                 var productResult = await _productService.GetAsync(productId.Value);
                 if (productResult.Success && productResult.Data != null)
                 {
                     Input.UnitPrice = productResult.Data.Price;
                 }
+            }
+            else
+            {
+                // Reset unit price if no product selected
+                Input.UnitPrice = 0;
             }
 
             // Set default values
@@ -83,14 +86,14 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
             {
                 // Reload products if validation fails
                 var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
-                if (productsResult.Success && productsResult.Data != null)
+                if (productsResult.Success)
                 {
-                    Products = _mappingService.MapToProductViewModels(productsResult.Data);
+                    Products = productsResult.Data;
                 }
                 return Page();
             }
 
-            // Get current dealer ID from session
+            // Get current dealer ID (you'll need to implement this)
             var dealerId = GetCurrentDealerId();
             if (!dealerId.HasValue)
             {
@@ -98,7 +101,7 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
                 return Page();
             }
 
-            // Get current user ID from session
+            // Get current user ID (you'll need to implement this)
             var requestedById = GetCurrentUserId();
             if (!requestedById.HasValue)
             {
@@ -139,24 +142,70 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
 
         private Guid? GetCurrentDealerId()
         {
-            // Get dealer ID from session
-            var dealerIdString = HttpContext.Session.GetString("DealerId");
-            if (Guid.TryParse(dealerIdString, out var dealerId))
+            // Get dealer ID from session or authentication context
+            if (HttpContext.Session.GetString("DealerId") != null)
+            {
+                return Guid.Parse(HttpContext.Session.GetString("DealerId")!);
+            }
+            
+            // Fallback: try to get from user claims
+            var dealerIdClaim = User.FindFirst("DealerId");
+            if (dealerIdClaim != null && Guid.TryParse(dealerIdClaim.Value, out var dealerId))
             {
                 return dealerId;
             }
+            
             return null;
         }
 
         private Guid? GetCurrentUserId()
         {
-            // Get user ID from session
-            var userIdString = HttpContext.Session.GetString("UserId");
-            if (Guid.TryParse(userIdString, out var userId))
+            // Get user ID from authentication context
+            var userIdClaim = User.FindFirst("UserId") ?? User.FindFirst("sub");
+            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out var userId))
             {
                 return userId;
             }
+            
             return null;
+        }
+
+        public async Task<IActionResult> OnGetGetProductStockAsync(Guid productId)
+        {
+            try
+            {
+                var productResult = await _productService.GetAsync(productId);
+                if (!productResult.Success || productResult.Data == null)
+                {
+                    return new JsonResult(new { success = false, message = "Không tìm thấy sản phẩm" });
+                }
+
+                var product = productResult.Data;
+                var hasStock = product.StockQuantity > 0;
+                var minimumStock = 5; // You can make this configurable
+                var availableQuantity = product.StockQuantity;
+                var allocatedQuantity = 0; // TODO: Calculate from orders
+                var reservedQuantity = 0; // TODO: Calculate from reservations
+
+                var message = hasStock 
+                    ? $"Có sẵn {availableQuantity} xe trong kho"
+                    : "Không còn xe trong kho";
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    hasStock = hasStock,
+                    availableQuantity = availableQuantity,
+                    minimumStock = minimumStock,
+                    allocatedQuantity = allocatedQuantity,
+                    reservedQuantity = reservedQuantity,
+                    message = message
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = $"Lỗi: {ex.Message}" });
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using DataAccessLayer.Data;
 using DataAccessLayer.Repository;
 using Microsoft.EntityFrameworkCore;
 using PresentationLayer.Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace PresentationLayer
 {
@@ -49,7 +50,24 @@ namespace PresentationLayer
                 {
                     model.Filters.Add(new DashboardAuthorizePageFilter());
                 });
+
+                // Thêm filter bảo vệ khu vực DealerManager (yêu cầu đã đăng nhập)
+                options.Conventions.AddFolderApplicationModelConvention("/DealerManager", model =>
+                {
+                    model.Filters.Add(new DashboardAuthorizePageFilter());
+                });
             });
+
+            // Authentication - Cookie scheme (default)
+            builder.Services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.AccessDeniedPath = "/Account/Login";
+                    options.SlidingExpiration = true;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                });
 
             // Session for auth
             builder.Services.AddSession(options =>
@@ -140,6 +158,7 @@ namespace PresentationLayer
 
             app.UseRouting();
             app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapRazorPages();

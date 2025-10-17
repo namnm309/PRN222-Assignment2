@@ -63,13 +63,27 @@ namespace DataAccessLayer.Repository
         {
             try
             {
-                user.UpdatedAt = DateTime.UtcNow;
-                _dbContext.Users.Update(user);
+                var existingUser = await _dbContext.Users.FindAsync(user.Id);
+                if (existingUser == null)
+                {
+                    return false;
+                }
+
+                // Update only the fields that should be updated
+                existingUser.FullName = user.FullName;
+                existingUser.Email = user.Email;
+                existingUser.PhoneNumber = user.PhoneNumber;
+                existingUser.Role = user.Role;
+                existingUser.IsActive = user.IsActive;
+                existingUser.UpdatedAt = DateTime.UtcNow;
+
                 var result = await _dbContext.SaveChangesAsync();
                 return result > 0;
             }
-            catch
+            catch (Exception ex)
             {
+                // Log the exception for debugging
+                Console.WriteLine($"Error updating user: {ex.Message}");
                 return false;
             }
         }

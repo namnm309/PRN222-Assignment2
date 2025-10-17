@@ -1,0 +1,278 @@
+@page
+@model PresentationLayer.Pages.DealerManager.Users.EditModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Chỉnh sửa nhân viên";
+}
+
+<div class="container-fluid">
+	<!-- Breadcrumb -->
+	<nav aria-label="breadcrumb" class="mb-4">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a asp-page="/DealerManager/Index">Dashboard</a></li>
+			<li class="breadcrumb-item"><a asp-page="/DealerManager/Users/Index">Quản lý nhân viên</a></li>
+			<li class="breadcrumb-item"><a asp-page="/DealerManager/Users/Detail" asp-route-id="@Model.User.Id">Chi tiết nhân viên</a></li>
+			<li class="breadcrumb-item active">Chỉnh sửa</li>
+		</ol>
+	</nav>
+
+	<!-- Header -->
+	<div class="d-flex align-items-center justify-content-between mb-4">
+		<div>
+			<h3 class="mb-1 fw-bold"><i class="fas fa-user-edit me-2 text-primary"></i>Chỉnh sửa nhân viên</h3>
+			<p class="text-muted mb-0">Cập nhật thông tin nhân viên</p>
+		</div>
+		<div class="d-flex gap-2">
+			<a asp-page="/DealerManager/Users/Detail" asp-route-id="@Model.User.Id" class="btn btn-outline-secondary">
+				<i class="fas fa-eye me-2"></i>Xem chi tiết
+			</a>
+			<a asp-page="/DealerManager/Users/Index" class="btn btn-secondary">
+				<i class="fas fa-arrow-left me-2"></i>Quay lại
+			</a>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-8">
+			<div class="card border-0 shadow-sm">
+				<div class="card-header bg-gradient-primary text-white">
+					<h5 class="mb-0"><i class="fas fa-edit me-2"></i>Thông tin nhân viên</h5>
+				</div>
+				<div class="card-body">
+					<form method="post">
+						<input type="hidden" asp-for="Input.Id" />
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label asp-for="Input.FullName" class="form-label fw-semibold">
+										<i class="fas fa-user me-1 text-primary"></i>Họ và tên <span class="text-danger">*</span>
+									</label>
+									<input asp-for="Input.FullName" class="form-control" placeholder="Nhập họ và tên" />
+									<span asp-validation-for="Input.FullName" class="text-danger small"></span>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label asp-for="Input.Email" class="form-label fw-semibold">
+										<i class="fas fa-envelope me-1 text-primary"></i>Email <span class="text-danger">*</span>
+									</label>
+									<input asp-for="Input.Email" type="email" class="form-control" placeholder="Nhập email" />
+									<span asp-validation-for="Input.Email" class="text-danger small"></span>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label asp-for="Input.PhoneNumber" class="form-label fw-semibold">
+										<i class="fas fa-phone me-1 text-primary"></i>Số điện thoại
+									</label>
+									<input asp-for="Input.PhoneNumber" class="form-control" placeholder="Nhập số điện thoại" />
+									<span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label asp-for="Input.Role" class="form-label fw-semibold">
+										<i class="fas fa-user-tag me-1 text-primary"></i>Vai trò <span class="text-danger">*</span>
+									</label>
+									<select asp-for="Input.Role" class="form-select">
+										<option value="DealerStaff">Dealer Staff</option>
+										<option value="DealerManager">Dealer Manager</option>
+									</select>
+									<span asp-validation-for="Input.Role" class="text-danger small"></span>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label asp-for="Input.IsActive" class="form-label fw-semibold">
+										<i class="fas fa-toggle-on me-1 text-primary"></i>Trạng thái
+									</label>
+									<div class="form-check form-switch">
+										<input asp-for="Input.IsActive" class="form-check-input" type="checkbox" />
+										<label asp-for="Input.IsActive" class="form-check-label">
+											<span id="statusText">@(Model.Input.IsActive ? "Hoạt động" : "Khóa")</span>
+										</label>
+									</div>
+									<span asp-validation-for="Input.IsActive" class="text-danger small"></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="d-flex gap-2 justify-content-end">
+							<a asp-page="/DealerManager/Users/Detail" asp-route-id="@Model.User.Id" class="btn btn-outline-secondary">
+								<i class="fas fa-times me-2"></i>Hủy
+							</a>
+							<button type="submit" class="btn btn-primary">
+								<i class="fas fa-save me-2"></i>Lưu thay đổi
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-4">
+			<!-- User Info Card -->
+			<div class="card border-0 shadow-sm mb-4">
+				<div class="card-body text-center">
+					<div class="avatar-large bg-primary text-white mx-auto mb-3">
+						@(string.IsNullOrEmpty(Model.User.FullName) ? "?" : Model.User.FullName.Substring(0, 1).ToUpper())
+					</div>
+					<h5 class="mb-1">@Model.User.FullName</h5>
+					<p class="text-muted mb-3">@Model.User.Email</p>
+					
+					@{
+						var roleInfo = Model.User.Role.ToString() switch
+						{
+							"Admin" => ("danger", "crown", "Admin"),
+							"EVMStaff" => ("warning", "user-shield", "EVM Staff"),
+							"DealerManager" => ("primary", "user-tie", "Dealer Manager"),
+							"DealerStaff" => ("info", "user", "Dealer Staff"),
+							_ => ("secondary", "question", "N/A")
+						};
+					}
+					<span class="badge bg-@roleInfo.Item1-subtle text-@roleInfo.Item1 fs-6 mb-3">
+						<i class="fas fa-@roleInfo.Item2 me-1"></i>@roleInfo.Item3
+					</span>
+					
+					<div class="mt-3">
+						@if (Model.User.IsActive)
+						{
+							<span class="badge bg-success-subtle text-success fs-6">
+								<i class="fas fa-check-circle me-1"></i>Hoạt động
+							</span>
+						}
+						else
+						{
+							<span class="badge bg-secondary-subtle text-secondary fs-6">
+								<i class="fas fa-times-circle me-1"></i>Khóa
+							</span>
+						}
+					</div>
+				</div>
+			</div>
+
+			<!-- Help Card -->
+			<div class="card border-0 shadow-sm">
+				<div class="card-header bg-white border-0">
+					<h6 class="mb-0"><i class="fas fa-info-circle me-2 text-info"></i>Lưu ý</h6>
+				</div>
+				<div class="card-body">
+					<ul class="list-unstyled mb-0 small text-muted">
+						<li class="mb-2">
+							<i class="fas fa-check text-success me-2"></i>
+							Email phải là duy nhất trong hệ thống
+						</li>
+						<li class="mb-2">
+							<i class="fas fa-check text-success me-2"></i>
+							Số điện thoại là tùy chọn
+						</li>
+						<li class="mb-2">
+							<i class="fas fa-check text-success me-2"></i>
+							Vai trò xác định quyền truy cập
+						</li>
+						<li>
+							<i class="fas fa-check text-success me-2"></i>
+							Tài khoản bị khóa sẽ không thể đăng nhập
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.avatar-large {
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 700;
+		font-size: 48px;
+	}
+	
+	.bg-gradient-primary {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	}
+	
+	.form-check-input:checked {
+		background-color: #28a745;
+		border-color: #28a745;
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const statusToggle = document.getElementById('Input_IsActive');
+		const statusText = document.getElementById('statusText');
+		const form = document.querySelector('form');
+		const submitBtn = form.querySelector('button[type="submit"]');
+		let isSubmitting = false;
+		
+		// Status toggle handler
+		if (statusToggle && statusText) {
+			statusToggle.addEventListener('change', function() {
+				statusText.textContent = this.checked ? 'Hoạt động' : 'Khóa';
+			});
+		}
+
+		// Double submit prevention
+		if (form && submitBtn) {
+			form.addEventListener('submit', function(e) {
+				if (isSubmitting) {
+					e.preventDefault();
+					return false;
+				}
+				
+				isSubmitting = true;
+				submitBtn.disabled = true;
+				submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+				
+				// Re-enable after 5 seconds as fallback
+				setTimeout(function() {
+					isSubmitting = false;
+					submitBtn.disabled = false;
+					submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Lưu thay đổi';
+				}, 5000);
+			});
+		}
+
+		// Show success message if exists
+		const successMessage = '@TempData["SuccessMessage"]';
+		if (successMessage) {
+			showToast('success', successMessage);
+		}
+
+		// Show error messages
+		const errorElements = document.querySelectorAll('.text-danger');
+		errorElements.forEach(function(element) {
+			if (element.textContent.trim()) {
+				showToast('error', element.textContent);
+			}
+		});
+	});
+
+	function showToast(type, message) {
+		// Create toast element
+		const toast = document.createElement('div');
+		toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+		toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+		toast.innerHTML = `
+			<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+			${message}
+			<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		`;
+		
+		document.body.appendChild(toast);
+		
+		// Auto remove after 5 seconds
+		setTimeout(function() {
+			if (toast.parentNode) {
+				toast.parentNode.removeChild(toast);
+			}
+		}, 5000);
+	}
+</script>

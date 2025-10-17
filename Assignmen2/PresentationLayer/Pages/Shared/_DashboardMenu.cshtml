@@ -14,7 +14,10 @@
 <!-- TỔNG QUAN - Common cho tất cả roles -->
 <div class="menu-section">
     <div class="menu-title">TỔNG QUAN</div>
-    <a asp-page="/Dashboard/Index" class="menu-item">
+    @{ var dashboardPage = (userRole == UserRole.Admin || userRole == UserRole.EVMStaff)
+            ? "/EVMStaff/Dashboard/Index"
+            : "/Dashboard/Index"; }
+    <a asp-page="@dashboardPage" class="menu-item">
         <i class="fas fa-tachometer-alt"></i>
         <span>Dashboard</span>
     </a>
@@ -62,72 +65,65 @@ else if (userRole == UserRole.DealerManager)
     <!-- MENU CHO DEALER MANAGER -->
     <div class="menu-section">
         <div class="menu-title">QUẢN LÝ ĐẠI LÝ</div>
-        <a asp-page="/DealerReport/Index" class="menu-item">
+        <a asp-page="/DealerManager/Index" class="menu-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard Đại lý</span>
+        </a>
+        <a asp-page="/DealerManager/Reports/Index" class="menu-item">
             <i class="fas fa-chart-line"></i>
             <span>Báo cáo doanh số</span>
         </a>
-        <a asp-page="/DealerDebtReport/Index" class="menu-item">
+        <a asp-page="/DealerManager/Reports/Debt" class="menu-item">
             <i class="fas fa-file-invoice-dollar"></i>
             <span>Báo cáo công nợ</span>
         </a>
-        <a asp-page="/UserManagement/Index" class="menu-item">
+    </div>
+    
+    <div class="menu-section">
+        <div class="menu-title">NHÂN SỰ</div>
+        <a asp-page="/DealerManager/Users/Index" class="menu-item">
             <i class="fas fa-users-cog"></i>
             <span>Quản lý nhân viên</span>
+        </a>
+        <a asp-page="/DealerManager/Staff/Create" class="menu-item">
+            <i class="fas fa-user-plus"></i>
+            <span>Thêm Dealer Staff</span>
         </a>
     </div>
     
     <div class="menu-section">
         <div class="menu-title">KINH DOANH</div>
-        <a asp-page="/Orders/Index" class="menu-item">
+        <a asp-page="/DealerManager/Orders/Index" class="menu-item">
             <i class="fas fa-file-invoice"></i>
             <span>Quản lý đơn hàng</span>
         </a>
-        <a asp-page="/Orders/CreateQuotation" class="menu-item">
-            <i class="fas fa-briefcase"></i>
+        <a asp-page="/DealerManager/Orders/Create" class="menu-item">
+            <i class="fas fa-file-invoice-dollar"></i>
             <span>Tạo báo giá mới</span>
         </a>
-        <a asp-page="/PurchaseOrder/Index" class="menu-item">
+        <a asp-page="/DealerManager/PurchaseOrders/Index" class="menu-item">
             <i class="fas fa-box"></i>
             <span>Đặt xe từ hãng</span>
-        </a>
-        <a href="#" class="menu-item">
-            <i class="fas fa-tags"></i>
-            <span>Quản lý khuyến mãi</span>
         </a>
     </div>
     
     <div class="menu-section">
         <div class="menu-title">KHÁCH HÀNG</div>
-        <a href="#customersSubmenu" class="menu-item" data-bs-toggle="collapse" aria-expanded="false">
+        <a asp-page="/DealerManager/Customers/Index" class="menu-item">
             <i class="fas fa-users"></i>
             <span>Quản lý khách hàng</span>
-            <i class="fas fa-chevron-down ms-auto submenu-arrow"></i>
         </a>
-        <div class="collapse submenu" id="customersSubmenu">
-            <a asp-page="/Customers/Index" class="submenu-item">
-                <i class="fas fa-list"></i>
-                <span>Danh sách khách hàng</span>
-            </a>
-            <a asp-page="/Customers/Create" class="submenu-item">
-                <i class="fas fa-user-plus"></i>
-                <span>Thêm khách hàng</span>
-            </a>
-        </div>
-        <a asp-page="/TestDrive/Index" class="menu-item">
+        <a asp-page="/DealerManager/TestDrives/Index" class="menu-item">
             <i class="fas fa-calendar-alt"></i>
             <span>Lịch hẹn lái thử</span>
-        </a>
-        <a asp-page="/VehicleSearch/Index" class="menu-item">
-            <i class="fas fa-search"></i>
-            <span>Tra cứu xe</span>
         </a>
     </div>
     
     <div class="menu-section">
-        <div class="menu-title">HỆ THỐNG</div>
-        <a href="#" class="menu-item">
-            <i class="fas fa-cog"></i>
-            <span>Cài đặt</span>
+        <div class="menu-title">TRA CỨU</div>
+        <a asp-page="/DealerManager/Vehicles/Search" class="menu-item">
+            <i class="fas fa-search"></i>
+            <span>Tra cứu xe</span>
         </a>
     </div>
 }
@@ -215,15 +211,15 @@ else if (userRole == UserRole.Admin)
     <!-- MENU CHO ADMIN - Full quyền -->
     <div class="menu-section">
         <div class="menu-title">QUẢN LÝ SẢN PHẨM</div>
-        <a asp-page="/Brand/Index" class="menu-item">
+        <a asp-page="/EVMStaff/BrandManagement/Index" class="menu-item">
             <i class="fas fa-copyright"></i>
             <span>Quản lý Thương hiệu</span>
         </a>
-        <a asp-page="/ProductManagement/Index" class="menu-item">
+        <a asp-page="/EVMStaff/ProductManagement/Index" class="menu-item">
             <i class="fas fa-car"></i>
             <span>Quản lý sản phẩm</span>
         </a>
-        <a asp-page="/PricingManagement/Index" class="menu-item">
+        <a asp-page="/EVMStaff/PricingManagement/Index" class="menu-item">
             <i class="fas fa-dollar-sign"></i>
             <span>Quản lý giá sỉ</span>
         </a>
@@ -251,15 +247,15 @@ else if (userRole == UserRole.Admin)
     
     <div class="menu-section">
         <div class="menu-title">ĐẠI LÝ & ĐỐI TÁC</div>
-        <a asp-page="/Dealer/Index" class="menu-item">
+        <a asp-page="/EVMStaff/DealerManagement/Index" class="menu-item">
             <i class="fas fa-building"></i>
             <span>Quản lý đại lý</span>
         </a>
-        <a asp-page="/UserManagement/Index" class="menu-item">
+        <a asp-page="/EVMStaff/UserManagement/Index" class="menu-item">
             <i class="fas fa-users"></i>
             <span>Tài khoản đại lý</span>
         </a>
-        <a asp-page="/ContractManagement/Index" class="menu-item">
+        <a asp-page="/EVMStaff/ContractManagement/Index" class="menu-item">
             <i class="fas fa-file-contract"></i>
             <span>Hợp đồng & chỉ tiêu</span>
         </a>

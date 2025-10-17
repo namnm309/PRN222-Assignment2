@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
 
@@ -10,15 +10,18 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
         private readonly IEVMReportService _evmReportService;
         private readonly IOrderService _orderService;
         private readonly IDealerService _dealerService;
+        private readonly IMappingService _mappingService;
 
         public IndexModel(
             IEVMReportService evmReportService,
             IOrderService orderService,
-            IDealerService dealerService)
+            IDealerService dealerService,
+            IMappingService mappingService)
         {
             _evmReportService = evmReportService;
             _orderService = orderService;
             _dealerService = dealerService;
+            _mappingService = mappingService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -37,9 +40,9 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
         public Guid? DealerId { get; set; }
 
         // Report data
-        public List<Region> Regions { get; set; } = new();
-        public List<Dealer> Dealers { get; set; } = new();
-        public List<Order> Orders { get; set; } = new();
+        public List<RegionResponse> Regions { get; set; } = new();
+        public List<DealerResponse> Dealers { get; set; } = new();
+        public List<OrderResponse> Orders { get; set; } = new();
         
         // Summary statistics
         public decimal TotalRevenue { get; set; }
@@ -78,12 +81,16 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
 
         private async Task LoadRegionsAndDealersAsync()
         {
-            Regions = await _evmReportService.GetAllRegionsAsync() ?? new List<Region>();
+            var regions = await _evmReportService.GetAllRegionsAsync();
+            if (regions != null)
+            {
+                Regions = _mappingService.MapToRegionViewModels(regions);
+            }
 
             var dealersResult = await _dealerService.GetAllAsync();
             if (dealersResult.Success && dealersResult.Data != null)
             {
-                Dealers = dealersResult.Data;
+                Dealers = _mappingService.MapToDealerViewModels(dealersResult.Data);
             }
         }
 
@@ -92,17 +99,20 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
             var ordersResult = await _orderService.GetAllAsync();
             if (ordersResult.Success && ordersResult.Data != null)
             {
-                Orders = ordersResult.Data;
+                // Map entities to DTOs
+                Orders = _mappingService.MapToOrderCreateViewModels(ordersResult.Data);
 
                 // Filter by date range
                 Orders = Orders.Where(o => 
                     o.OrderDate >= FromDate && 
                     o.OrderDate <= ToDate).ToList();
 
-                // Filter by region if specified
+                // Filter by region if specified - need to get dealer's region
                 if (RegionId.HasValue)
                 {
-                    Orders = Orders.Where(o => o.RegionId == RegionId.Value).ToList();
+                    // Get dealers in this region
+                    var dealersInRegion = Dealers.Where(d => d.RegionId == RegionId.Value).Select(d => d.Id).ToList();
+                    Orders = Orders.Where(o => o.DealerId.HasValue && dealersInRegion.Contains(o.DealerId.Value)).ToList();
                 }
 
                 // Calculate statistics
@@ -111,9 +121,12 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
                 TotalProducts = Orders.Count; // Each order is 1 product
                 AverageOrderValue = TotalOrders > 0 ? TotalRevenue / TotalOrders : 0m;
 
-                // Group by region
+                // Group by region - use dealer's region
                 var groupedByRegion = Orders
-                    .GroupBy(o => o.Region?.Name ?? "Không xác định")
+                    .GroupBy(o => {
+                        var dealer = Dealers.FirstOrDefault(d => d.Id == o.DealerId);
+                        return dealer?.RegionName ?? "Không xác định";
+                    })
                     .ToDictionary(
                         g => g.Key,
                         g => g.Sum(o => o.FinalAmount)
@@ -122,7 +135,10 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
                 RevenueByGroup = groupedByRegion;
 
                 OrderCountByGroup = Orders
-                    .GroupBy(o => o.Region?.Name ?? "Không xác định")
+                    .GroupBy(o => {
+                        var dealer = Dealers.FirstOrDefault(d => d.Id == o.DealerId);
+                        return dealer?.RegionName ?? "Không xác định";
+                    })
                     .ToDictionary(
                         g => g.Key,
                         g => g.Count()
@@ -135,7 +151,8 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
             var ordersResult = await _orderService.GetAllAsync();
             if (ordersResult.Success && ordersResult.Data != null)
             {
-                Orders = ordersResult.Data;
+                // Map entities to DTOs
+                Orders = _mappingService.MapToOrderCreateViewModels(ordersResult.Data);
 
                 // Filter by date range
                 Orders = Orders.Where(o => 
@@ -156,7 +173,7 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
 
                 // Group by dealer
                 var groupedByDealer = Orders
-                    .GroupBy(o => o.Dealer?.Name ?? "Không xác định")
+                    .GroupBy(o => o.DealerName ?? "Không xác định")
                     .ToDictionary(
                         g => g.Key,
                         g => g.Sum(o => o.FinalAmount)
@@ -165,7 +182,7 @@ namespace PresentationLayer.Pages.EVMStaff.SalesReport
                 RevenueByGroup = groupedByDealer;
 
                 OrderCountByGroup = Orders
-                    .GroupBy(o => o.Dealer?.Name ?? "Không xác định")
+                    .GroupBy(o => o.DealerName ?? "Không xác định")
                     .ToDictionary(
                         g => g.Key,
                         g => g.Count()
