@@ -117,7 +117,7 @@ namespace BusinessLayer.Services
         {
             var td = await _repo.GetByIdAsync(id);
             if (td == null) return (false, "Không tìm thấy", null);
-            td.Status = TestDriveStatus.Confirmed;
+            td.Status = TestDriveStatus.Successfully; // Thay đổi từ Confirmed sang Successfully
             td.UpdatedAt = DateTime.UtcNow;
             var ok = await _repo.UpdateAsync(td);
             return ok ? (true, null, td) : (false, "Không xác nhận được", null);
@@ -137,7 +137,7 @@ namespace BusinessLayer.Services
         {
             var td = await _repo.GetByIdAsync(id);
             if (td == null) return (false, "Không tìm thấy", null);
-            td.Status = TestDriveStatus.Canceled;
+            td.Status = TestDriveStatus.Failed; // Thay đổi từ Canceled sang Failed
             td.UpdatedAt = DateTime.UtcNow;
             var ok = await _repo.UpdateAsync(td);
             return ok ? (true, null, td) : (false, "Không hủy được", null);

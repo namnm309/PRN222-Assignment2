@@ -15,6 +15,7 @@ namespace BusinessLayer.Services
         Task<List<InventoryAllocationResponse>> GetInventoryAllocationsByDealerAsync(Guid dealerId);
         Task<List<InventoryAllocationResponse>> GetInventoryAllocationsByProductAsync(Guid productId);
         Task<InventoryAllocationResponse?> GetInventoryAllocationAsync(Guid productId, Guid dealerId);
+        Task<(bool Success, string Error, InventoryAllocationResponse Data)> GetInventoryByDealerAndProductAsync(Guid dealerId, Guid productId);
         Task<bool> CreateInventoryAllocationAsync(InventoryAllocationResponse allocation);
         Task<bool> UpdateInventoryAllocationAsync(InventoryAllocationResponse allocation);
         Task<bool> DeleteInventoryAllocationAsync(Guid id);

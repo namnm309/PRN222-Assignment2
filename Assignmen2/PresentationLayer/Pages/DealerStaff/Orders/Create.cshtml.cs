@@ -193,5 +193,108 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
             }
             return null;
         }
+
+        // API endpoint để kiểm tra tồn kho sản phẩm
+        public async Task<IActionResult> OnGetGetProductStockAsync(Guid productId)
+        {
+            try
+            {
+                var dealerId = GetCurrentDealerId();
+                if (!dealerId.HasValue)
+                {
+                    return new JsonResult(new { success = false, message = "Không xác định được đại lý hiện tại" });
+                }
+
+                // Kiểm tra tồn kho từ InventoryAllocation
+                var inventoryService = HttpContext.RequestServices.GetRequiredService<IInventoryManagementService>();
+                var result = await inventoryService.GetInventoryByDealerAndProductAsync(dealerId.Value, productId);
+
+                if (!result.Success || result.Data == null)
+                {
+                    // Fallback: Kiểm tra tồn kho tổng từ Product (như EVMStaff)
+                    var productService = HttpContext.RequestServices.GetRequiredService<IProductService>();
+                    var productResult = await productService.GetByIdAsync(productId);
+                    
+                    if (productResult.Success && productResult.Data != null)
+                    {
+                        var product = productResult.Data;
+                        var evmHasStock = product.StockQuantity > 0;
+                        
+                        string evmMessage;
+                        if (evmHasStock)
+                        {
+                            evmMessage = $"✅ Có sẵn {product.StockQuantity} xe trong kho EVM (chưa phân bổ cho đại lý)";
+                        }
+                        else
+                        {
+                            evmMessage = "❌ Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
+                        }
+
+                        return new JsonResult(new { 
+                            success = true,
+                            hasStock = evmHasStock,
+                            availableQuantity = product.StockQuantity,
+                            allocatedQuantity = 0,
+                            reservedQuantity = 0,
+                            minimumStock = 0,
+                            message = evmMessage,
+                            isEVMStock = true // Đánh dấu đây là tồn kho EVM, chưa phân bổ
+                        });
+                    }
+                    else
+                    {
+                        // Không tìm thấy sản phẩm
+                        return new JsonResult(new { 
+                            success = true,
+                            hasStock = false,
+                            availableQuantity = 0,
+                            allocatedQuantity = 0,
+                            reservedQuantity = 0,
+                            minimumStock = 0,
+                            message = "Không tìm thấy thông tin sản phẩm."
+                        });
+                    }
+                }
+
+                var inventory = result.Data;
+                var hasStock = inventory.AvailableQuantity > 0;
+                
+                string message;
+                if (hasStock)
+                {
+                    if (inventory.AvailableQuantity <= inventory.MinimumStock)
+                    {
+                        message = $"⚠️ Tồn kho thấp! Chỉ còn {inventory.AvailableQuantity} xe (tối thiểu: {inventory.MinimumStock} xe)";
+                    }
+                    else
+                    {
+                        message = $"✅ Có sẵn {inventory.AvailableQuantity} xe trong kho";
+                    }
+                }
+                else
+                {
+                    message = "❌ Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
+                }
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    hasStock = hasStock,
+                    availableQuantity = inventory.AvailableQuantity,
+                    allocatedQuantity = inventory.AllocatedQuantity,
+                    reservedQuantity = inventory.ReservedQuantity,
+                    minimumStock = inventory.MinimumStock,
+                    message = message
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { 
+                    success = false, 
+                    hasStock = false, 
+                    message = $"Lỗi kiểm tra tồn kho: {ex.Message}" 
+                });
+            }
+        }
     }
 }

@@ -147,5 +147,25 @@ namespace BusinessLayer.Services
                 return (false, $"Lỗi: {ex.Message}", new List<Customer>());
             }
         }
+
+        public async Task<(bool Success, string Error)> UpdateStatusAsync(Guid id, bool isActive)
+        {
+            try
+            {
+                var customer = await _repo.GetByIdAsync(id);
+                if (customer == null)
+                    return (false, "Không tìm thấy khách hàng");
+
+                customer.IsActive = isActive;
+                customer.UpdatedAt = DateTime.UtcNow;
+
+                var result = await _repo.UpdateAsync(customer);
+                return result ? (true, null) : (false, "Không thể cập nhật trạng thái khách hàng");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi: {ex.Message}");
+            }
+        }
     }
 }
