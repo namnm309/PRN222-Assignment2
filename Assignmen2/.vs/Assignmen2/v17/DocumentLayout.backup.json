@@ -146,22 +146,10 @@
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
               "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
               "RelativeToolTip": "PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAcwEUAAABTAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAAiwD4AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-16T15:50:53.554Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Index.cshtml.cs",
-              "DocumentMoniker": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
-              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
-              "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
-              "RelativeToolTip": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAIwEoAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-16T00:53:22.884Z"
             },
             {
               "$type": "Document",
@@ -244,6 +232,18 @@
               "ViewState": "AgIAAP0AAAAAAAAAAAAswAkBAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
               "WhenOpened": "2025-10-16T15:08:19.483Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
+              "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
+              "RelativeToolTip": "PresentationLayer\\Pages\\EVMStaff\\PricingManagement\\Index.cshtml.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAIwEoAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T00:53:22.884Z"
             },
             {
               "$type": "Document",
