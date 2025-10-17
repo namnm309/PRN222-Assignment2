@@ -199,6 +199,13 @@ namespace BusinessLayer.Services
             order.DeliveryDate = deliveryUtc;
             order.Status = "Delivered";
             order.UpdatedAt = DateTime.UtcNow;
+            
+            // 🔥 TỰ ĐỘNG CẬP NHẬT THANH TOÁN THÀNH ĐẦY ĐỦ KHI GIAO XE
+            if (order.PaymentStatus == "Partial")
+            {
+                order.PaymentStatus = "Paid";
+                Console.WriteLine($"[Order Delivered] Auto-updating PaymentStatus from Partial to Paid for order: {order.OrderNumber}");
+            }
 
             // 🔥 GIẢM TỒN KHO ĐẠI LÝ KHI GIAO HÀNG CHO KHÁCH
             try

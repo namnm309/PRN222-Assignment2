@@ -53,19 +53,19 @@ namespace DataAccessLayer.Repository
         {
             try
             {
-                Console.WriteLine($"[DEBUG] OrderRepository.UpdateAsync called for order: {order.Id}, Status: {order.Status}");
+                Console.WriteLine($"[DEBUG] OrderRepository.UpdateAsync called for order: {order.Id}, Status: {order.Status}, PaymentStatus: {order.PaymentStatus}");
                 
-                // Use raw SQL to update the order
+                // Use raw SQL to update the order - only update non-null fields
                 var sql = @"
                     UPDATE ""Order"" 
-                    SET ""Status"" = @status,
-                        ""OrderDate"" = @orderDate,
+                    SET ""Status"" = COALESCE(@status, ""Status""),
+                        ""OrderDate"" = COALESCE(@orderDate, ""OrderDate""),
                         ""UpdatedAt"" = @updatedAt,
-                        ""PaymentStatus"" = @paymentStatus,
-                        ""PaymentMethod"" = @paymentMethod,
-                        ""PaymentDueDate"" = @paymentDueDate,
-                        ""DeliveryDate"" = @deliveryDate,
-                        ""Notes"" = @notes
+                        ""PaymentStatus"" = COALESCE(@paymentStatus, ""PaymentStatus""),
+                        ""PaymentMethod"" = COALESCE(@paymentMethod, ""PaymentMethod""),
+                        ""PaymentDueDate"" = COALESCE(@paymentDueDate, ""PaymentDueDate""),
+                        ""DeliveryDate"" = COALESCE(@deliveryDate, ""DeliveryDate""),
+                        ""Notes"" = COALESCE(@notes, ""Notes"")
                     WHERE ""Id"" = @id";
                 
                 var parameters = new[]
@@ -82,6 +82,8 @@ namespace DataAccessLayer.Repository
                 };
                 
                 Console.WriteLine($"[DEBUG] Executing SQL update for order: {order.Id}");
+                Console.WriteLine($"[DEBUG] Status to update: {order.Status}");
+                Console.WriteLine($"[DEBUG] PaymentStatus to update: {order.PaymentStatus}");
                 
                 var result = await _db.Database.ExecuteSqlRawAsync(sql, parameters);
                 

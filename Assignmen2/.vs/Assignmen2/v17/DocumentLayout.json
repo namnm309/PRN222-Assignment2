@@ -146,20 +146,10 @@
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
               "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
               "RelativeToolTip": "PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAcwEUAAABTAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAAiwEUAAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-16T15:50:53.554Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Microsoft.PackageDependencyResolution.targets",
-              "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
-              "ToolTip": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
-              "ViewState": "AgIAAP0AAAAAAAAAAAAswAkBAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2025-10-16T15:08:19.483Z"
             },
             {
               "$type": "Document",
@@ -244,6 +234,16 @@
               "ViewState": "AgIAALkAAAAAAAAAAAAAAF0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-10-16T15:33:01.02Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Microsoft.PackageDependencyResolution.targets",
+              "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
+              "ToolTip": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
+              "ViewState": "AgIAAP0AAAAAAAAAAAAswAkBAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2025-10-16T15:08:19.483Z"
             },
             {
               "$type": "Document",

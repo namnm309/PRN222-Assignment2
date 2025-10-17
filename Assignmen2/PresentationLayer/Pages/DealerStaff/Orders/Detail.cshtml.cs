@@ -26,6 +26,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 if (result.Success && result.Data != null)
                 {
                     Order = _mappingService.MapToOrderCreateViewModel(result.Data);
+                    Console.WriteLine($"[DEBUG] OnGetAsync - Order ID: {Order.Id}, Status: {Order.Status}, PaymentStatus: {Order.PaymentStatus}");
                     return Page();
                 }
                 else
@@ -121,7 +122,9 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 var result = await _orderService.DeliverOrderAsync(id, deliveryDate);
                 if (result.Success)
                 {
-                    TempData["Success"] = "Cập nhật giao hàng thành công!";
+                    TempData["Success"] = "Giao xe thành công! Đơn hàng đã được cập nhật trạng thái thanh toán đầy đủ. Bây giờ bạn có thể tạo hợp đồng bán hàng.";
+                    // Redirect đến trang tạo hợp đồng
+                    return RedirectToPage("/DealerStaff/Orders/CreateContract", new { orderId = id });
                 }
                 else
                 {
