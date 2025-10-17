@@ -1,0 +1,251 @@
+@page
+@model PresentationLayer.Pages.DealerManager.Users.DetailModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Chi tiết nhân viên";
+}
+
+<div class="container-fluid">
+	<!-- Breadcrumb -->
+	<nav aria-label="breadcrumb" class="mb-4">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a asp-page="/DealerManager/Index">Dashboard</a></li>
+			<li class="breadcrumb-item"><a asp-page="/DealerManager/Users/Index">Quản lý nhân viên</a></li>
+			<li class="breadcrumb-item active">Chi tiết nhân viên</li>
+		</ol>
+	</nav>
+
+	<!-- Header -->
+	<div class="d-flex align-items-center justify-content-between mb-4">
+		<div>
+			<h3 class="mb-1 fw-bold"><i class="fas fa-user me-2 text-primary"></i>Chi tiết nhân viên</h3>
+			<p class="text-muted mb-0">Thông tin chi tiết về nhân viên</p>
+		</div>
+		<div class="d-flex gap-2">
+			<a asp-page="/DealerManager/Users/Edit" asp-route-id="@Model.User.Id" class="btn btn-outline-primary">
+				<i class="fas fa-edit me-2"></i>Chỉnh sửa
+			</a>
+			<a asp-page="/DealerManager/Users/Index" class="btn btn-secondary">
+				<i class="fas fa-arrow-left me-2"></i>Quay lại
+			</a>
+		</div>
+	</div>
+
+	<div class="row">
+		<!-- User Info Card -->
+		<div class="col-lg-8">
+			<div class="card border-0 shadow-sm mb-4">
+				<div class="card-header bg-gradient-primary text-white">
+					<h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Thông tin cá nhân</h5>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label class="form-label fw-semibold text-muted">Họ và tên</label>
+								<div class="p-2 bg-light rounded">
+									<i class="fas fa-user text-primary me-2"></i>@Model.User.FullName
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label class="form-label fw-semibold text-muted">Email</label>
+								<div class="p-2 bg-light rounded">
+									<i class="fas fa-envelope text-primary me-2"></i>
+									<a href="mailto:@Model.User.Email" class="text-decoration-none">@Model.User.Email</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label class="form-label fw-semibold text-muted">Số điện thoại</label>
+								<div class="p-2 bg-light rounded">
+									<i class="fas fa-phone text-primary me-2"></i>@(Model.User.PhoneNumber ?? "Chưa cập nhật")
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label class="form-label fw-semibold text-muted">Vai trò</label>
+								<div class="p-2 bg-light rounded">
+									@{
+										var roleInfo = Model.User.Role.ToString() switch
+										{
+											"Admin" => ("danger", "crown", "Admin"),
+											"EVMStaff" => ("warning", "user-shield", "EVM Staff"),
+											"DealerManager" => ("primary", "user-tie", "Dealer Manager"),
+											"DealerStaff" => ("info", "user", "Dealer Staff"),
+											_ => ("secondary", "question", "N/A")
+										};
+									}
+									<span class="badge bg-@roleInfo.Item1-subtle text-@roleInfo.Item1 fs-6">
+										<i class="fas fa-@roleInfo.Item2 me-1"></i>@roleInfo.Item3
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label class="form-label fw-semibold text-muted">Đại lý</label>
+								<div class="p-2 bg-light rounded">
+									<i class="fas fa-store text-primary me-2"></i>@(Model.User.DealerName ?? "Chưa gán")
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label class="form-label fw-semibold text-muted">Trạng thái</label>
+								<div class="p-2 bg-light rounded">
+									@if (Model.User.IsActive)
+									{
+										<span class="badge bg-success-subtle text-success fs-6">
+											<i class="fas fa-check-circle me-1"></i>Hoạt động
+										</span>
+									}
+									else
+									{
+										<span class="badge bg-secondary-subtle text-secondary fs-6">
+											<i class="fas fa-times-circle me-1"></i>Khóa
+										</span>
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- User Avatar & Actions -->
+		<div class="col-lg-4">
+			<div class="card border-0 shadow-sm mb-4">
+				<div class="card-body text-center">
+					<div class="avatar-large bg-primary text-white mx-auto mb-3">
+						@(string.IsNullOrEmpty(Model.User.FullName) ? "?" : Model.User.FullName.Substring(0, 1).ToUpper())
+					</div>
+					<h5 class="mb-1">@Model.User.FullName</h5>
+					<p class="text-muted mb-3">@Model.User.Email</p>
+					
+					<div class="d-grid gap-2">
+						<a asp-page="/DealerManager/Users/Edit" asp-route-id="@Model.User.Id" class="btn btn-primary">
+							<i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin
+						</a>
+						@if (Model.User.IsActive)
+						{
+							<button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#lockModal">
+								<i class="fas fa-lock me-2"></i>Khóa tài khoản
+							</button>
+						}
+						else
+						{
+							<button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#unlockModal">
+								<i class="fas fa-unlock me-2"></i>Mở khóa tài khoản
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+
+			<!-- Quick Stats -->
+			<div class="card border-0 shadow-sm">
+				<div class="card-header bg-white border-0">
+					<h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Thống kê nhanh</h6>
+				</div>
+				<div class="card-body">
+					<div class="row text-center">
+						<div class="col-6">
+							<div class="border-end">
+								<h4 class="text-primary mb-1">@Model.TotalOrders</h4>
+								<small class="text-muted">Đơn hàng</small>
+							</div>
+						</div>
+						<div class="col-6">
+							<h4 class="text-success mb-1">@Model.TotalSales.ToString("N0")</h4>
+							<small class="text-muted">Doanh thu (VNĐ)</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.avatar-large {
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 700;
+		font-size: 48px;
+	}
+	
+	.bg-gradient-primary {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	}
+</style>
+
+<!-- Lock Modal -->
+<div class="modal fade" id="lockModal" tabindex="-1" aria-labelledby="lockModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="lockModalLabel">
+					<i class="fas fa-lock me-2 text-warning"></i>Khóa tài khoản
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="post" asp-page-handler="ToggleUserStatus">
+				<div class="modal-body">
+					<input type="hidden" name="UserId" value="@Model.User.Id" />
+					<input type="hidden" name="Action" value="lock" />
+					<div class="alert alert-warning">
+						<i class="fas fa-exclamation-triangle me-2"></i>
+						Bạn có chắc chắn muốn khóa tài khoản <strong>@Model.User.FullName</strong>?
+					</div>
+					<p class="text-muted">Tài khoản sẽ không thể đăng nhập sau khi bị khóa.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-warning">
+						<i class="fas fa-lock me-1"></i>Khóa tài khoản
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Unlock Modal -->
+<div class="modal fade" id="unlockModal" tabindex="-1" aria-labelledby="unlockModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="unlockModalLabel">
+					<i class="fas fa-unlock me-2 text-success"></i>Mở khóa tài khoản
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="post" asp-page-handler="ToggleUserStatus">
+				<div class="modal-body">
+					<input type="hidden" name="UserId" value="@Model.User.Id" />
+					<input type="hidden" name="Action" value="unlock" />
+					<div class="alert alert-success">
+						<i class="fas fa-check-circle me-2"></i>
+						Bạn có chắc chắn muốn mở khóa tài khoản <strong>@Model.User.FullName</strong>?
+					</div>
+					<p class="text-muted">Tài khoản sẽ có thể đăng nhập trở lại.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-success">
+						<i class="fas fa-unlock me-1"></i>Mở khóa tài khoản
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

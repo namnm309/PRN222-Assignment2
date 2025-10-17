@@ -81,9 +81,8 @@
                                 </td>
                                 <td>
                                     <div>
-                                        <div class="fw-bold">@order.Product?.Name</div>
-                                        <div class="text-muted small">@order.Product?.Brand?.Name</div>
-                                        <div class="text-muted small">SKU: @order.Product?.Sku</div>
+                                        <div class="fw-bold">@order.ProductName</div>
+                                        <div class="text-muted small">SKU: @order.ProductSku</div>
                                     </div>
                                 </td>
                                 <td>
@@ -99,18 +98,18 @@
                                     @{
                                         var statusClass = order.Status switch
                                         {
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Pending => "bg-warning",
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Approved => "bg-success",
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Rejected => "bg-danger",
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Delivered => "bg-info",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Pending => "bg-warning",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Approved => "bg-success",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Rejected => "bg-danger",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Delivered => "bg-info",
                                             _ => "bg-secondary"
                                         };
                                         var statusText = order.Status switch
                                         {
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Pending => "Chờ duyệt",
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Approved => "Đã duyệt",
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Rejected => "Từ chối",
-                                            DataAccessLayer.Enum.PurchaseOrderStatus.Delivered => "Đã giao",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Pending => "Chờ duyệt",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Approved => "Đã duyệt",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Rejected => "Từ chối",
+                                            BusinessLayer.Enums.PurchaseOrderStatus.Delivered => "Đã giao",
                                             _ => "Không xác định"
                                         };
                                     }
@@ -124,7 +123,7 @@
                                         <a asp-page="/DealerStaff/PurchaseOrders/Detail" asp-route-id="@order.Id" class="btn btn-outline-primary btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        @if (order.Status == DataAccessLayer.Enum.PurchaseOrderStatus.Pending)
+                                        @if (order.Status == BusinessLayer.Enums.PurchaseOrderStatus.Pending)
                                         {
                                             <a asp-page="/DealerStaff/PurchaseOrders/Edit" asp-route-id="@order.Id" class="btn btn-outline-secondary btn-sm">
                                                 <i class="fas fa-edit"></i>
@@ -154,7 +153,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <div class="text-muted small">Chờ duyệt</div>
-                    <div class="h4 text-warning">@Model.PurchaseOrders.Count(o => o.Status == DataAccessLayer.Enum.PurchaseOrderStatus.Pending)</div>
+                    <div class="h4 text-warning">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Pending)</div>
                 </div>
             </div>
         </div>
@@ -162,7 +161,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <div class="text-muted small">Đã duyệt</div>
-                    <div class="h4 text-success">@Model.PurchaseOrders.Count(o => o.Status == DataAccessLayer.Enum.PurchaseOrderStatus.Approved)</div>
+                    <div class="h4 text-success">@Model.PurchaseOrders.Count(o => o.Status == BusinessLayer.Enums.PurchaseOrderStatus.Approved)</div>
                 </div>
             </div>
         </div>

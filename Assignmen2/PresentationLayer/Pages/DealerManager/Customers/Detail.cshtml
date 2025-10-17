@@ -1,0 +1,129 @@
+@page "{id:guid}"
+@model PresentationLayer.Pages.DealerManager.Customers.DetailModel
+@{
+    Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Chi tiết khách hàng";
+}
+<div class="container-fluid">
+    <a asp-page="/DealerManager/Customers/Index" class="btn btn-sm btn-link mb-3"><i class="fas fa-arrow-left me-1"></i>Quay lại</a>
+    <h3 class="fw-bold mb-4"><i class="fas fa-user me-2 text-primary"></i>Chi tiết khách hàng</h3>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Thông tin cá nhân</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <strong>Họ và tên:</strong><br />
+                            <span class="text-primary">@Model.Customer.FullName</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Số điện thoại:</strong><br />
+                            <span>@(Model.Customer.PhoneNumber ?? "-")</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Email:</strong><br />
+                            <span>@(Model.Customer.Email ?? "-")</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Địa chỉ:</strong><br />
+                            <span>@(Model.Customer.Address ?? "-")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Lịch sử đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Orders.Count == 0)
+                    {
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-file-invoice fs-1 mb-3 d-block opacity-25"></i>
+                            <div>Khách hàng chưa có đơn hàng nào</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Mã đơn</th>
+                                        <th>Sản phẩm</th>
+                                        <th>Giá</th>
+                                        <th>Trạng thái</th>
+                                        <th>Ngày tạo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.Orders)
+                                    {
+                                        var statusInfo = order.Status.ToString() switch
+                                        {
+                                            "Pending" => ("warning", "clock", "Chờ xử lý"),
+                                            "Confirmed" => ("info", "check-circle", "Đã xác nhận"),
+                                            "Completed" => ("success", "check-double", "Hoàn thành"),
+                                            "Cancelled" => ("danger", "times-circle", "Đã hủy"),
+                                            _ => ("secondary", "question", "N/A")
+                                        };
+                                        <tr>
+                                            <td>
+                                                <a asp-page="/DealerManager/Orders/Detail" asp-route-id="@order.Id" class="text-decoration-none">
+                                                    #@order.OrderNumber
+                                                </a>
+                                            </td>
+                                            <td>@(order.Product?.Name ?? "N/A")</td>
+                                            <td>@order.FinalAmount.ToString("N0") VND</td>
+                                            <td>
+                                                <span class="badge bg-@statusInfo.Item1-subtle text-@statusInfo.Item1">
+                                                    <i class="fas fa-@statusInfo.Item2 me-1"></i>@statusInfo.Item3
+                                                </span>
+                                            </td>
+                                            <td>@order.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Thống kê</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Tổng đơn hàng:</span>
+                                <span class="badge bg-primary">@Model.Orders.Count</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Tổng chi tiêu:</span>
+                                <span class="text-success fw-bold">@Model.Orders.Sum(o => o.FinalAmount).ToString("N0") VND</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Đơn hàng gần nhất:</span>
+                                <span class="text-muted">@(Model.Orders.OrderByDescending(o => o.CreatedAt).FirstOrDefault()?.CreatedAt.ToString("dd/MM/yyyy") ?? "-")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

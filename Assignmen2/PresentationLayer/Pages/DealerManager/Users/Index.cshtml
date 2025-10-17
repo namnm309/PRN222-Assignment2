@@ -1,0 +1,245 @@
+@page
+@model PresentationLayer.Pages.DealerManager.Users.IndexModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Quản lý nhân viên";
+}
+
+<div class="container-fluid">
+	<!-- Header -->
+	<div class="d-flex align-items-center justify-content-between mb-4">
+		<div>
+			<h3 class="mb-1 fw-bold"><i class="fas fa-users-cog me-2 text-primary"></i>Quản lý nhân viên</h3>
+			<p class="text-muted mb-0">Danh sách tài khoản nhân viên đại lý</p>
+		</div>
+		<a class="btn btn-primary shadow-sm" asp-page="/DealerManager/Staff/Create">
+			<i class="fas fa-user-plus me-2"></i>Tạo Dealer Staff
+		</a>
+	</div>
+
+	<!-- Users List -->
+	<div class="card border-0 shadow-sm">
+		<div class="card-header bg-white border-0 py-3">
+			<div class="d-flex align-items-center justify-content-between">
+				<h5 class="mb-0"><i class="fas fa-list me-2"></i>Danh sách nhân viên</h5>
+				<span class="badge bg-primary fs-6">@Model.Users.Count nhân viên</span>
+			</div>
+		</div>
+		<div class="card-body p-0">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle mb-0">
+					<thead class="table-light">
+						<tr>
+							<th class="ps-4">Nhân viên</th>
+							<th>Email</th>
+							<th>Số điện thoại</th>
+							<th>Vai trò</th>
+							<th>Đại lý</th>
+							<th>Trạng thái</th>
+							<th class="text-center pe-4">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (Model.Users.Count == 0)
+						{
+							<tr>
+								<td colspan="7" class="text-center py-5 text-muted">
+									<i class="fas fa-users fs-1 mb-3 d-block opacity-25"></i>
+									<div>Chưa có nhân viên nào</div>
+									<a asp-page="/DealerManager/Staff/Create" class="btn btn-sm btn-primary mt-3">
+										<i class="fas fa-plus me-1"></i>Thêm nhân viên đầu tiên
+									</a>
+								</td>
+							</tr>
+						}
+						@foreach (var user in Model.Users)
+						{
+							var roleInfo = user.Role.ToString() switch
+							{
+								"Admin" => ("danger", "crown", "Admin"),
+								"EVMStaff" => ("warning", "user-shield", "EVM Staff"),
+								"DealerManager" => ("primary", "user-tie", "Dealer Manager"),
+								"DealerStaff" => ("info", "user", "Dealer Staff"),
+								_ => ("secondary", "question", "N/A")
+							};
+							<tr>
+								<td class="ps-4">
+									<div class="d-flex align-items-center">
+										<div class="avatar-circle bg-@roleInfo.Item1 text-white me-3">
+											@(string.IsNullOrEmpty(user.FullName) ? "?" : user.FullName.Substring(0, 1).ToUpper())
+										</div>
+										<div>
+											<div class="fw-semibold">@user.FullName</div>
+											<small class="text-muted">ID: @user.Id.ToString("N").Substring(0, 8).ToUpper()</small>
+										</div>
+									</div>
+								</td>
+								<td>
+									<i class="fas fa-envelope text-muted me-2"></i>
+									<a href="mailto:@user.Email" class="text-decoration-none">@user.Email</a>
+								</td>
+								<td>
+									<i class="fas fa-phone text-muted me-2"></i>
+									@(user.PhoneNumber ?? "-")
+								</td>
+								<td>
+									<span class="badge bg-@roleInfo.Item1-subtle text-@roleInfo.Item1">
+										<i class="fas fa-@roleInfo.Item2 me-1"></i>@roleInfo.Item3
+									</span>
+								</td>
+								<td>
+									@if (!string.IsNullOrEmpty(user.DealerName))
+									{
+										<i class="fas fa-store me-1 text-success"></i>@user.DealerName
+									}
+									else
+									{
+										<span class="text-muted">-</span>
+									}
+								</td>
+								<td>
+									@if (user.IsActive)
+									{
+										<span class="badge bg-success-subtle text-success">
+											<i class="fas fa-check-circle me-1"></i>Hoạt động
+										</span>
+									}
+									else
+									{
+										<span class="badge bg-secondary-subtle text-secondary">
+											<i class="fas fa-times-circle me-1"></i>Khóa
+										</span>
+									}
+								</td>
+								<td class="text-center pe-4">
+									<div class="btn-group" role="group">
+										<a asp-page="/DealerManager/Users/Detail" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+											<i class="fas fa-eye"></i>
+										</a>
+										<a asp-page="/DealerManager/Users/Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary" title="Chỉnh sửa">
+											<i class="fas fa-edit"></i>
+										</a>
+										@if (user.IsActive)
+										{
+											<button class="btn btn-sm btn-outline-warning" title="Khóa tài khoản" data-bs-toggle="modal" data-bs-target="#toggleModal" data-user-id="@user.Id" data-user-name="@user.FullName" data-action="lock">
+												<i class="fas fa-lock"></i>
+											</button>
+										}
+										else
+										{
+											<button class="btn btn-sm btn-outline-success" title="Mở khóa" data-bs-toggle="modal" data-bs-target="#toggleModal" data-user-id="@user.Id" data-user-name="@user.FullName" data-action="unlock">
+												<i class="fas fa-unlock"></i>
+											</button>
+										}
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		@if (Model.Users.Count > 0)
+		{
+			<div class="card-footer bg-white border-0 py-3">
+				<div class="d-flex align-items-center justify-content-between">
+					<div class="text-muted small">
+						Tổng <strong>@Model.Users.Count</strong> nhân viên
+					</div>
+					<div class="d-flex gap-2">
+						<span class="badge bg-primary">DealerManager: @Model.Users.Count(u => u.Role == DataAccessLayer.Enum.UserRole.DealerManager)</span>
+						<span class="badge bg-info">DealerStaff: @Model.Users.Count(u => u.Role == DataAccessLayer.Enum.UserRole.DealerStaff)</span>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<style>
+	.avatar-circle {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 700;
+		font-size: 18px;
+	}
+	
+	.table tbody tr {
+		transition: background-color 0.2s ease;
+	}
+	
+	.table tbody tr:hover {
+		background-color: rgba(102, 126, 234, 0.05);
+	}
+</style>
+
+<!-- Toggle User Status Modal -->
+<div class="modal fade" id="toggleModal" tabindex="-1" aria-labelledby="toggleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="toggleModalLabel">
+					<i class="fas fa-user-lock me-2 text-warning"></i>Xác nhận thay đổi trạng thái
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="post" asp-page-handler="ToggleUserStatus">
+				<div class="modal-body">
+					<input type="hidden" id="toggleUserId" name="UserId" />
+					<input type="hidden" id="toggleAction" name="Action" />
+					<div class="alert alert-warning">
+						<i class="fas fa-exclamation-triangle me-2"></i>
+						<span id="toggleMessage">Bạn có chắc chắn muốn thay đổi trạng thái tài khoản này?</span>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<strong>Tên người dùng:</strong><br />
+							<span id="toggleUserName" class="text-primary"></span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-warning" id="toggleSubmitBtn">
+						<i class="fas fa-check me-1"></i>Xác nhận
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const toggleModal = document.getElementById('toggleModal');
+		if (toggleModal) {
+			toggleModal.addEventListener('show.bs.modal', function (event) {
+				const button = event.relatedTarget;
+				const userId = button.getAttribute('data-user-id');
+				const userName = button.getAttribute('data-user-name');
+				const action = button.getAttribute('data-action');
+				
+				document.getElementById('toggleUserId').value = userId;
+				document.getElementById('toggleAction').value = action;
+				document.getElementById('toggleUserName').textContent = userName;
+				
+				const message = document.getElementById('toggleMessage');
+				const submitBtn = document.getElementById('toggleSubmitBtn');
+				
+				if (action === 'lock') {
+					message.textContent = 'Bạn có chắc chắn muốn khóa tài khoản này?';
+					submitBtn.innerHTML = '<i class="fas fa-lock me-1"></i>Khóa tài khoản';
+					submitBtn.className = 'btn btn-warning';
+				} else {
+					message.textContent = 'Bạn có chắc chắn muốn mở khóa tài khoản này?';
+					submitBtn.innerHTML = '<i class="fas fa-unlock me-1"></i>Mở khóa tài khoản';
+					submitBtn.className = 'btn btn-success';
+				}
+			});
+		}
+	});
+</script>

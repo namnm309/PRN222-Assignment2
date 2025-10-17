@@ -1,0 +1,23 @@
+@* status: string, map màu linh hoạt *@
+@{
+	var status = (ViewData["status"] as string)?.Trim() ?? string.Empty;
+	string badge = status.ToLower() switch
+	{
+		"pending" => "bg-warning text-dark",
+		"confirmed" => "bg-info text-dark",
+		"successfully" => "bg-success",
+		"failed" => "bg-secondary",
+		"canceled" => "bg-danger",
+		"completed" => "bg-success",
+		"delivered" => "bg-primary",
+		"unpaid" => "bg-warning text-dark",
+		"partial" => "bg-warning text-dark",
+		"overdue" => "bg-danger",
+		"paid" => "bg-success",
+		_ => "bg-light text-dark"
+	};
+}
+
+<span class="badge @badge">@status</span>
+
+

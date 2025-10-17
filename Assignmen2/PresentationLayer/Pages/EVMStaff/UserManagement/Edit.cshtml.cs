@@ -2,7 +2,6 @@ using BusinessLayer.Services;
 using BusinessLayer.DTOs.Responses;
 using BusinessLayer.DTOs.Requests;
 using BusinessLayer.Enums;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
 
@@ -24,7 +23,7 @@ namespace PresentationLayer.Pages.EVMStaff.UserManagement
         [BindProperty]
         public UserUpdateRequest Input { get; set; } = new();
 
-        public UserResponse? User { get; set; }
+        public new UserResponse? User { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {

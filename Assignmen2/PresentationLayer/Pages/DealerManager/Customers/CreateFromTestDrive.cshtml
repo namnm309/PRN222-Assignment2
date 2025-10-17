@@ -1,0 +1,53 @@
+@page "{id:guid}"
+@model PresentationLayer.Pages.DealerManager.Customers.CreateFromTestDriveModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Tạo khách hàng từ lái thử";
+}
+
+<div class="container-fluid">
+	<nav aria-label="breadcrumb" class="mb-3">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a asp-page="/DealerManager/TestDrives/Detail" asp-route-id="@Model.TestDriveId">Chi tiết lái thử</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Tạo khách hàng</li>
+		</ol>
+	</nav>
+
+	<div class="row justify-content-center">
+		<div class="col-lg-8">
+			<div class="card shadow-sm">
+				<div class="card-header bg-success text-white">
+					<i class="fas fa-user-plus me-2"></i>Tạo khách hàng từ lái thử
+				</div>
+				<div class="card-body">
+					<form method="post">
+						<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label asp-for="Input.FullName" class="form-label">Họ và tên</label>
+								<input asp-for="Input.FullName" class="form-control" placeholder="Nguyễn Văn A" />
+								<span asp-validation-for="Input.FullName" class="text-danger"></span>
+							</div>
+							<div class="col-md-6">
+								<label asp-for="Input.Email" class="form-label">Email</label>
+								<input asp-for="Input.Email" class="form-control" type="email" placeholder="customer@example.com" />
+								<span asp-validation-for="Input.Email" class="text-danger"></span>
+							</div>
+							<div class="col-md-6">
+								<label asp-for="Input.PhoneNumber" class="form-label">Số điện thoại</label>
+								<input asp-for="Input.PhoneNumber" class="form-control" placeholder="09xxxxxxxx" />
+								<span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="mt-4 d-flex gap-2">
+							<button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i> Tạo</button>
+							<a asp-page="/DealerManager/TestDrives/Detail" asp-route-id="@Model.TestDriveId" class="btn btn-outline-secondary">Hủy</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

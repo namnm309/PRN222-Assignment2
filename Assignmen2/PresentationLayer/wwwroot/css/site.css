@@ -122,3 +122,96 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
   border-radius: 1rem; 
   box-shadow: 0 20px 40px rgba(14, 165, 233, 0.3);
 }
+
+/* ===== DASHBOARD UTILITIES ===== */
+/* Activity icon alignment */
+.activity-icon {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	flex-shrink: 0;
+}
+
+/* Ensure consistent icon alignment in activity list */
+.list-group-item .d-flex {
+	align-items: center;
+	min-height: 45px;
+}
+
+.list-group-item .flex-shrink-0 {
+	width: 45px;
+	text-align: center;
+}
+
+/* Responsive adjustments for dashboard */
+@media (max-width: 768px) {
+	.activity-icon {
+		width: 40px;
+		height: 40px;
+		font-size: 0.9rem;
+	}
+	
+	.list-group-item .flex-shrink-0 {
+		width: 40px;
+	}
+	
+	.list-group-item .d-flex {
+		min-height: 40px;
+	}
+}
+
+/* KPI card responsive improvements */
+@media (max-width: 576px) {
+	.card-body .d-flex.justify-content-between {
+		flex-direction: column;
+		align-items: flex-start !important;
+	}
+	
+	.card-body .p-3.bg-white.bg-opacity-25 {
+		margin-top: 1rem;
+		align-self: flex-end;
+	}
+}
+
+/* Loading skeleton for dashboard data */
+.skeleton {
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+	0% { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}
+
+/* Vietnamese number formatting utilities */
+.vn-currency {
+	font-variant-numeric: tabular-nums;
+}
+
+.vn-date {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== DASHBOARD COMPONENT STYLES ===== */
+.hover-lift {
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15) !important;
+}
+
+.hover-bg-light {
+	transition: background-color 0.2s ease;
+}
+
+.hover-bg-light:hover {
+	background-color: rgba(0,0,0,0.02);
+}

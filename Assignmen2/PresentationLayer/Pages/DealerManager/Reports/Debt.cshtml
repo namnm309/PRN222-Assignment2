@@ -1,0 +1,523 @@
+@page
+@model PresentationLayer.Pages.DealerManager.Reports.DebtModel
+@{
+	Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+	ViewData["Title"] = "Báo cáo công nợ";
+}
+
+<div class="container-fluid">
+	<!-- Header -->
+	<div class="mb-4">
+		<h3 class="fw-bold mb-1"><i class="fas fa-file-invoice-dollar me-2 text-danger"></i>Báo cáo công nợ</h3>
+		<p class="text-muted mb-0">Theo dõi công nợ và thanh toán của khách hàng</p>
+	</div>
+
+	<!-- Filters -->
+	<div class="card border-0 shadow-sm mb-4">
+		<div class="card-body">
+			<form method="get" class="row g-3">
+				<div class="col-md-5">
+					<label class="form-label fw-semibold">
+						<i class="fas fa-user me-1"></i>Khách hàng
+					</label>
+					<select class="form-select" asp-for="CustomerId">
+						<option value="">-- Tất cả khách hàng --</option>
+						@foreach (var c in Model.Customers)
+						{
+							<option value="@c.Id" selected="@(Model.CustomerId == c.Id)">@c.FullName - @c.PhoneNumber</option>
+						}
+					</select>
+				</div>
+				<div class="col-md-3">
+					<label class="form-label fw-semibold">
+						<i class="fas fa-credit-card me-1"></i>Trạng thái thanh toán
+					</label>
+					<select class="form-select" asp-for="PaymentStatus">
+						<option value="">-- Tất cả trạng thái --</option>
+						<option value="Pending" selected="@(Model.PaymentStatus == "Pending")">Chờ thanh toán</option>
+						<option value="Partial" selected="@(Model.PaymentStatus == "Partial")">Thanh toán 1 phần</option>
+						<option value="Overdue" selected="@(Model.PaymentStatus == "Overdue")">Quá hạn</option>
+						<option value="Paid" selected="@(Model.PaymentStatus == "Paid")">Đã thanh toán</option>
+					</select>
+				</div>
+				<div class="col-md-2 align-self-end">
+					<button class="btn btn-primary w-100" type="submit">
+						<i class="fas fa-filter me-1"></i>Lọc
+					</button>
+				</div>
+				<div class="col-md-2 align-self-end">
+					<a asp-page="/DealerManager/Reports/Debt" class="btn btn-outline-secondary w-100">
+						<i class="fas fa-sync me-1"></i>Làm mới
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Summary KPI -->
+	<div class="row g-3 mb-4">
+		<div class="col-md-4">
+			<div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+				<div class="card-body text-white">
+					<div class="d-flex justify-content-between align-items-center">
+						<div>
+							<div class="small opacity-75 mb-2">Tổng công nợ</div>
+							<h2 class="mb-0 fw-bold">@Model.TotalDebt.ToString("N0")</h2>
+							<div class="small mt-2 opacity-75">VND</div>
+						</div>
+						<div class="p-3 bg-white bg-opacity-25 rounded-circle">
+							<i class="fas fa-file-invoice-dollar fs-1"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+				<div class="card-body text-white">
+					<div class="d-flex justify-content-between align-items-center">
+						<div>
+							<div class="small opacity-75 mb-2">Số đơn hàng</div>
+							<h2 class="mb-0 fw-bold">@Model.Orders.Count</h2>
+							<div class="small mt-2 opacity-75">Đơn công nợ</div>
+						</div>
+						<div class="p-3 bg-white bg-opacity-25 rounded-circle">
+							<i class="fas fa-shopping-cart fs-1"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+				<div class="card-body text-white">
+					<div class="d-flex justify-content-between align-items-center">
+						<div>
+							<div class="small opacity-75 mb-2">Khách hàng có nợ</div>
+							<h2 class="mb-0 fw-bold">@Model.Customers.Count</h2>
+							<div class="small mt-2 opacity-75">Khách hàng</div>
+						</div>
+						<div class="p-3 bg-white bg-opacity-25 rounded-circle">
+							<i class="fas fa-users fs-1"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Debt Table -->
+	<div class="card border-0 shadow-sm">
+		<div class="card-header bg-white border-0 py-3">
+			<div class="d-flex align-items-center justify-content-between">
+				<h5 class="mb-0"><i class="fas fa-list me-2"></i>Chi tiết công nợ</h5>
+				<span class="badge bg-danger fs-6">@Model.Orders.Count đơn</span>
+			</div>
+		</div>
+		<div class="card-body p-0">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle mb-0">
+					<thead class="table-light">
+						<tr>
+							<th class="ps-4">Mã đơn hàng</th>
+							<th>Khách hàng</th>
+							<th>Sản phẩm</th>
+							<th class="text-end">Tổng tiền</th>
+							<th class="text-end">Còn nợ</th>
+							<th>Trạng thái TT</th>
+							<th>Hạn thanh toán</th>
+							<th class="text-center pe-4">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (Model.Orders.Count == 0)
+						{
+							<tr>
+								<td colspan="8" class="text-center py-5 text-muted">
+									<i class="fas fa-clipboard-check fs-1 mb-3 d-block opacity-25"></i>
+									<div class="fw-semibold">Không có công nợ nào</div>
+									<small>Tất cả đơn hàng đã được thanh toán hoặc không có đơn nào phù hợp với bộ lọc</small>
+								</td>
+							</tr>
+						}
+						@foreach (var order in Model.Orders)
+						{
+							var debt = order.FinalAmount; // Giả định chưa thanh toán gì
+							var isOverdue = order.PaymentDueDate.HasValue && order.PaymentDueDate.Value < DateTime.Now;
+							var statusInfo = order.PaymentStatus switch
+							{
+								"Pending" => ("warning", "clock", "Chờ thanh toán"),
+								"Partial" => ("info", "hourglass-half", "TT 1 phần"),
+								"Overdue" => ("danger", "exclamation-triangle", "Quá hạn"),
+								"Paid" => ("success", "check-circle", "Đã TT"),
+								_ => ("secondary", "question", "N/A")
+							};
+							<tr class="@(isOverdue ? "table-danger" : "")">
+								<td class="ps-4">
+									<div class="d-flex align-items-center">
+										<div class="bg-danger bg-opacity-10 p-2 rounded me-2">
+											<i class="fas fa-file-invoice-dollar text-danger"></i>
+										</div>
+										<div>
+											<div class="fw-semibold">@order.OrderNumber</div>
+											<small class="text-muted">@order.CreatedAt.ToString("dd/MM/yyyy")</small>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="d-flex align-items-center">
+										<div class="avatar-circle bg-primary text-white me-2">
+											@(string.IsNullOrEmpty(order.Customer?.FullName) ? "?" : order.Customer.FullName.Substring(0, 1).ToUpper())
+										</div>
+										<div>
+											<div class="fw-semibold">@order.Customer.FullName</div>
+											<small class="text-muted">@order.Customer.PhoneNumber</small>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div>@order.Product?.Name</div>
+									<small class="text-muted">@order.Product?.Sku</small>
+								</td>
+								<td class="text-end">
+									<div class="fw-bold">@order.FinalAmount.ToString("N0")</div>
+									<small class="text-muted">VND</small>
+								</td>
+								<td class="text-end">
+									<div class="fw-bold text-danger">@debt.ToString("N0")</div>
+									<small class="text-muted">VND</small>
+								</td>
+								<td>
+									<span class="badge bg-@statusInfo.Item1-subtle text-@statusInfo.Item1">
+										<i class="fas fa-@statusInfo.Item2 me-1"></i>@statusInfo.Item3
+									</span>
+								</td>
+								<td>
+									@if (order.PaymentDueDate.HasValue)
+									{
+										<div class="@(isOverdue ? "text-danger fw-semibold" : "")">
+											<i class="fas fa-calendar @(isOverdue ? "text-danger" : "text-muted") me-1"></i>
+											@order.PaymentDueDate.Value.ToString("dd/MM/yyyy")
+										</div>
+										@if (isOverdue)
+										{
+											<small class="text-danger">
+												<i class="fas fa-exclamation-triangle me-1"></i>Quá hạn @((DateTime.Now - order.PaymentDueDate.Value).Days) ngày
+											</small>
+										}
+									}
+									else
+									{
+										<span class="text-muted">Chưa có</span>
+									}
+								</td>
+								<td class="text-center pe-4">
+									<div class="btn-group" role="group">
+										<a asp-page="/DealerManager/Orders/Detail" asp-route-id="@order.Id" 
+										   class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+											<i class="fas fa-eye"></i>
+										</a>
+										@if (order.PaymentStatus != "Paid")
+										{
+											<button class="btn btn-sm btn-outline-success" 
+													title="Thanh toán" 
+													onclick="showPaymentModal('@order.Id', '@order.OrderNumber', @order.FinalAmount)">
+												<i class="fas fa-money-bill-wave"></i>
+											</button>
+										}
+										@if (order.PaymentStatus == "Pending" || order.PaymentStatus == "Partial")
+										{
+											<button class="btn btn-sm btn-outline-warning" 
+													title="Gia hạn" 
+													onclick="showExtendModal('@order.Id', '@order.OrderNumber')">
+												<i class="fas fa-clock"></i>
+											</button>
+										}
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		@if (Model.Orders.Count > 0)
+		{
+			<div class="card-footer bg-white border-0 py-3">
+				<div class="d-flex align-items-center justify-content-between">
+					<div class="text-muted small">
+						Hiển thị <strong>@Model.Orders.Count</strong> đơn hàng
+					</div>
+					<div class="text-end">
+						<small class="text-danger fw-semibold">Tổng công nợ:</small>
+						<strong class="text-danger ms-2 fs-5">@Model.TotalDebt.ToString("N0") VND</strong>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="paymentModalLabel">
+					<i class="fas fa-money-bill-wave me-2 text-success"></i>Thanh toán công nợ
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form id="paymentForm">
+				@Html.AntiForgeryToken()
+				<div class="modal-body">
+					<input type="hidden" id="paymentOrderId" name="orderId" />
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Mã đơn hàng</label>
+						<input type="text" class="form-control" id="paymentOrderNumber" readonly />
+					</div>
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Số tiền còn nợ</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="paymentDebtAmount" readonly />
+							<span class="input-group-text">VND</span>
+						</div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Số tiền thanh toán <span class="text-danger">*</span></label>
+						<div class="input-group">
+							<input type="number" class="form-control" id="paymentAmount" name="amount" required min="1" />
+							<span class="input-group-text">VND</span>
+						</div>
+						<div class="form-text">Nhập số tiền muốn thanh toán</div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Phương thức thanh toán</label>
+						<select class="form-select" id="paymentMethod" name="method" required>
+							<option value="">-- Chọn phương thức --</option>
+							<option value="Cash">Tiền mặt</option>
+							<option value="BankTransfer">Chuyển khoản</option>
+							<option value="Card">Thẻ</option>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Ghi chú</label>
+						<textarea class="form-control" id="paymentNote" name="note" rows="3" placeholder="Ghi chú về giao dịch..."></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-success">
+						<i class="fas fa-check me-2"></i>Xác nhận thanh toán
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Extend Modal -->
+<div class="modal fade" id="extendModal" tabindex="-1" aria-labelledby="extendModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="extendModalLabel">
+					<i class="fas fa-clock me-2 text-warning"></i>Gia hạn thanh toán
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form id="extendForm">
+				@Html.AntiForgeryToken()
+				<div class="modal-body">
+					<input type="hidden" id="extendOrderId" name="orderId" />
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Mã đơn hàng</label>
+						<input type="text" class="form-control" id="extendOrderNumber" readonly />
+					</div>
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Ngày gia hạn đến <span class="text-danger">*</span></label>
+						<input type="date" class="form-control" id="extendDate" name="extendDate" required />
+					</div>
+					<div class="mb-3">
+						<label class="form-label fw-semibold">Lý do gia hạn</label>
+						<textarea class="form-control" id="extendReason" name="reason" rows="3" placeholder="Lý do gia hạn thanh toán..."></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-warning">
+						<i class="fas fa-clock me-2"></i>Gia hạn
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<style>
+	.avatar-circle {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 700;
+		font-size: 16px;
+	}
+	
+	.table tbody tr {
+		transition: background-color 0.2s ease;
+	}
+	
+	.table tbody tr:hover:not(.table-danger) {
+		background-color: rgba(102, 126, 234, 0.05);
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		// Payment modal functions
+		window.showPaymentModal = function(orderId, orderNumber, debtAmount) {
+			document.getElementById('paymentOrderId').value = orderId;
+			document.getElementById('paymentOrderNumber').value = orderNumber;
+			document.getElementById('paymentDebtAmount').value = debtAmount.toLocaleString('vi-VN');
+			document.getElementById('paymentAmount').value = '';
+			document.getElementById('paymentMethod').value = '';
+			document.getElementById('paymentNote').value = '';
+			
+			const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+			modal.show();
+		};
+
+		// Extend modal functions
+		window.showExtendModal = function(orderId, orderNumber) {
+			document.getElementById('extendOrderId').value = orderId;
+			document.getElementById('extendOrderNumber').value = orderNumber;
+			document.getElementById('extendDate').value = '';
+			document.getElementById('extendReason').value = '';
+			
+			// Set minimum date to tomorrow
+			const tomorrow = new Date();
+			tomorrow.setDate(tomorrow.getDate() + 1);
+			document.getElementById('extendDate').min = tomorrow.toISOString().split('T')[0];
+			
+			const modal = new bootstrap.Modal(document.getElementById('extendModal'));
+			modal.show();
+		};
+
+		// Payment form submission
+		document.getElementById('paymentForm').addEventListener('submit', function(e) {
+			e.preventDefault();
+			
+			const formData = new FormData(this);
+			const orderId = formData.get('orderId');
+			const amount = parseFloat(formData.get('amount'));
+			const method = formData.get('method');
+			const note = formData.get('note');
+			
+			if (!orderId || !amount || !method) {
+				showToast('error', 'Vui lòng điền đầy đủ thông tin');
+				return;
+			}
+			
+			// Show loading
+			const submitBtn = this.querySelector('button[type="submit"]');
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+			
+			// Submit to server
+			fetch('?handler=Payment', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+				},
+				body: `PaymentInput.OrderId=${orderId}&PaymentInput.Amount=${amount}&PaymentInput.Method=${method}&PaymentInput.Note=${encodeURIComponent(note || '')}`
+			})
+			.then(response => {
+				if (response.ok) {
+					showToast('success', `Thanh toán ${amount.toLocaleString('vi-VN')} VND thành công!`);
+					bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+					location.reload();
+				} else {
+					showToast('error', 'Có lỗi xảy ra khi xử lý thanh toán');
+				}
+			})
+			.catch(error => {
+				showToast('error', 'Có lỗi xảy ra khi xử lý thanh toán');
+			})
+			.finally(() => {
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = '<i class="fas fa-check me-2"></i>Xác nhận thanh toán';
+			});
+		});
+
+		// Extend form submission
+		document.getElementById('extendForm').addEventListener('submit', function(e) {
+			e.preventDefault();
+			
+			const formData = new FormData(this);
+			const orderId = formData.get('orderId');
+			const extendDate = formData.get('extendDate');
+			const reason = formData.get('reason');
+			
+			if (!orderId || !extendDate) {
+				showToast('error', 'Vui lòng điền đầy đủ thông tin');
+				return;
+			}
+			
+			// Show loading
+			const submitBtn = this.querySelector('button[type="submit"]');
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+			
+			// Submit to server
+			fetch('?handler=Extend', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+				},
+				body: `ExtendInput.OrderId=${orderId}&ExtendInput.ExtendDate=${extendDate}&ExtendInput.Reason=${encodeURIComponent(reason || '')}`
+			})
+			.then(response => {
+				if (response.ok) {
+					showToast('success', `Gia hạn thanh toán đến ${extendDate} thành công!`);
+					bootstrap.Modal.getInstance(document.getElementById('extendModal')).hide();
+					location.reload();
+				} else {
+					showToast('error', 'Có lỗi xảy ra khi gia hạn');
+				}
+			})
+			.catch(error => {
+				showToast('error', 'Có lỗi xảy ra khi gia hạn');
+			})
+			.finally(() => {
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = '<i class="fas fa-clock me-2"></i>Gia hạn';
+			});
+		});
+
+		// Toast notification function
+		function showToast(type, message) {
+			const toast = document.createElement('div');
+			toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+			toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+			toast.innerHTML = `
+				<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+				${message}
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			`;
+			
+			document.body.appendChild(toast);
+			
+			// Auto remove after 5 seconds
+			setTimeout(() => {
+				if (toast.parentNode) {
+					toast.parentNode.removeChild(toast);
+				}
+			}, 5000);
+		}
+	});
+</script>

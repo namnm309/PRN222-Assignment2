@@ -1,6 +1,6 @@
 using BusinessLayer.Services;
 using BusinessLayer.DTOs.Requests;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
 
@@ -25,7 +25,7 @@ namespace PresentationLayer.Pages.EVMStaff.ProductManagement
         [BindProperty]
         public ProductCreateRequest Input { get; set; } = new();
 
-        public List<Brand> Brands { get; set; } = new();
+        public List<BrandResponse> Brands { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -92,7 +92,7 @@ namespace PresentationLayer.Pages.EVMStaff.ProductManagement
             var brandsResult = await _brandService.GetAllAsync();
             if (brandsResult.Success && brandsResult.Data != null)
             {
-                Brands = brandsResult.Data.Where(b => b.IsActive).ToList();
+                Brands = _mappingService.MapToBrandViewModels(brandsResult.Data.Where(b => b.IsActive).ToList());
             }
         }
 

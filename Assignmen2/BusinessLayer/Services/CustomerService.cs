@@ -34,6 +34,60 @@ namespace BusinessLayer.Services
             return ok ? (true, null, updated) : (false, "Cập nhật thất bại", null);
         }
 
+        public async Task<(bool Success, string Error)> UpdateAsync(Guid id, string fullName, string email, string phoneNumber, string address)
+        {
+            try
+            {
+                var (ok, err, customer) = await GetAsync(id);
+                if (!ok || customer == null)
+                {
+                    return (false, err ?? "Không tìm thấy khách hàng");
+                }
+
+                customer.FullName = fullName;
+                customer.Name = fullName; // Duplicate for backward compatibility
+                customer.Email = email;
+                customer.PhoneNumber = phoneNumber;
+                customer.Address = address;
+                customer.UpdatedAt = DateTime.UtcNow;
+
+                var success = await _repo.UpdateAsync(customer);
+                return success ? (true, null) : (false, "Không thể cập nhật khách hàng");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Error, Customer Data)> GetByEmailAsync(string email)
+        {
+            try
+            {
+                var customer = await _context.Customer
+                    .FirstOrDefaultAsync(c => c.Email == email && c.IsActive);
+                return customer == null ? (false, "Không tìm thấy", null) : (true, null, customer);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi: {ex.Message}", null);
+            }
+        }
+
+        public async Task<(bool Success, string Error, Customer Data)> GetByPhoneAsync(string phoneNumber)
+        {
+            try
+            {
+                var customer = await _context.Customer
+                    .FirstOrDefaultAsync(c => c.PhoneNumber == phoneNumber && c.IsActive);
+                return customer == null ? (false, "Không tìm thấy", null) : (true, null, customer);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi: {ex.Message}", null);
+            }
+        }
+
         public async Task<(bool Success, string Error, Customer Data)> CreateAsync(string fullName, string email, string phoneNumber, string address)
         {
             if (string.IsNullOrWhiteSpace(fullName)) return (false, "Vui lòng nhập họ tên", null);

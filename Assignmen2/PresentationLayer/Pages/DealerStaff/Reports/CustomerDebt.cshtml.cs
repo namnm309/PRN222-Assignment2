@@ -1,5 +1,4 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -92,7 +91,8 @@ namespace PresentationLayer.Pages.DealerStaff.Reports
 
         private async Task<List<DebtDataItem>> GetDebtDataAsync()
         {
-            // TODO: Implement real debt data retrieval from database
+            // TODO: Implement real debt data retrieval using service
+            // This should call a service method to get debt data from database
             // For now, return sample data
             return new List<DebtDataItem>
             {

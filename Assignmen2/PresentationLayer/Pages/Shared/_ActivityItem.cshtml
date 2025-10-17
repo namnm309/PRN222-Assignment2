@@ -1,0 +1,29 @@
+@* ActivityItem partial for Recent Activities section
+   Parameters: IconClass, Title, Description, TimeAgo, ColorClass *@
+@{
+	var iconClass = ViewData["IconClass"] as string ?? "fas fa-circle";
+	var title = ViewData["Title"] as string ?? "Activity";
+	var description = ViewData["Description"] as string ?? "";
+	var timeAgo = ViewData["TimeAgo"] as string ?? "Vừa xong";
+	var colorClass = ViewData["ColorClass"] as string ?? "bg-primary";
+}
+
+<div class="list-group-item px-4 py-3">
+	<div class="d-flex align-items-center">
+		<div class="flex-shrink-0">
+			<div class="activity-icon @colorClass text-white me-3">
+				<i class="@iconClass"></i>
+			</div>
+		</div>
+		<div class="flex-grow-1">
+			<div class="fw-semibold mb-1">@title</div>
+			@if (!string.IsNullOrEmpty(description))
+			{
+				<small class="text-muted">@description</small>
+			}
+		</div>
+		<div class="text-end">
+			<small class="text-muted">@timeAgo</small>
+		</div>
+	</div>
+</div>

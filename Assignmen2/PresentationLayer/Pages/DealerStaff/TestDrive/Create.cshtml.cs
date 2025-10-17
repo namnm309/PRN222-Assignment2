@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -10,17 +10,19 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
     {
         private readonly ITestDriveService _testDriveService;
         private readonly IProductService _productService;
+        private readonly IMappingService _mappingService;
 
-        public CreateModel(ITestDriveService testDriveService, IProductService productService)
+        public CreateModel(ITestDriveService testDriveService, IProductService productService, IMappingService mappingService)
         {
             _testDriveService = testDriveService;
             _productService = productService;
+            _mappingService = mappingService;
         }
 
         [BindProperty]
         public InputModel Input { get; set; } = new();
 
-        public List<Product> Products { get; set; } = new();
+        public List<ProductResponse> Products { get; set; } = new();
 
         public class InputModel
         {
@@ -55,11 +57,11 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
 
         public async Task OnGetAsync()
         {
-            // Load available products for test drive
+            // Load available products for test drive using service
             var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
-            if (productsResult.Success)
+            if (productsResult.Success && productsResult.Data != null)
             {
-                Products = productsResult.Data;
+                Products = _mappingService.MapToProductViewModels(productsResult.Data);
             }
 
             // Set default date to tomorrow
@@ -72,14 +74,14 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
             {
                 // Reload products if validation fails
                 var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
-                if (productsResult.Success)
+                if (productsResult.Success && productsResult.Data != null)
                 {
-                    Products = productsResult.Data;
+                    Products = _mappingService.MapToProductViewModels(productsResult.Data);
                 }
                 return Page();
             }
 
-            // Get current dealer ID (you'll need to implement this)
+            // Get current dealer ID from session
             var dealerId = GetCurrentDealerId();
             if (!dealerId.HasValue)
             {
@@ -115,9 +117,13 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
 
         private Guid? GetCurrentDealerId()
         {
-            // TODO: Implement getting current dealer ID from session/authentication
-            // For now, return a dummy ID - you'll need to implement this based on your authentication system
-            return Guid.NewGuid();
+            // Get dealer ID from session
+            var dealerIdString = HttpContext.Session.GetString("DealerId");
+            if (Guid.TryParse(dealerIdString, out var dealerId))
+            {
+                return dealerId;
+            }
+            return null;
         }
     }
 }

@@ -1,0 +1,36 @@
+@page "{id:guid}"
+@model PresentationLayer.Pages.DealerManager.Orders.DetailModel
+@{
+    Layout = "/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+<div class="container-fluid">
+    <a asp-page="/DealerManager/Orders/Index" class="btn btn-sm btn-link mb-3"><i class="fas fa-arrow-left me-1"></i>Quay lại</a>
+    <h3 class="fw-bold mb-4"><i class="fas fa-file-invoice me-2 text-primary"></i>Chi tiết đơn hàng #@Model.Order.OrderNumber</h3>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <strong>Khách hàng:</strong><br />
+                    @Model.Order.Customer.FullName<br />
+                    <small class="text-muted">@Model.Order.Customer.PhoneNumber</small>
+                </div>
+                <div class="col-md-4">
+                    <strong>Sản phẩm:</strong><br />
+                    @Model.Order.Product.Name<br />
+                    <small class="text-muted">SKU: @Model.Order.Product.Sku</small>
+                </div>
+                <div class="col-md-4">
+                    <strong>Trạng thái:</strong><br />
+                    <span class="badge bg-info">@Model.Order.Status</span>
+                </div>
+            </div>
+            <hr />
+            <div class="row g-3">
+                <div class="col-md-4"><strong>Giá bán:</strong> @Model.Order.Price.ToString("N0") VND</div>
+                <div class="col-md-4"><strong>Giảm giá:</strong> @Model.Order.Discount.ToString("N0") VND</div>
+                <div class="col-md-4"><strong>Thành tiền:</strong> <span class="text-success fw-bold">@Model.Order.FinalAmount.ToString("N0") VND</span></div>
+            </div>
+        </div>
+    </div>
+</div>
