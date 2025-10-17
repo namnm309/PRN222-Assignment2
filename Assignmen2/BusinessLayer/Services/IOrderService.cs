@@ -17,6 +17,7 @@ namespace BusinessLayer.Services
         Task<(bool Success, string Error, Order Data)> DeliverOrderAsync(Guid orderId, DateTime deliveryDate);
         Task<(bool Success, string Error, Order Data)> CancelOrderAsync(Guid orderId);
         Task<(bool Success, string Error, Order Data)> UpdateOrderAsync(Order order);
+        Task<(bool Success, string Error)> DeleteOrderAsync(Guid orderId);
     }
 }
 

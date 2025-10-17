@@ -32,6 +32,7 @@ namespace BusinessLayer.Services
         OrderResponse MapToOrderCreateViewModel(Order order);
         Order MapToOrder(OrderCreateRequest viewModel);
         List<OrderResponse> MapToOrderCreateViewModels(List<Order> orders);
+        Order MapToOrderEntity(OrderResponse viewModel);
 
         // Feedback mappings
         FeedbackResponse MapToFeedbackViewModel(Feedback feedback);

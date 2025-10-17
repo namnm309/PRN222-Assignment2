@@ -19,16 +19,14 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
         public List<OrderResponse> Orders { get; set; } = new();
         public string SearchTerm { get; set; } = string.Empty;
         public string StatusFilter { get; set; } = string.Empty;
-        public string OrderTypeFilter { get; set; } = string.Empty;
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; } = 1;
         public int PageSize { get; set; } = 10;
 
-        public async Task OnGetAsync(string? search, string? status, string? orderType, int page = 1)
+        public async Task OnGetAsync(string? search, string? status, int page = 1)
         {
             SearchTerm = search ?? string.Empty;
             StatusFilter = status ?? string.Empty;
-            OrderTypeFilter = orderType ?? string.Empty;
             CurrentPage = page;
 
             try
@@ -47,7 +45,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                     dealerId.Value,
                     SearchTerm,
                     StatusFilter,
-                    OrderTypeFilter,
+                    null, // Bỏ orderType filter
                     CurrentPage,
                     PageSize
                 );
@@ -69,6 +67,28 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 Orders = new List<OrderResponse>();
                 TempData["Error"] = $"Lỗi: {ex.Message}";
             }
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(Guid id)
+        {
+            try
+            {
+                var result = await _orderService.DeleteOrderAsync(id);
+                if (result.Success)
+                {
+                    TempData["Success"] = "Xóa đơn hàng thành công!";
+                }
+                else
+                {
+                    TempData["Error"] = result.Error ?? "Không thể xóa đơn hàng";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi: {ex.Message}";
+            }
+
+            return RedirectToPage();
         }
 
         private Guid? GetCurrentDealerId()

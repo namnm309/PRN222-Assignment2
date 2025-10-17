@@ -101,6 +101,11 @@ namespace BusinessLayer.Services
             return _mapper.Map<List<OrderResponse>>(orders);
         }
 
+        public Order MapToOrderEntity(OrderResponse viewModel)
+        {
+            return _mapper.Map<Order>(viewModel);
+        }
+
         // Feedback mappings
         public FeedbackResponse MapToFeedbackViewModel(Feedback feedback)
         {
