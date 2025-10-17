@@ -1,0 +1,68 @@
+@page
+@model PresentationLayer.Pages.EVMStaff.DealerManagement.IndexModel
+@{
+    ViewData["Title"] = "Quản lý đại lý";
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">
+        <i class="fas fa-store me-2 text-primary"></i>Quản lý đại lý
+    </h2>
+    <div>
+        <a class="btn btn-primary" asp-page="/EVMStaff/DealerManagement/Create">
+            <i class="fas fa-plus-circle me-1"></i>Thêm đại lý
+        </a>
+    </div>
+ </div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Mã đại lý</th>
+            <th>Tên đại lý</th>
+            <th>Khu vực</th>
+            <th>Liên hệ</th>
+            <th>Điện thoại</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var d in Model.Dealers)
+    {
+        <tr>
+            <td>@(string.IsNullOrWhiteSpace(d.Code) ? "-" : d.Code)</td>
+            <td>@(string.IsNullOrWhiteSpace(d.Name) ? "-" : d.Name)</td>
+            <td>@(string.IsNullOrWhiteSpace(d.RegionName) ? "-" : d.RegionName)</td>
+            <td>
+                @(string.IsNullOrWhiteSpace(d.ContactPerson) ? "-" : d.ContactPerson)
+                @if(!string.IsNullOrWhiteSpace(d.Email))
+                {
+                    <text> (@d.Email)</text>
+                }
+            </td>
+            <td>@(string.IsNullOrWhiteSpace(d.PhoneNumber) ? "-" : d.PhoneNumber)</td>
+            <td>@(d.IsActive ? "Active" : "Inactive")</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-secondary" asp-page="/EVMStaff/DealerManagement/Edit" asp-route-id="@d.Id">Sửa</a>
+                <form method="post" asp-page-handler="Delete" asp-route-id="@d.Id" class="d-inline" onsubmit="return confirm('Xóa đại lý này?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+    </table>
+
+
