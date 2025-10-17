@@ -42,11 +42,17 @@
     @foreach (var d in Model.Dealers)
     {
         <tr>
-            <td>@d.Code</td>
-            <td>@d.Name</td>
+            <td>@(string.IsNullOrWhiteSpace(d.Code) ? "-" : d.Code)</td>
+            <td>@(string.IsNullOrWhiteSpace(d.Name) ? "-" : d.Name)</td>
             <td>@(string.IsNullOrWhiteSpace(d.RegionName) ? "-" : d.RegionName)</td>
-            <td>@d.ContactPerson @if(!string.IsNullOrWhiteSpace(d.Email)){<text>(@d.Email)</text>}</td>
-            <td>@d.PhoneNumber</td>
+            <td>
+                @(string.IsNullOrWhiteSpace(d.ContactPerson) ? "-" : d.ContactPerson)
+                @if(!string.IsNullOrWhiteSpace(d.Email))
+                {
+                    <text> (@d.Email)</text>
+                }
+            </td>
+            <td>@(string.IsNullOrWhiteSpace(d.PhoneNumber) ? "-" : d.PhoneNumber)</td>
             <td>@(d.IsActive ? "Active" : "Inactive")</td>
             <td class="text-end">
                 <a class="btn btn-sm btn-secondary" asp-page="/EVMStaff/DealerManagement/Edit" asp-route-id="@d.Id">Sửa</a>
