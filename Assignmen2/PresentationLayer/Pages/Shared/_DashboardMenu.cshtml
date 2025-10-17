@@ -14,7 +14,10 @@
 <!-- TỔNG QUAN - Common cho tất cả roles -->
 <div class="menu-section">
     <div class="menu-title">TỔNG QUAN</div>
-    <a asp-page="/Dashboard/Index" class="menu-item">
+    @{ var dashboardPage = (userRole == UserRole.Admin || userRole == UserRole.EVMStaff)
+            ? "/EVMStaff/Dashboard/Index"
+            : "/Dashboard/Index"; }
+    <a asp-page="@dashboardPage" class="menu-item">
         <i class="fas fa-tachometer-alt"></i>
         <span>Dashboard</span>
     </a>
