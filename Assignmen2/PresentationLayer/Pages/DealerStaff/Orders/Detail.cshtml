@@ -184,15 +184,32 @@
                             </div>
                         </form>
 
-                        <form method="post" asp-page-handler="Deliver" asp-route-id="@Model.Order.Id" class="mb-3">
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Giao xe</label>
-                                <input type="datetime-local" name="deliveryDate" class="form-control mb-2" required>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-truck me-1"></i> Giao xe
-                                </button>
+                        @if (Model.Order.PaymentStatus == "Paid" || Model.Order.PaymentStatus == "Partial")
+                        {
+                            <form method="post" asp-page-handler="Deliver" asp-route-id="@Model.Order.Id" class="mb-3">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Giao xe</label>
+                                    <input type="datetime-local" name="deliveryDate" class="form-control mb-2" required>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-truck me-1"></i> Giao xe
+                                    </button>
+                                </div>
+                                @if (Model.Order.PaymentStatus == "Partial")
+                                {
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        Khách hàng đã cọc, sau khi giao xe sẽ tự động cập nhật thành đã thanh toán đủ
+                                    </div>
+                                }
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Vui lòng cập nhật trạng thái thanh toán trước khi giao xe
                             </div>
-                        </form>
+                        }
 
                         <button type="button" class="btn btn-danger w-100" onclick="cancelOrder()">
                             <i class="fas fa-times me-1"></i> Hủy đơn hàng
