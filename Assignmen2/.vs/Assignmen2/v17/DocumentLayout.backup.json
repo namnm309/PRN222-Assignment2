@@ -146,35 +146,9 @@
               "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
               "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
               "RelativeToolTip": "PresentationLayer\\Pages\\Account\\Login.cshtml.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAmwEUAAABTAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAAcwEUAAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-16T15:50:53.554Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml",
-              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Account\\Login.cshtml",
-              "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml",
-              "RelativeToolTip": "PresentationLayer\\Pages\\Account\\Login.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-16T15:50:49.811Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
-              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
-              "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
-              "RelativeToolTip": "PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
-              "ViewState": "AgIAALkAAAAAAAAAAAAAAF0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-16T15:33:01.02Z",
               "EditorCaption": ""
             },
             {
@@ -185,8 +159,7 @@
               "ToolTip": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
               "ViewState": "AgIAAP0AAAAAAAAAAAAswAkBAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2025-10-16T15:08:19.483Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-16T15:08:19.483Z"
             },
             {
               "$type": "Document",
@@ -250,6 +223,30 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\Account\\Login.cshtml",
+              "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\Account\\Login.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-16T15:50:49.811Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
+              "RelativeDocumentMoniker": "PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
+              "ToolTip": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
+              "RelativeToolTip": "PresentationLayer\\Pages\\PurchaseOrder\\Index.cshtml",
+              "ViewState": "AgIAALkAAAAAAAAAAAAAAF0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-16T15:33:01.02Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "E:\\FPT Material\\Project\\PRN222\\PRN222_Assignment2\\PRN222-Assignment2\\Assignmen2\\PresentationLayer\\Program.cs",
@@ -270,8 +267,7 @@
               "RelativeToolTip": "BusinessLayer\\Services\\AuthenService.cs",
               "ViewState": "AgIAAEMAAAAAAAAAAAAwwEsAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-16T00:27:25.097Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-16T00:27:25.097Z"
             },
             {
               "$type": "Document",

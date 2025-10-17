@@ -1,0 +1,216 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.Orders.CreateContractModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Tạo hợp đồng bán hàng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-file-contract me-2 text-primary"></i>
+            Tạo hợp đồng bán hàng
+        </h2>
+        <p class="text-muted mb-0">Tạo hợp đồng bán hàng cho đơn hàng đã giao</p>
+    </div>
+    <div>
+        <a asp-page="/DealerStaff/Orders/Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+@if (Model.Order != null)
+{
+    <div class="row">
+        <!-- Order Information -->
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Thông tin đơn hàng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số đơn:</label>
+                            <div class="text-muted">@Model.Order.OrderNumber</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Sản phẩm:</label>
+                            <div class="text-muted">@Model.Order.ProductName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Khách hàng:</label>
+                            <div class="text-muted">@Model.Order.CustomerName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Đại lý:</label>
+                            <div class="text-muted">@Model.Order.DealerName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Giá bán:</label>
+                            <div class="text-muted">@Model.Order.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Thành tiền:</label>
+                            <div class="fw-bold text-primary fs-5">@Model.Order.FinalAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                        </div>
+                        @if (Model.Order.DeliveryDate.HasValue)
+                        {
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Ngày giao xe:</label>
+                                <div class="text-muted">@Model.Order.DeliveryDate.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contract Form -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-contract me-2"></i>
+                        Thông tin hợp đồng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Input.ContractNumber" class="form-label">Số hợp đồng <span class="text-danger">*</span></label>
+                                <input asp-for="Input.ContractNumber" class="form-control" placeholder="HD-2025-001" readonly>
+                                <span asp-validation-for="Input.ContractNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.ContractDate" class="form-label">Ngày ký hợp đồng <span class="text-danger">*</span></label>
+                                <input asp-for="Input.ContractDate" type="date" class="form-control" required>
+                                <span asp-validation-for="Input.ContractDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.DeliveryAddress" class="form-label">Địa chỉ giao xe <span class="text-danger">*</span></label>
+                                <textarea asp-for="Input.DeliveryAddress" class="form-control" rows="3" placeholder="Nhập địa chỉ giao xe..." required></textarea>
+                                <span asp-validation-for="Input.DeliveryAddress" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.PaymentTerms" class="form-label">Điều khoản thanh toán <span class="text-danger">*</span></label>
+                                <select asp-for="Input.PaymentTerms" class="form-select" required>
+                                    <option value="">-- Chọn điều khoản --</option>
+                                    <option value="Cash">Thanh toán tiền mặt</option>
+                                    <option value="BankTransfer">Chuyển khoản ngân hàng</option>
+                                    <option value="Installment">Trả góp</option>
+                                </select>
+                                <span asp-validation-for="Input.PaymentTerms" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.WarrantyPeriod" class="form-label">Thời gian bảo hành (tháng)</label>
+                                <input asp-for="Input.WarrantyPeriod" type="number" class="form-control" value="24" min="0" max="120">
+                                <span asp-validation-for="Input.WarrantyPeriod" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Input.InstallmentPeriod" class="form-label">Kỳ hạn trả góp (tháng)</label>
+                                <input asp-for="Input.InstallmentPeriod" type="number" class="form-control" min="0" max="60">
+                                <span asp-validation-for="Input.InstallmentPeriod" class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Input.ContractTerms" class="form-label">Điều khoản hợp đồng</label>
+                                <textarea asp-for="Input.ContractTerms" class="form-control" rows="5" placeholder="Nhập các điều khoản hợp đồng..."></textarea>
+                                <span asp-validation-for="Input.ContractTerms" class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Input.Notes" class="form-label">Ghi chú</label>
+                                <textarea asp-for="Input.Notes" class="form-control" rows="3" placeholder="Ghi chú thêm..."></textarea>
+                                <span asp-validation-for="Input.Notes" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-file-contract me-1"></i> Tạo hợp đồng
+                            </button>
+                            <a asp-page="/DealerStaff/Orders/Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i> Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contract Preview -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-eye me-2"></i>
+                        Xem trước hợp đồng
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="contractPreview">
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-file-contract fa-2x mb-2"></i>
+                            <div>Hợp đồng sẽ được tạo tự động</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>
+                        Thao tác nhanh
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-page="/DealerStaff/Orders/Detail" asp-route-id="@Model.Order.Id" class="btn btn-outline-primary">
+                            <i class="fas fa-eye me-1"></i> Xem chi tiết đơn hàng
+                        </a>
+                        <a asp-page="/DealerStaff/Orders/Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-1"></i> Danh sách đơn hàng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Không tìm thấy đơn hàng hoặc đơn hàng chưa được giao xe
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Auto-generate contract number
+        document.addEventListener('DOMContentLoaded', function() {
+            const contractNumberInput = document.querySelector('input[name="Input.ContractNumber"]');
+            if (contractNumberInput && !contractNumberInput.value) {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                contractNumberInput.value = `HD-${year}${month}${day}-${random}`;
+            }
+
+            // Set default contract date to today
+            const contractDateInput = document.querySelector('input[name="Input.ContractDate"]');
+            if (contractDateInput && !contractDateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                contractDateInput.value = today;
+            }
+        });
+    </script>
+}

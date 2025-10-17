@@ -39,8 +39,6 @@
                             <select asp-for="Input.OrderType" class="form-select" onchange="toggleOrderType()">
                                 <option value="">-- Chọn loại đơn hàng --</option>
                                 <option value="Quotation">Báo giá</option>
-                                <option value="Order">Đơn hàng</option>
-                                <option value="Contract">Hợp đồng bán hàng</option>
                             </select>
                             <span asp-validation-for="Input.OrderType" class="text-danger"></span>
                         </div>

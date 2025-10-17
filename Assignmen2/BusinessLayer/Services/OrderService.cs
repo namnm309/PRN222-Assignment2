@@ -25,6 +25,11 @@ namespace BusinessLayer.Services
             return order == null ? (false, "Không tìm thấy đơn hàng", null) : (true, null, order);
         }
 
+        public async Task<(bool Success, string Error, Order Data)> GetByIdAsync(Guid id)
+        {
+            return await GetAsync(id);
+        }
+
         public async Task<(bool Success, string Error, List<Order> Data)> GetAllAsync(Guid? dealerId = null, string? status = null)
         {
             var list = await _repo.GetAllAsync(dealerId, status);
@@ -85,7 +90,7 @@ namespace BusinessLayer.Services
 
         public async Task<(bool Success, string Error, Order Data)> CreateQuotationAsync(
             Guid productId, Guid customerId, Guid dealerId, Guid? salesPersonId,
-            decimal price, decimal discount, string description, string notes)
+            decimal price, decimal discount, string orderType, string notes)
         {
             if (productId == Guid.Empty || customerId == Guid.Empty || dealerId == Guid.Empty)
                 return (false, "Thiếu thông tin bắt buộc", null);
@@ -107,9 +112,9 @@ namespace BusinessLayer.Services
                 Price = price,
                 Discount = discount,
                 FinalAmount = finalAmount,
-                Description = description ?? "",
+                Description = orderType ?? "",
                 Notes = notes ?? "",
-                Status = "Draft", // Quotation status
+                Status = "Quoted", // Quotation status
                 PaymentStatus = "Unpaid",
                 PaymentMethod = "",
                 OrderDate = null,
@@ -125,22 +130,37 @@ namespace BusinessLayer.Services
 
         public async Task<(bool Success, string Error, Order Data)> ConfirmOrderAsync(Guid orderId)
         {
+            Console.WriteLine($"[DEBUG] ConfirmOrderAsync called with orderId: {orderId}");
+            
             var order = await _repo.GetByIdAsync(orderId);
-            if (order == null) return (false, "Không tìm thấy đơn hàng", null);
+            if (order == null) 
+            {
+                Console.WriteLine($"[DEBUG] Order not found for id: {orderId}");
+                return (false, "Không tìm thấy đơn hàng", null);
+            }
 
-            if (order.Status != "Draft")
-                return (false, "Chỉ có thể xác nhận báo giá ở trạng thái Draft", null);
+            Console.WriteLine($"[DEBUG] Current order status: {order.Status}");
+            
+            if (order.Status != "Quoted")
+            {
+                Console.WriteLine($"[DEBUG] Cannot confirm order with status: {order.Status}");
+                return (false, "Chỉ có thể xác nhận báo giá ở trạng thái Quoted", null);
+            }
 
             order.Status = "Confirmed";
             order.OrderDate = DateTime.UtcNow;
             order.UpdatedAt = DateTime.UtcNow;
 
+            Console.WriteLine($"[DEBUG] Updating order status to: {order.Status}");
+            
             var ok = await _repo.UpdateAsync(order);
+            Console.WriteLine($"[DEBUG] UpdateAsync result: {ok}");
+            
             return ok ? (true, null, order) : (false, "Không thể xác nhận đơn hàng", null);
         }
 
         public async Task<(bool Success, string Error, Order Data)> UpdatePaymentAsync(
-            Guid orderId, string paymentStatus, string paymentMethod, DateTime? paymentDueDate)
+            Guid orderId, string paymentStatus, string? paymentMethod, DateTime? paymentDueDate)
         {
             var order = await _repo.GetByIdAsync(orderId);
             if (order == null) return (false, "Không tìm thấy đơn hàng", null);
@@ -242,11 +262,21 @@ namespace BusinessLayer.Services
             if (order.Status == "Delivered")
                 return (false, "Không thể hủy đơn đã giao", null);
 
-            order.Status = "Cancelled";
+            order.Status = "Canceled";
             order.UpdatedAt = DateTime.UtcNow;
 
             var ok = await _repo.UpdateAsync(order);
             return ok ? (true, null, order) : (false, "Không thể hủy đơn hàng", null);
+        }
+
+        public async Task<(bool Success, string Error, Order Data)> UpdateOrderAsync(Order order)
+        {
+            if (order == null)
+                return (false, "Đơn hàng không hợp lệ", null);
+
+            order.UpdatedAt = DateTime.UtcNow;
+            var ok = await _repo.UpdateAsync(order);
+            return ok ? (true, null, order) : (false, "Không thể cập nhật đơn hàng", null);
         }
     }
 }

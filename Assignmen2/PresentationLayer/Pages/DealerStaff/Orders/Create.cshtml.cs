@@ -131,7 +131,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                     salesPersonId,
                     Input.Price,
                     Input.Discount,
-                    Input.Description ?? "",
+                    Input.OrderType,
                     Input.Notes ?? ""
                 );
 
