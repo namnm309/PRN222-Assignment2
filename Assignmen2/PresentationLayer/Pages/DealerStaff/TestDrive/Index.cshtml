@@ -76,21 +76,18 @@
                             <tr>
                                 <td>
                                     <div>
-                                        <div class="fw-bold">@(testDrive.Customer?.FullName ?? testDrive.CustomerName)</div>
-                                        <div class="text-muted small">
-                                            @(testDrive.Customer?.PhoneNumber ?? testDrive.CustomerPhone)
-                                        </div>
-                                        @if (!string.IsNullOrWhiteSpace(testDrive.Customer?.Email ?? testDrive.CustomerEmail))
+                                        <div class="fw-bold">@testDrive.CustomerName</div>
+                                        <div class="text-muted small">@testDrive.CustomerPhone</div>
+                                        @if (!string.IsNullOrWhiteSpace(testDrive.CustomerEmail))
                                         {
-                                            <div class="text-muted small">@(testDrive.Customer?.Email ?? testDrive.CustomerEmail)</div>
+                                            <div class="text-muted small">@testDrive.CustomerEmail</div>
                                         }
                                     </div>
                                 </td>
                                 <td>
                                     <div>
-                                        <div class="fw-bold">@testDrive.Product?.Name</div>
-                                        <div class="text-muted small">@testDrive.Product?.Brand?.Name</div>
-                                        <div class="text-muted small">SKU: @testDrive.Product?.Sku</div>
+                                        <div class="fw-bold">@testDrive.ProductName</div>
+                                        <div class="text-muted small">SKU: @testDrive.ProductId</div>
                                     </div>
                                 </td>
                                 <td>
@@ -103,20 +100,20 @@
                                     @{
                                         var statusClass = testDrive.Status switch
                                         {
-                                            DataAccessLayer.Enum.TestDriveStatus.Pending => "bg-warning",
-                                            DataAccessLayer.Enum.TestDriveStatus.Confirmed => "bg-info",
-                                            DataAccessLayer.Enum.TestDriveStatus.Successfully => "bg-success",
-                                            DataAccessLayer.Enum.TestDriveStatus.Failed => "bg-danger",
-                                            DataAccessLayer.Enum.TestDriveStatus.Canceled => "bg-secondary",
+                                            BusinessLayer.Enums.TestDriveStatus.Pending => "bg-warning",
+                                            BusinessLayer.Enums.TestDriveStatus.Confirmed => "bg-info",
+                                            BusinessLayer.Enums.TestDriveStatus.Successfully => "bg-success",
+                                            BusinessLayer.Enums.TestDriveStatus.Failed => "bg-danger",
+                                            BusinessLayer.Enums.TestDriveStatus.Canceled => "bg-secondary",
                                             _ => "bg-secondary"
                                         };
                                         var statusText = testDrive.Status switch
                                         {
-                                            DataAccessLayer.Enum.TestDriveStatus.Pending => "Chờ xác nhận",
-                                            DataAccessLayer.Enum.TestDriveStatus.Confirmed => "Đã xác nhận",
-                                            DataAccessLayer.Enum.TestDriveStatus.Successfully => "Thành công",
-                                            DataAccessLayer.Enum.TestDriveStatus.Failed => "Thất bại",
-                                            DataAccessLayer.Enum.TestDriveStatus.Canceled => "Đã hủy",
+                                            BusinessLayer.Enums.TestDriveStatus.Pending => "Chờ xác nhận",
+                                            BusinessLayer.Enums.TestDriveStatus.Confirmed => "Đã xác nhận",
+                                            BusinessLayer.Enums.TestDriveStatus.Successfully => "Thành công",
+                                            BusinessLayer.Enums.TestDriveStatus.Failed => "Thất bại",
+                                            BusinessLayer.Enums.TestDriveStatus.Canceled => "Đã hủy",
                                             _ => "Không xác định"
                                         };
                                     }
@@ -139,19 +136,19 @@
                                         <a asp-page="/DealerStaff/TestDrive/Detail" asp-route-id="@testDrive.Id" class="btn btn-outline-primary btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        @if (testDrive.Status == DataAccessLayer.Enum.TestDriveStatus.Pending)
+                                        @if (testDrive.Status == BusinessLayer.Enums.TestDriveStatus.Pending)
                                         {
                                             <a asp-page="/DealerStaff/TestDrive/Confirm" asp-route-id="@testDrive.Id" class="btn btn-outline-success btn-sm">
                                                 <i class="fas fa-check"></i>
                                             </a>
                                         }
-                                        @if (testDrive.Status == DataAccessLayer.Enum.TestDriveStatus.Confirmed)
+                                        @if (testDrive.Status == BusinessLayer.Enums.TestDriveStatus.Confirmed)
                                         {
                                             <a asp-page="/DealerStaff/TestDrive/Complete" asp-route-id="@testDrive.Id" class="btn btn-outline-info btn-sm">
                                                 <i class="fas fa-flag-checkered"></i>
                                             </a>
                                         }
-                                        @if (testDrive.Status != DataAccessLayer.Enum.TestDriveStatus.Canceled && testDrive.Status != DataAccessLayer.Enum.TestDriveStatus.Successfully)
+                                        @if (testDrive.Status != BusinessLayer.Enums.TestDriveStatus.Canceled && testDrive.Status != BusinessLayer.Enums.TestDriveStatus.Successfully)
                                         {
                                             <a asp-page="/DealerStaff/TestDrive/Cancel" asp-route-id="@testDrive.Id" class="btn btn-outline-danger btn-sm">
                                                 <i class="fas fa-times"></i>
@@ -181,7 +178,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <div class="text-muted small">Chờ xác nhận</div>
-                    <div class="h4 text-warning">@Model.TestDrives.Count(t => t.Status == DataAccessLayer.Enum.TestDriveStatus.Pending)</div>
+                    <div class="h4 text-warning">@Model.TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Pending)</div>
                 </div>
             </div>
         </div>
@@ -189,7 +186,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <div class="text-muted small">Đã xác nhận</div>
-                    <div class="h4 text-info">@Model.TestDrives.Count(t => t.Status == DataAccessLayer.Enum.TestDriveStatus.Confirmed)</div>
+                    <div class="h4 text-info">@Model.TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Confirmed)</div>
                 </div>
             </div>
         </div>
@@ -197,7 +194,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <div class="text-muted small">Thành công</div>
-                    <div class="h4 text-success">@Model.TestDrives.Count(t => t.Status == DataAccessLayer.Enum.TestDriveStatus.Successfully)</div>
+                    <div class="h4 text-success">@Model.TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Successfully)</div>
                 </div>
             </div>
         </div>

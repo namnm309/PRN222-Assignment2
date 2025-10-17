@@ -22,6 +22,10 @@ namespace BusinessLayer.DTOs.Responses
 		public string? CustomerFullName { get; set; }
 		public string? CustomerPhoneNumber { get; set; }
 		public string? CustomerEmailAddress { get; set; }
+		
+		// Navigation properties for compatibility
+		public ProductResponse? Product { get; set; }
+		public CustomerResponse? Customer { get; set; }
 	}
 }
 

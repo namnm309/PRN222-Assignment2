@@ -1,0 +1,264 @@
+@page
+@model PresentationLayer.Pages.DealerStaff.Orders.DetailModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-file-invoice me-2 text-primary"></i>
+            Chi tiết đơn hàng: @Model.Order?.OrderNumber
+        </h2>
+        <p class="text-muted mb-0">Thông tin chi tiết và quản lý đơn hàng</p>
+    </div>
+    <div>
+        <a asp-page="/DealerStaff/Orders/Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+@if (Model.Order != null)
+{
+    <div class="row">
+        <!-- Order Information -->
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Thông tin đơn hàng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số đơn:</label>
+                            <div class="text-muted">@Model.Order.OrderNumber</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Sản phẩm:</label>
+                            <div class="text-muted">@Model.Order.ProductName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Khách hàng:</label>
+                            <div class="text-muted">@Model.Order.CustomerName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Đại lý:</label>
+                            <div class="text-muted">@Model.Order.DealerName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Nhân viên bán hàng:</label>
+                            <div class="text-muted">@Model.Order.SalesPersonName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Giá bán:</label>
+                            <div class="text-muted">@Model.Order.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Giảm giá:</label>
+                            <div class="text-muted">@Model.Order.Discount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Thành tiền:</label>
+                            <div class="fw-bold text-primary fs-5">@Model.Order.FinalAmount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Trạng thái:</label>
+                            <div>
+                                <span class="badge @(Model.Order.Status switch {
+                                    "Quoted" => "bg-info",
+                                    "Confirmed" => "bg-success", 
+                                    "Delivered" => "bg-primary",
+                                    "Contract" => "bg-success",
+                                    "Canceled" => "bg-danger",
+                                    _ => "bg-secondary"
+                                })">
+                                    @(Model.Order.Status switch {
+                                        "Quoted" => "Báo giá",
+                                        "Confirmed" => "Đã xác nhận",
+                                        "Delivered" => "Đã giao xe",
+                                        "Contract" => "Hợp đồng",
+                                        "Canceled" => "Đã hủy",
+                                        _ => Model.Order.Status
+                                    })
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Thanh toán:</label>
+                            <div>
+                                <span class="badge @(Model.Order.PaymentStatus switch {
+                                    "Unpaid" => "bg-warning",
+                                    "Partial" => "bg-info",
+                                    "Paid" => "bg-success",
+                                    _ => "bg-secondary"
+                                })">
+                                    @(Model.Order.PaymentStatus switch {
+                                        "Unpaid" => "Chưa thanh toán",
+                                        "Partial" => "Đã cọc",
+                                        "Paid" => "Đã thanh toán đủ",
+                                        _ => Model.Order.PaymentStatus
+                                    })
+                                </span>
+                            </div>
+                        </div>
+                        @if (Model.Order.OrderDate.HasValue)
+                        {
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Ngày đặt hàng:</label>
+                                <div class="text-muted">@Model.Order.OrderDate.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                        }
+                        @if (Model.Order.DeliveryDate.HasValue)
+                        {
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Ngày giao xe:</label>
+                                <div class="text-muted">@Model.Order.DeliveryDate.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Order.Description))
+                        {
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Mô tả:</label>
+                                <div class="text-muted">@Model.Order.Description</div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Order.Notes))
+                        {
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Ghi chú:</label>
+                                <div class="text-muted">@Model.Order.Notes</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Panel -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>
+                        Thao tác
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @if (Model.Order.Status == "Quoted")
+                    {
+                        <!-- Quoted Status Actions -->
+                        <div class="d-grid gap-2 mb-3">
+                            <form method="post" asp-page-handler="ConfirmOrder" asp-route-id="@Model.Order.Id" style="display: inline;">
+                                <button type="submit" class="btn btn-success w-100" onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này?')">
+                                    <i class="fas fa-check me-1"></i> Xác nhận đơn hàng
+                                </button>
+                            </form>
+                            <form method="post" asp-page-handler="CancelOrder" asp-route-id="@Model.Order.Id" style="display: inline;">
+                                <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
+                                    <i class="fas fa-times me-1"></i> Hủy đơn hàng
+                                </button>
+                            </form>
+                        </div>
+                    }
+                    else if (Model.Order.Status == "Confirmed")
+                    {
+                        <!-- Confirmed Status Actions -->
+                        <form method="post" asp-page-handler="UpdatePayment" asp-route-id="@Model.Order.Id" class="mb-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Cập nhật thanh toán</label>
+                                <select name="paymentStatus" class="form-select mb-2">
+                                    <option value="Unpaid" selected="@(Model.Order.PaymentStatus == "Unpaid")">Chưa thanh toán</option>
+                                    <option value="Partial" selected="@(Model.Order.PaymentStatus == "Partial")">Đã cọc</option>
+                                    <option value="Paid" selected="@(Model.Order.PaymentStatus == "Paid")">Đã thanh toán đủ</option>
+                                </select>
+                                <input type="text" name="paymentMethod" class="form-control mb-2" placeholder="Phương thức thanh toán" value="@Model.Order.PaymentMethod">
+                                <input type="date" name="paymentDueDate" class="form-control mb-2" placeholder="Hạn thanh toán" value="@(Model.Order.PaymentDueDate?.ToString("yyyy-MM-dd"))">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-credit-card me-1"></i> Cập nhật thanh toán
+                                </button>
+                            </div>
+                        </form>
+
+                        @if (Model.Order.PaymentStatus == "Paid" || Model.Order.PaymentStatus == "Partial")
+                        {
+                            <form method="post" asp-page-handler="Deliver" asp-route-id="@Model.Order.Id" class="mb-3">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Giao xe</label>
+                                    <input type="datetime-local" name="deliveryDate" class="form-control mb-2" required>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-truck me-1"></i> Giao xe
+                                    </button>
+                                </div>
+                                @if (Model.Order.PaymentStatus == "Partial")
+                                {
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        Khách hàng đã cọc, sau khi giao xe sẽ tự động cập nhật thành đã thanh toán đủ
+                                    </div>
+                                }
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Vui lòng cập nhật trạng thái thanh toán trước khi giao xe
+                            </div>
+                        }
+
+                        <button type="button" class="btn btn-danger w-100" onclick="cancelOrder()">
+                            <i class="fas fa-times me-1"></i> Hủy đơn hàng
+                        </button>
+                    }
+                    else if (Model.Order.Status == "Delivered")
+                    {
+                        <!-- Delivered Status Actions -->
+                        <div class="d-grid gap-2">
+                            <a asp-page="/DealerStaff/Orders/CreateContract" asp-route-orderId="@Model.Order.Id" class="btn btn-success">
+                                <i class="fas fa-file-contract me-1"></i> Tạo hợp đồng bán hàng
+                            </a>
+                        </div>
+                    }
+                    else if (Model.Order.Status == "Contract")
+                    {
+                        <!-- Contract Status Actions -->
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Hợp đồng đã được tạo thành công
+                        </div>
+                    }
+                    else if (Model.Order.Status == "Canceled")
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Đơn hàng đã bị hủy
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Không tìm thấy đơn hàng
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function createContract() {
+            if (confirm('Bạn có chắc chắn muốn tạo hợp đồng bán hàng?')) {
+                // Redirect to contract creation
+                window.location.href = '@Url.Page("/DealerStaff/Orders/CreateContract", new { orderId = Model.Order?.Id })';
+            }
+        }
+    </script>
+}

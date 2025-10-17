@@ -1,18 +1,19 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PurchaseOrderEntity = DataAccessLayer.Entities.PurchaseOrder;
 
 namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
 {
     public class IndexModel : PageModel
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
+        private readonly IMappingService _mappingService;
 
-        public IndexModel(IPurchaseOrderService purchaseOrderService)
+        public IndexModel(IPurchaseOrderService purchaseOrderService, IMappingService mappingService)
         {
             _purchaseOrderService = purchaseOrderService;
+            _mappingService = mappingService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -24,19 +25,20 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
         [BindProperty(SupportsGet = true)]
         public DateTime? FromDate { get; set; }
 
-        public List<PurchaseOrderEntity> PurchaseOrders { get; set; } = new();
+        public List<PurchaseOrderResponse> PurchaseOrders { get; set; } = new();
 
         public async Task OnGetAsync()
         {
-            // Get current dealer ID (you'll need to implement this)
+            // Get current dealer ID from session
             var dealerId = GetCurrentDealerId();
             
             if (dealerId.HasValue)
             {
                 var result = await _purchaseOrderService.GetAllAsync(dealerId.Value);
-                if (result.Success)
+                if (result.Success && result.Data != null)
                 {
-                    PurchaseOrders = result.Data;
+                    // Map entities to DTOs using mapping service
+                    PurchaseOrders = _mappingService.MapToPurchaseOrderViewModels(result.Data);
 
                     // Apply search filter
                     if (!string.IsNullOrWhiteSpace(Search))
@@ -44,17 +46,17 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
                         var searchLower = Search.ToLower();
                         PurchaseOrders = PurchaseOrders.Where(o => 
                             o.OrderNumber.ToLower().Contains(searchLower) ||
-                            (o.Product != null && o.Product.Name.ToLower().Contains(searchLower)) ||
-                            (o.Product != null && o.Product.Sku.ToLower().Contains(searchLower))
+                            o.ProductName.ToLower().Contains(searchLower) ||
+                            o.ProductSku.ToLower().Contains(searchLower)
                         ).ToList();
                     }
 
                     // Apply status filter
                     if (!string.IsNullOrWhiteSpace(Status))
                     {
-                        if (Enum.TryParse<DataAccessLayer.Enum.PurchaseOrderStatus>(Status, out var statusEnum))
+                        if (Enum.TryParse<BusinessLayer.Enums.PurchaseOrderStatus>(Status, out var statusEnum))
                         {
-                            PurchaseOrders = PurchaseOrders.Where(o => o.Status == statusEnum).ToList();
+                            PurchaseOrders = PurchaseOrders.Where(o => o.Status.ToString() == Status).ToList();
                         }
                     }
 
@@ -67,14 +69,28 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
                     // Sort by requested date descending
                     PurchaseOrders = PurchaseOrders.OrderByDescending(o => o.RequestedDate).ToList();
                 }
+                else
+                {
+                    PurchaseOrders = new List<PurchaseOrderResponse>();
+                    TempData["Error"] = result.Error ?? "Không thể tải danh sách đơn đặt hàng";
+                }
+            }
+            else
+            {
+                PurchaseOrders = new List<PurchaseOrderResponse>();
+                TempData["Error"] = "Không xác định được đại lý hiện tại";
             }
         }
 
         private Guid? GetCurrentDealerId()
         {
-            // TODO: Implement getting current dealer ID from session/authentication
-            // For now, return a dummy ID - you'll need to implement this based on your authentication system
-            return Guid.NewGuid();
+            // Get dealer ID from session
+            var dealerIdString = HttpContext.Session.GetString("DealerId");
+            if (Guid.TryParse(dealerIdString, out var dealerId))
+            {
+                return dealerId;
+            }
+            return null;
         }
     }
 }

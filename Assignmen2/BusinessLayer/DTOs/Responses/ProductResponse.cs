@@ -17,7 +17,8 @@ namespace BusinessLayer.DTOs.Responses
 		public DateTime CreatedAt { get; set; }
 		public DateTime UpdatedAt { get; set; }
 
-		// Search-related fields removed from response
+		// Navigation property for compatibility
+		public BrandResponse? Brand { get; set; }
 	}
 }
 

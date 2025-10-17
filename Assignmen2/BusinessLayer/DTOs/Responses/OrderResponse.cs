@@ -17,6 +17,8 @@ namespace BusinessLayer.DTOs.Responses
 		public DateTime? OrderDate { get; set; }
 		public DateTime? DeliveryDate { get; set; }
 		public DateTime? PaymentDueDate { get; set; }
+		public DateTime CreatedAt { get; set; }
+		public DateTime UpdatedAt { get; set; }
 		public Guid ProductId { get; set; }
 		public Guid CustomerId { get; set; }
 		public Guid? DealerId { get; set; }
@@ -25,6 +27,10 @@ namespace BusinessLayer.DTOs.Responses
 		public string? ProductName { get; set; }
 		public string? DealerName { get; set; }
 		public string? SalesPersonName { get; set; }
+		
+		// Navigation properties for compatibility
+		public ProductResponse? Product { get; set; }
+		public CustomerResponse? Customer { get; set; }
 	}
 }
 
