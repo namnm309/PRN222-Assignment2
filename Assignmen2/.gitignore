@@ -1,0 +1,25 @@
+﻿# Ignore Visual Studio/IDE artifacts
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+bin/
+obj/
+
+# Rider
+.idea/
+
+# NuGet
+packages/
+*.nupkg
+
+# Logs
+*.log
+
+# Others
+Thumbs.db
+*.DS_Store
+
