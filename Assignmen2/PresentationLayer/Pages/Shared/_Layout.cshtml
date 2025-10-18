@@ -68,6 +68,11 @@
                         @{
                             var fullName = Context.Session.GetString("UserFullName");
                             var userRole = Context.Session.GetString("UserRole");
+                            var dashboardPage = (userRole == "Admin" || userRole == "EVMStaff")
+                                ? "/EVMStaff/Dashboard/Index"
+                                : (userRole == "DealerStaff")
+                                ? "/DealerStaff/Dashboard"
+                                : "/Dashboard/Index";
                         }
                         @if (!string.IsNullOrEmpty(fullName))
                         {
@@ -75,7 +80,7 @@
                                 <i class="fas fa-user-circle me-1"></i>
                                 <span class="fw-semibold">@fullName</span>
                             </div>
-                            <a asp-page="/Dashboard/Index" class="btn btn-sm btn-primary rounded-pill px-3">
+                            <a asp-page="@dashboardPage" class="btn btn-sm btn-primary rounded-pill px-3">
                                 <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                             </a>
                             <a asp-page="/Account/Logout" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')">

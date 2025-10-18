@@ -16,6 +16,8 @@
     <div class="menu-title">TỔNG QUAN</div>
     @{ var dashboardPage = (userRole == UserRole.Admin || userRole == UserRole.EVMStaff)
             ? "/EVMStaff/Dashboard/Index"
+            : (userRole == UserRole.DealerStaff)
+            ? "/DealerStaff/Dashboard"
             : "/Dashboard/Index"; }
     <a asp-page="@dashboardPage" class="menu-item">
         <i class="fas fa-tachometer-alt"></i>

@@ -88,5 +88,87 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
                 return Page();
             }
         }
+
+        // API endpoint to check if customer exists
+        public async Task<IActionResult> OnPostCheckCustomerAsync()
+        {
+            try
+            {
+                var form = await Request.ReadFormAsync();
+                var phone = form["phone"].ToString();
+                var name = form["name"].ToString();
+
+                if (string.IsNullOrWhiteSpace(phone) && string.IsNullOrWhiteSpace(name))
+                {
+                    return new JsonResult(new { exists = false, message = "Vui lòng nhập số điện thoại hoặc tên khách hàng" });
+                }
+
+                // Check by phone
+                if (!string.IsNullOrWhiteSpace(phone))
+                {
+                    var result = await _customerService.GetByPhoneAsync(phone);
+                    if (result.Success && result.Data != null)
+                    {
+                        return new JsonResult(new { 
+                            exists = true, 
+                            customer = new { 
+                                name = result.Data.FullName, 
+                                phone = result.Data.PhoneNumber, 
+                                email = result.Data.Email 
+                            } 
+                        });
+                    }
+                }
+
+                return new JsonResult(new { exists = false });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { exists = false, message = $"Lỗi: {ex.Message}" });
+            }
+        }
+
+        // API endpoint to create customer
+        public async Task<IActionResult> OnPostCreateCustomerAsync()
+        {
+            try
+            {
+                var form = await Request.ReadFormAsync();
+                var fullName = form["name"].ToString();
+                var phone = form["phone"].ToString();
+                var email = form["email"].ToString();
+                var address = form["address"].ToString();
+                var notes = form["notes"].ToString();
+
+                if (string.IsNullOrWhiteSpace(fullName) || string.IsNullOrWhiteSpace(phone))
+                {
+                    return new JsonResult(new { success = false, message = "Tên và số điện thoại là bắt buộc" });
+                }
+
+                var result = await _customerService.CreateAsync(fullName, email, phone, address);
+                
+                if (result.Success)
+                {
+                    return new JsonResult(new { 
+                        success = true, 
+                        customer = new { 
+                            id = result.Data.Id, 
+                            name = result.Data.FullName, 
+                            phone = result.Data.PhoneNumber, 
+                            email = result.Data.Email 
+                        } 
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new { success = false, message = result.Error ?? "Không thể tạo khách hàng" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = $"Lỗi: {ex.Message}" });
+            }
+        }
+
     }
 }

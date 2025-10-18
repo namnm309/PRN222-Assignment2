@@ -11,7 +11,6 @@
             <i class="fas fa-calendar-check me-2 text-primary"></i>
             Quản lý lịch hẹn lái thử
         </h2>
-        <p class="text-muted mb-0">Quản lý và theo dõi lịch hẹn lái thử xe</p>
     </div>
     <div>
         <a asp-page="/DealerStaff/TestDrive/Create" class="btn btn-primary">
@@ -29,10 +28,8 @@
                 <select name="status" class="form-select">
                     <option value="">Tất cả trạng thái</option>
                     <option value="Pending" selected="@(Model.Status == "Pending")">Chờ xác nhận</option>
-                    <option value="Confirmed" selected="@(Model.Status == "Confirmed")">Đã xác nhận</option>
                     <option value="Successfully" selected="@(Model.Status == "Successfully")">Thành công</option>
                     <option value="Failed" selected="@(Model.Status == "Failed")">Thất bại</option>
-                    <option value="Canceled" selected="@(Model.Status == "Canceled")">Đã hủy</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -101,19 +98,15 @@
                                         var statusClass = testDrive.Status switch
                                         {
                                             BusinessLayer.Enums.TestDriveStatus.Pending => "bg-warning",
-                                            BusinessLayer.Enums.TestDriveStatus.Confirmed => "bg-info",
                                             BusinessLayer.Enums.TestDriveStatus.Successfully => "bg-success",
                                             BusinessLayer.Enums.TestDriveStatus.Failed => "bg-danger",
-                                            BusinessLayer.Enums.TestDriveStatus.Canceled => "bg-secondary",
                                             _ => "bg-secondary"
                                         };
                                         var statusText = testDrive.Status switch
                                         {
                                             BusinessLayer.Enums.TestDriveStatus.Pending => "Chờ xác nhận",
-                                            BusinessLayer.Enums.TestDriveStatus.Confirmed => "Đã xác nhận",
                                             BusinessLayer.Enums.TestDriveStatus.Successfully => "Thành công",
                                             BusinessLayer.Enums.TestDriveStatus.Failed => "Thất bại",
-                                            BusinessLayer.Enums.TestDriveStatus.Canceled => "Đã hủy",
                                             _ => "Không xác định"
                                         };
                                     }
@@ -133,26 +126,34 @@
                                 </td>
                                 <td>
                                     <div class="btn-group-vertical btn-group-sm" role="group">
-                                        <a asp-page="/DealerStaff/TestDrive/Detail" asp-route-id="@testDrive.Id" class="btn btn-outline-primary btn-sm">
+                                        <a asp-page="/DealerStaff/TestDrive/Detail" asp-route-id="@testDrive.Id" class="btn btn-outline-primary btn-sm" title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </a>
+                                        <button type="button" class="btn btn-outline-success btn-sm" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#addCustomerModal"
+                                                data-customer-name="@testDrive.CustomerName"
+                                                data-customer-phone="@testDrive.CustomerPhone"
+                                                data-customer-email="@testDrive.CustomerEmail"
+                                                title="Đăng ký khách hàng mới">
+                                            <i class="fas fa-user-plus"></i>
+                                        </button>
                                         @if (testDrive.Status == BusinessLayer.Enums.TestDriveStatus.Pending)
                                         {
-                                            <a asp-page="/DealerStaff/TestDrive/Confirm" asp-route-id="@testDrive.Id" class="btn btn-outline-success btn-sm">
-                                                <i class="fas fa-check"></i>
-                                            </a>
+                                            <form method="post" asp-page-handler="Confirm" asp-route-id="@testDrive.Id" style="display: inline;" onsubmit="return confirmAction('Xác nhận lái thử này?')">
+                                                <button type="submit" class="btn btn-outline-success btn-sm" title="Xác nhận">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
                                         }
-                                        @if (testDrive.Status == BusinessLayer.Enums.TestDriveStatus.Confirmed)
+                                        @* Nút Complete không còn cần thiết vì Confirm đã chuyển trực tiếp sang Successfully *@
+                                        @if (testDrive.Status != BusinessLayer.Enums.TestDriveStatus.Failed && testDrive.Status != BusinessLayer.Enums.TestDriveStatus.Successfully)
                                         {
-                                            <a asp-page="/DealerStaff/TestDrive/Complete" asp-route-id="@testDrive.Id" class="btn btn-outline-info btn-sm">
-                                                <i class="fas fa-flag-checkered"></i>
-                                            </a>
-                                        }
-                                        @if (testDrive.Status != BusinessLayer.Enums.TestDriveStatus.Canceled && testDrive.Status != BusinessLayer.Enums.TestDriveStatus.Successfully)
-                                        {
-                                            <a asp-page="/DealerStaff/TestDrive/Cancel" asp-route-id="@testDrive.Id" class="btn btn-outline-danger btn-sm">
-                                                <i class="fas fa-times"></i>
-                                            </a>
+                                            <form method="post" asp-page-handler="Cancel" asp-route-id="@testDrive.Id" style="display: inline;" onsubmit="return confirmAction('Hủy lái thử này?')">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Hủy">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
                                         }
                                     </div>
                                 </td>
@@ -185,8 +186,8 @@
         <div class="col-md-3">
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
-                    <div class="text-muted small">Đã xác nhận</div>
-                    <div class="h4 text-info">@Model.TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Confirmed)</div>
+                    <div class="text-muted small">Thất bại</div>
+                    <div class="h4 text-danger">@Model.TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Failed)</div>
                 </div>
             </div>
         </div>
@@ -210,4 +211,185 @@ else
             <i class="fas fa-plus me-1"></i> Tạo lịch hẹn đầu tiên
         </a>
     </div>
+}
+
+<!-- Add Customer Modal -->
+<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCustomerModalLabel">
+                    <i class="fas fa-user-plus me-2"></i>Tạo khách hàng mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addCustomerForm">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Tên khách hàng <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                            <input type="tel" name="phone" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Địa chỉ</label>
+                            <input type="text" name="address" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày sinh</label>
+                            <input type="date" name="dateOfBirth" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Giới tính</label>
+                            <select name="gender" class="form-select">
+                                <option value="">Chọn giới tính</option>
+                                <option value="Male">Nam</option>
+                                <option value="Female">Nữ</option>
+                                <option value="Other">Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Ghi chú</label>
+                            <textarea name="notes" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div id="customer-error-message" class="alert alert-danger mt-3 d-none" role="alert"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-success" id="saveCustomerBtn">
+                    <i class="fas fa-save me-1"></i> Lưu khách hàng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Handle Add Customer button click from test drive rows
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('button[data-bs-target="#addCustomerModal"]')) {
+                var button = e.target.closest('button[data-bs-target="#addCustomerModal"]');
+                var customerName = button.getAttribute('data-customer-name');
+                var customerPhone = button.getAttribute('data-customer-phone');
+                var customerEmail = button.getAttribute('data-customer-email');
+                
+                // Pre-fill the form with customer data from test drive
+                var form = document.getElementById('addCustomerForm');
+                form.querySelector('input[name="name"]').value = customerName || '';
+                form.querySelector('input[name="phone"]').value = customerPhone || '';
+                form.querySelector('input[name="email"]').value = customerEmail || '';
+                
+                // Clear any previous error messages
+                document.getElementById('customer-error-message').classList.add('d-none');
+            }
+        });
+
+        // Handle Add Customer
+        document.getElementById('saveCustomerBtn').addEventListener('click', function() {
+            var form = document.getElementById('addCustomerForm');
+            var formData = new FormData(form);
+            var errorDiv = document.getElementById('customer-error-message');
+            
+            // Hide previous errors
+            errorDiv.classList.add('d-none');
+            
+            // Disable button during request
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...';
+            
+            // First check if customer exists
+            var phone = formData.get('phone');
+            var name = formData.get('name');
+            
+            // Create FormData for anti-forgery token
+            var checkData = new FormData();
+            checkData.append('phone', phone);
+            checkData.append('name', name);
+            checkData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+            
+            fetch('/DealerStaff/Customers/Create?handler=CheckCustomer', {
+                method: 'POST',
+                body: checkData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    // Customer already exists
+                    errorDiv.innerHTML = `
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Khách hàng đã có thông tin rồi!</strong><br>
+                        <small>Tên: ${data.customer.name} | SĐT: ${data.customer.phone} | Email: ${data.customer.email || 'Chưa có'}</small>
+                    `;
+                    errorDiv.classList.remove('d-none');
+                } else {
+                    // Customer doesn't exist, create new one
+                    fetch('/DealerStaff/Customers/Create?handler=CreateCustomer', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Success - show success message and close modal
+                            errorDiv.innerHTML = `
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <strong>Tạo khách hàng thành công!</strong><br>
+                                    <small>Khách hàng: ${data.customer.name} - ${data.customer.phone}</small>
+                                </div>
+                            `;
+                            errorDiv.classList.remove('d-none');
+                            
+                            // Close modal after 2 seconds
+                            setTimeout(() => {
+                                var modal = bootstrap.Modal.getInstance(document.getElementById('addCustomerModal'));
+                                modal.hide();
+                                form.reset();
+                                errorDiv.classList.add('d-none');
+                            }, 2000);
+                        } else {
+                            // Show error
+                            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${data.message}`;
+                            errorDiv.classList.remove('d-none');
+                        }
+                    })
+                    .catch(error => {
+                        errorDiv.innerHTML = '<i class="fas fa-times-circle me-2"></i> Có lỗi xảy ra khi tạo khách hàng. Vui lòng thử lại.';
+                        errorDiv.classList.remove('d-none');
+                    });
+                }
+            })
+            .catch(error => {
+                errorDiv.innerHTML = '<i class="fas fa-times-circle me-2"></i> Có lỗi xảy ra khi kiểm tra khách hàng. Vui lòng thử lại.';
+                errorDiv.classList.remove('d-none');
+            })
+            .finally(() => {
+                // Re-enable button
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-save me-1"></i> Lưu khách hàng';
+            });
+        });
+
+        // Reset error message when modal is closed
+        document.getElementById('addCustomerModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('customer-error-message').classList.add('d-none');
+            document.getElementById('addCustomerForm').reset();
+        });
+
+        // Function to confirm actions
+        function confirmAction(message) {
+            return confirm(message);
+        }
+    </script>
 }

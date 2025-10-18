@@ -75,6 +75,50 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
             }
         }
 
+        // Handler for confirming test drive
+        public async Task<IActionResult> OnPostConfirmAsync(Guid id)
+        {
+            try
+            {
+                var result = await _testDriveService.ConfirmAsync(id);
+                if (result.Success)
+                {
+                    TempData["Success"] = "Xác nhận lái thử thành công!";
+                }
+                else
+                {
+                    TempData["Error"] = result.Error ?? "Không thể xác nhận lái thử";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi: {ex.Message}";
+            }
+            return RedirectToPage();
+        }
+
+        // Handler for canceling test drive
+        public async Task<IActionResult> OnPostCancelAsync(Guid id)
+        {
+            try
+            {
+                var result = await _testDriveService.CancelAsync(id);
+                if (result.Success)
+                {
+                    TempData["Success"] = "Hủy lái thử thành công!";
+                }
+                else
+                {
+                    TempData["Error"] = result.Error ?? "Không thể hủy lái thử";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi: {ex.Message}";
+            }
+            return RedirectToPage();
+        }
+
         private Guid? GetCurrentDealerId()
         {
             // Get dealer ID from session

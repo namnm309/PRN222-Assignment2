@@ -355,7 +355,7 @@
             stockAlert.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div> Đang kiểm tra tồn kho...';
             stockAlert.style.display = 'block';
             
-            fetch('/DealerStaff/Orders/GetProductStock?productId=' + productId)
+            fetch('/DealerStaff/Orders/Create?handler=GetProductStock&productId=' + productId)
                 .then(response => response.json())
                 .then(data => {
                     if (!data.success) {
@@ -376,11 +376,21 @@
                                 <br><small class="text-danger">⚠️ Tồn kho thấp (tối thiểu: ${data.minimumStock} xe). Nên đặt hàng thêm!</small>
                             </div>`;
                     } else {
-                        stockAlert.innerHTML = `
-                            <div class="alert alert-success mb-0">
-                                <i class="fas fa-check-circle"></i> ${data.message}
-                                <br><small>Đã phân bổ: ${data.allocatedQuantity} | Đã đặt: ${data.reservedQuantity}</small>
-                            </div>`;
+                        if (data.isEVMStock) {
+                            // Tồn kho EVM (chưa phân bổ cho đại lý)
+                            stockAlert.innerHTML = `
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-info-circle"></i> ${data.message}
+                                    <br><small class="text-info">💡 Đây là tồn kho EVM. Liên hệ EVM để phân bổ cho đại lý.</small>
+                                </div>`;
+                        } else {
+                            // Tồn kho đã phân bổ cho đại lý
+                            stockAlert.innerHTML = `
+                                <div class="alert alert-success mb-0">
+                                    <i class="fas fa-check-circle"></i> ${data.message}
+                                    <br><small>Đã phân bổ: ${data.allocatedQuantity} | Đã đặt: ${data.reservedQuantity}</small>
+                                </div>`;
+                        }
                     }
                 })
                 .catch(error => {

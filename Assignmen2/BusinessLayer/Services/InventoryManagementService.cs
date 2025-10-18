@@ -48,6 +48,25 @@ namespace BusinessLayer.Services
             return entity == null ? null : _mappingService.MapToInventoryAllocationViewModel(entity);
         }
 
+        public async Task<(bool Success, string Error, InventoryAllocationResponse Data)> GetInventoryByDealerAndProductAsync(Guid dealerId, Guid productId)
+        {
+            try
+            {
+                var entity = await _inventoryRepository.GetInventoryAllocationAsync(productId, dealerId);
+                if (entity == null)
+                {
+                    return (false, "Không tìm thấy thông tin tồn kho cho sản phẩm này", null);
+                }
+
+                var response = _mappingService.MapToInventoryAllocationViewModel(entity);
+                return (true, null, response);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi lấy thông tin tồn kho: {ex.Message}", null);
+            }
+        }
+
         public async Task<bool> CreateInventoryAllocationAsync(InventoryAllocationResponse allocation)
         {
             if (allocation.AllocatedQuantity < 0 || allocation.AvailableQuantity < 0)
