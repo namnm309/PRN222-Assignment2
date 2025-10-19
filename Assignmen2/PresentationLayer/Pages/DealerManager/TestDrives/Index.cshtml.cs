@@ -1,16 +1,18 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerManager.TestDrives
 {
 	public class IndexModel : BaseDealerManagerPageModel
 	{
-		public record Item(Guid Id, string CustomerName, string ProductName, string StatusName, DateTime ScheduledDate, string? CustomerPhone);
-		public List<Item> Items { get; private set; } = new();
-		[BindProperty(SupportsGet = true)] public string? StatusFilter { get; set; }
-		[BindProperty(SupportsGet = true)] public int Page { get; set; } = 1;
-		public int TotalPages { get; private set; }
+		[BindProperty(SupportsGet = true)] public string? Status { get; set; }
+		[BindProperty(SupportsGet = true)] public DateTime? FromDate { get; set; }
+		[BindProperty(SupportsGet = true)] public DateTime? ToDate { get; set; }
+
+		public List<TestDriveResponse> TestDrives { get; private set; } = new();
+		// Optional summary counters to match prior view expectations
 		public int TotalTestDrives { get; private set; }
 		public int PendingCount { get; private set; }
 		public int ConfirmedCount { get; private set; }
@@ -34,28 +36,49 @@ namespace PresentationLayer.Pages.DealerManager.TestDrives
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			var (ok, _, list) = await TestDriveService.GetAllAsync(dealerId, StatusFilter);
-			
-			// Calculate statistics
-			TotalTestDrives = list.Count;
-			PendingCount = list.Count(td => td.Status.ToString() == "Pending");
-			ConfirmedCount = list.Count(td => td.Status.ToString() == "Confirmed");
-			CompletedCount = list.Count(td => td.Status.ToString() == "Successfully");
-			
-			var paged = list
-				.OrderByDescending(td => td.ScheduledDate)
-				.Skip((Page - 1) * 10)
-				.Take(10)
-				.ToList();
-			Items = paged.Select(td => new Item(
-				td.Id,
-				td.Customer?.FullName ?? td.CustomerName,
-				td.Product?.Name ?? string.Empty,
-				td.Status.ToString(),
-				td.ScheduledDate,
-				td.Customer?.PhoneNumber)).ToList();
-			TotalPages = (int)Math.Ceiling((double)list.Count / 10.0);
+			var result = await TestDriveService.GetByDealerAsync(dealerId.Value);
+			if (result.Success && result.Data != null)
+			{
+				TestDrives = result.Data;
+				if (!string.IsNullOrWhiteSpace(Status))
+				{
+					if (Enum.TryParse<BusinessLayer.Enums.TestDriveStatus>(Status, out var statusEnum))
+					{
+						TestDrives = TestDrives.Where(t => t.Status == statusEnum).ToList();
+					}
+				}
+				if (FromDate.HasValue)
+				{
+					TestDrives = TestDrives.Where(t => t.ScheduledDate.Date >= FromDate.Value.Date).ToList();
+				}
+				if (ToDate.HasValue)
+				{
+					TestDrives = TestDrives.Where(t => t.ScheduledDate.Date <= ToDate.Value.Date).ToList();
+				}
+				TestDrives = TestDrives.OrderByDescending(t => t.ScheduledDate).ToList();
+				// Fill summary counters
+				TotalTestDrives = TestDrives.Count;
+				PendingCount = TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Pending);
+				ConfirmedCount = TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Confirmed);
+				CompletedCount = TestDrives.Count(t => t.Status == BusinessLayer.Enums.TestDriveStatus.Successfully);
+			}
+			else
+			{
+				TempData["Error"] = result.Error ?? "Không thể tải danh sách lái thử";
+			}
 			return Page();
+		}
+
+		public async Task<IActionResult> OnPostConfirmAsync(Guid id)
+		{
+			await TestDriveService.ConfirmAsync(id);
+			return RedirectToPage();
+		}
+
+		public async Task<IActionResult> OnPostCancelAsync(Guid id)
+		{
+			await TestDriveService.CancelAsync(id);
+			return RedirectToPage();
 		}
 	}
 }

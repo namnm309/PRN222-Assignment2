@@ -92,7 +92,25 @@ namespace BusinessLayer.Services
         {
             if (string.IsNullOrWhiteSpace(fullName)) return (false, "Vui lòng nhập họ tên", null);
             if (string.IsNullOrWhiteSpace(phoneNumber)) return (false, "Vui lòng nhập số điện thoại", null);
-            if (string.IsNullOrWhiteSpace(email)) return (false, "Vui lòng nhập email", null);
+
+            // Kiểm tra email trùng lặp nếu có email
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                var existingCustomer = await _context.Customer
+                    .FirstOrDefaultAsync(c => c.Email == email && c.IsActive);
+                if (existingCustomer != null)
+                {
+                    return (false, "Email này đã được sử dụng", null);
+                }
+            }
+
+            // Kiểm tra số điện thoại trùng lặp
+            var existingPhone = await _context.Customer
+                .FirstOrDefaultAsync(c => c.PhoneNumber == phoneNumber && c.IsActive);
+            if (existingPhone != null)
+            {
+                return (false, "Số điện thoại này đã được sử dụng", null);
+            }
 
             var customer = new Customer
             {

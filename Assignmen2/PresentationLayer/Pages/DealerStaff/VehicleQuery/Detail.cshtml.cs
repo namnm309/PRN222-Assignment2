@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -14,8 +14,8 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
             _productService = productService;
         }
 
-        public Product? Product { get; set; }
-        public List<Product> RelatedProducts { get; set; } = new();
+        public ProductResponse? Product { get; set; }
+        public List<ProductResponse> RelatedProducts { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -30,7 +30,22 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
                 return NotFound();
             }
 
-            Product = result.Data;
+            // Map entity to DTO response
+            Product = new ProductResponse
+            {
+                Id = result.Data.Id,
+                Sku = result.Data.Sku,
+                Name = result.Data.Name,
+                Description = result.Data.Description,
+                Price = result.Data.Price,
+                StockQuantity = result.Data.StockQuantity,
+                IsActive = result.Data.IsActive,
+                ImageUrl = result.Data.ImageUrl,
+                BrandId = result.Data.BrandId,
+                BrandName = result.Data.Brand != null ? result.Data.Brand.Name : string.Empty,
+                CreatedAt = result.Data.CreatedAt,
+                UpdatedAt = result.Data.UpdatedAt
+            };
 
             // Get related products (same brand)
             if (Product.BrandId != Guid.Empty)
@@ -49,6 +64,21 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
                     RelatedProducts = relatedResult.Data
                         .Where(p => p.Id != Product.Id)
                         .Take(4)
+                        .Select(p => new ProductResponse
+                        {
+                            Id = p.Id,
+                            Sku = p.Sku,
+                            Name = p.Name,
+                            Description = p.Description,
+                            Price = p.Price,
+                            StockQuantity = p.StockQuantity,
+                            IsActive = p.IsActive,
+                            ImageUrl = p.ImageUrl,
+                            BrandId = p.BrandId,
+                            BrandName = p.Brand != null ? p.Brand.Name : string.Empty,
+                            CreatedAt = p.CreatedAt,
+                            UpdatedAt = p.UpdatedAt
+                        })
                         .ToList();
                 }
             }

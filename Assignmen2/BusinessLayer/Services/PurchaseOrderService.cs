@@ -6,6 +6,7 @@ using DataAccessLayer.Repository;
 using BusinessLayer.Enums;
 using DataAccessLayer.Data;
 using Microsoft.EntityFrameworkCore;
+using BusinessLayer.DTOs.Responses;
 
 namespace BusinessLayer.Services
 {
@@ -14,15 +15,17 @@ namespace BusinessLayer.Services
         private readonly IPurchaseOrderRepository _repo;
         private readonly IProductService _productService;
         private readonly AppDbContext _dbContext;
+        private readonly IMappingService _mappingService;
 
-        public PurchaseOrderService(IPurchaseOrderRepository repo, IProductService productService, AppDbContext dbContext)
+        public PurchaseOrderService(IPurchaseOrderRepository repo, IProductService productService, AppDbContext dbContext, IMappingService mappingService)
         {
             _repo = repo;
             _productService = productService;
             _dbContext = dbContext;
+            _mappingService = mappingService;
         }
 
-        public async Task<(bool Success, string Error, PurchaseOrder Data)> GetAsync(Guid id)
+        public async Task<(bool Success, string Error, PurchaseOrderResponse Data)> GetAsync(Guid id)
         {
             if (id == Guid.Empty)
                 return (false, "ID không hợp lệ", null);
@@ -31,17 +34,17 @@ namespace BusinessLayer.Services
             if (purchaseOrder == null)
                 return (false, "Không tìm thấy đơn đặt hàng", null);
 
-            return (true, null, purchaseOrder);
+            return (true, null, _mappingService.MapToPurchaseOrderViewModel(purchaseOrder));
         }
 
-        public async Task<(bool Success, string Error, List<PurchaseOrder> Data)> GetAllAsync(Guid? dealerId = null, PurchaseOrderStatus? status = null)
+        public async Task<(bool Success, string Error, List<PurchaseOrderResponse> Data)> GetAllAsync(Guid? dealerId = null, PurchaseOrderStatus? status = null)
         {
             var dalStatus = status.HasValue ? (DataAccessLayer.Enum.PurchaseOrderStatus?)status.Value : null;
             var purchaseOrders = await _repo.GetAllAsync(dealerId, dalStatus);
-            return (true, null, purchaseOrders);
+            return (true, null, _mappingService.MapToPurchaseOrderViewModels(purchaseOrders));
         }
 
-        public async Task<(bool Success, string Error, PurchaseOrder Data)> CreateAsync(
+        public async Task<(bool Success, string Error, PurchaseOrderResponse Data)> CreateAsync(
             Guid dealerId, Guid productId, Guid requestedById, int quantity, decimal unitPrice, 
             string reason, string notes, DateTime? expectedDeliveryDate = null)
         {
@@ -107,7 +110,7 @@ namespace BusinessLayer.Services
                 if (!success)
                     return (false, "Không thể tạo đơn đặt hàng - Repository CreateAsync failed", null);
 
-                return (true, null, purchaseOrder);
+                return (true, null, _mappingService.MapToPurchaseOrderViewModel(purchaseOrder));
             }
             catch (Exception ex)
             {
@@ -115,25 +118,27 @@ namespace BusinessLayer.Services
             }
         }
 
-        public async Task<(bool Success, string Error, PurchaseOrder Data)> ApproveAsync(
+        public async Task<(bool Success, string Error, PurchaseOrderResponse Data)> ApproveAsync(
             Guid id, Guid approvedById, DateTime? expectedDeliveryDate = null, string notes = "")
         {
             var (exists, err, purchaseOrder) = await GetAsync(id);
             if (!exists)
                 return (false, err, null);
 
-            if (purchaseOrder.Status != DataAccessLayer.Enum.PurchaseOrderStatus.Pending)
+            if (purchaseOrder.Status != PurchaseOrderStatus.Pending)
                 return (false, "Chỉ có thể duyệt đơn hàng đang chờ duyệt", null);
 
             if (approvedById == Guid.Empty)
                 return (false, "Approved By ID không hợp lệ", null);
 
-            purchaseOrder.Status = DataAccessLayer.Enum.PurchaseOrderStatus.Approved;
-            purchaseOrder.ApprovedById = approvedById;
-            purchaseOrder.ApprovedDate = DateTime.UtcNow;
+            var entity = await _repo.GetByIdAsync(id);
+            if (entity == null) return (false, "Không tìm thấy đơn đặt hàng", null);
+            entity.Status = DataAccessLayer.Enum.PurchaseOrderStatus.Approved;
+            entity.ApprovedById = approvedById;
+            entity.ApprovedDate = DateTime.UtcNow;
             if (expectedDeliveryDate.HasValue)
             {
-                purchaseOrder.ExpectedDeliveryDate = expectedDeliveryDate.Value.Kind switch
+                entity.ExpectedDeliveryDate = expectedDeliveryDate.Value.Kind switch
                 {
                     DateTimeKind.Utc => expectedDeliveryDate.Value,
                     DateTimeKind.Local => expectedDeliveryDate.Value.ToUniversalTime(),
@@ -143,26 +148,26 @@ namespace BusinessLayer.Services
             
             if (!string.IsNullOrWhiteSpace(notes))
             {
-                purchaseOrder.Notes = string.IsNullOrWhiteSpace(purchaseOrder.Notes) 
+                entity.Notes = string.IsNullOrWhiteSpace(entity.Notes) 
                     ? notes.Trim() 
-                    : $"{purchaseOrder.Notes}\n[Duyệt]: {notes.Trim()}";
+                    : $"{entity.Notes}\n[Duyệt]: {notes.Trim()}";
             }
 
-            var success = await _repo.UpdateAsync(purchaseOrder);
+            var success = await _repo.UpdateAsync(entity);
             if (!success)
                 return (false, "Không thể duyệt đơn đặt hàng", null);
 
-            return (true, null, purchaseOrder);
+            return (true, null, _mappingService.MapToPurchaseOrderViewModel(entity));
         }
 
-        public async Task<(bool Success, string Error, PurchaseOrder Data)> RejectAsync(
+        public async Task<(bool Success, string Error, PurchaseOrderResponse Data)> RejectAsync(
             Guid id, Guid rejectedById, string rejectReason)
         {
             var (exists, err, purchaseOrder) = await GetAsync(id);
             if (!exists)
                 return (false, err, null);
 
-            if (purchaseOrder.Status != DataAccessLayer.Enum.PurchaseOrderStatus.Pending)
+            if (purchaseOrder.Status != PurchaseOrderStatus.Pending)
                 return (false, "Chỉ có thể từ chối đơn hàng đang chờ duyệt", null);
 
             if (rejectedById == Guid.Empty)
@@ -171,19 +176,21 @@ namespace BusinessLayer.Services
             if (string.IsNullOrWhiteSpace(rejectReason))
                 return (false, "Lý do từ chối không được để trống", null);
 
-            purchaseOrder.Status = DataAccessLayer.Enum.PurchaseOrderStatus.Rejected;
-            purchaseOrder.ApprovedById = rejectedById;
-            purchaseOrder.ApprovedDate = DateTime.UtcNow;
-            purchaseOrder.RejectReason = rejectReason.Trim();
+            var entity = await _repo.GetByIdAsync(id);
+            if (entity == null) return (false, "Không tìm thấy đơn đặt hàng", null);
+            entity.Status = DataAccessLayer.Enum.PurchaseOrderStatus.Rejected;
+            entity.ApprovedById = rejectedById;
+            entity.ApprovedDate = DateTime.UtcNow;
+            entity.RejectReason = rejectReason.Trim();
 
-            var success = await _repo.UpdateAsync(purchaseOrder);
+            var success = await _repo.UpdateAsync(entity);
             if (!success)
                 return (false, "Không thể từ chối đơn đặt hàng", null);
 
-            return (true, null, purchaseOrder);
+            return (true, null, _mappingService.MapToPurchaseOrderViewModel(entity));
         }
 
-        public async Task<(bool Success, string Error, PurchaseOrder Data)> UpdateStatusAsync(
+        public async Task<(bool Success, string Error, PurchaseOrderResponse Data)> UpdateStatusAsync(
             Guid id, PurchaseOrderStatus status, DateTime? actualDeliveryDate = null)
         {
             var (exists, err, purchaseOrder) = await GetAsync(id);
@@ -194,26 +201,32 @@ namespace BusinessLayer.Services
             switch (status)
             {
                 case PurchaseOrderStatus.InTransit:
-                    if (purchaseOrder.Status != DataAccessLayer.Enum.PurchaseOrderStatus.Approved)
+                    if (purchaseOrder.Status != PurchaseOrderStatus.Approved)
                         return (false, "Chỉ có thể chuyển trạng thái 'Đang vận chuyển' từ trạng thái 'Đã duyệt'", null);
                     break;
 
                 case PurchaseOrderStatus.Delivered:
-                    if (purchaseOrder.Status != DataAccessLayer.Enum.PurchaseOrderStatus.InTransit)
+                    if (purchaseOrder.Status != PurchaseOrderStatus.InTransit)
                         return (false, "Chỉ có thể chuyển trạng thái 'Đã giao' từ trạng thái 'Đang vận chuyển'", null);
                     
                     if (actualDeliveryDate.HasValue)
                     {
-                        purchaseOrder.ActualDeliveryDate = actualDeliveryDate.Value.Kind switch
+                        var entityForDate = await _repo.GetByIdAsync(id);
+                        if (entityForDate == null) return (false, "Không tìm thấy đơn đặt hàng", null);
+                        entityForDate.ActualDeliveryDate = actualDeliveryDate.Value.Kind switch
                         {
                             DateTimeKind.Utc => actualDeliveryDate.Value,
                             DateTimeKind.Local => actualDeliveryDate.Value.ToUniversalTime(),
                             _ => DateTime.SpecifyKind(actualDeliveryDate.Value, DateTimeKind.Local).ToUniversalTime()
                         };
+                        await _repo.UpdateAsync(entityForDate);
                     }
                     else
                     {
-                        purchaseOrder.ActualDeliveryDate = DateTime.UtcNow;
+                        var entityForDate = await _repo.GetByIdAsync(id);
+                        if (entityForDate == null) return (false, "Không tìm thấy đơn đặt hàng", null);
+                        entityForDate.ActualDeliveryDate = DateTime.UtcNow;
+                        await _repo.UpdateAsync(entityForDate);
                     }
 
                     // 🔥 CẬP NHẬT TỒN KHO ĐẠI LÝ KHI GIAO HÀNG
@@ -221,6 +234,8 @@ namespace BusinessLayer.Services
                     {
                         Console.WriteLine($"[PurchaseOrder Delivered] Updating inventory for Dealer={purchaseOrder.DealerId}, Product={purchaseOrder.ProductId}, Quantity={purchaseOrder.RequestedQuantity}");
                         
+                        var entity = await _repo.GetByIdAsync(id);
+                        if (entity == null) return (false, "Không tìm thấy đơn đặt hàng", null);
                         var inventory = await _dbContext.InventoryAllocation
                             .FirstOrDefaultAsync(i => i.DealerId == purchaseOrder.DealerId 
                                                    && i.ProductId == purchaseOrder.ProductId 
@@ -232,17 +247,17 @@ namespace BusinessLayer.Services
                             inventory = new InventoryAllocation
                             {
                                 Id = Guid.NewGuid(),
-                                DealerId = purchaseOrder.DealerId,
-                                ProductId = purchaseOrder.ProductId,
-                                AllocatedQuantity = purchaseOrder.RequestedQuantity,
+                                DealerId = entity.DealerId,
+                                ProductId = entity.ProductId,
+                                AllocatedQuantity = entity.RequestedQuantity,
                                 ReservedQuantity = 0,
-                                AvailableQuantity = purchaseOrder.RequestedQuantity,
+                                AvailableQuantity = entity.RequestedQuantity,
                                 MinimumStock = 5,
                                 MaximumStock = 50,
                                 LastRestockDate = DateTime.UtcNow,
                                 Status = "Active",
                                 Priority = "Normal",
-                                Notes = $"Tạo tự động từ PurchaseOrder #{purchaseOrder.OrderNumber}",
+                                Notes = $"Tạo tự động từ PurchaseOrder #{entity.OrderNumber}",
                                 IsActive = true,
                                 CreatedAt = DateTime.UtcNow,
                                 UpdatedAt = DateTime.UtcNow
@@ -253,13 +268,13 @@ namespace BusinessLayer.Services
                         else
                         {
                             // Cập nhật tồn kho hiện có
-                            inventory.AllocatedQuantity += purchaseOrder.RequestedQuantity;
-                            inventory.AvailableQuantity += purchaseOrder.RequestedQuantity;
+                            inventory.AllocatedQuantity += entity.RequestedQuantity;
+                            inventory.AvailableQuantity += entity.RequestedQuantity;
                             inventory.LastRestockDate = DateTime.UtcNow;
                             inventory.UpdatedAt = DateTime.UtcNow;
                             inventory.Notes = string.IsNullOrWhiteSpace(inventory.Notes)
-                                ? $"Nhập hàng từ PurchaseOrder #{purchaseOrder.OrderNumber}"
-                                : $"{inventory.Notes}\n[{DateTime.Now:dd/MM/yyyy HH:mm}] Nhập {purchaseOrder.RequestedQuantity} xe từ PO #{purchaseOrder.OrderNumber}";
+                                ? $"Nhập hàng từ PurchaseOrder #{entity.OrderNumber}"
+                                : $"{inventory.Notes}\n[{DateTime.Now:dd/MM/yyyy HH:mm}] Nhập {entity.RequestedQuantity} xe từ PO #{entity.OrderNumber}";
                             _dbContext.InventoryAllocation.Update(inventory);
                             Console.WriteLine($"[PurchaseOrder Delivered] Updated InventoryAllocation: AllocatedQty={inventory.AllocatedQuantity}, AvailableQty={inventory.AvailableQuantity}");
                         }
@@ -275,21 +290,23 @@ namespace BusinessLayer.Services
                     break;
 
                 case PurchaseOrderStatus.Cancelled:
-                    if (purchaseOrder.Status == DataAccessLayer.Enum.PurchaseOrderStatus.Delivered)
+                    if (purchaseOrder.Status == PurchaseOrderStatus.Delivered)
                         return (false, "Không thể hủy đơn hàng đã giao", null);
                     break;
             }
 
-            purchaseOrder.Status = (DataAccessLayer.Enum.PurchaseOrderStatus)status;
+            var updateEntity = await _repo.GetByIdAsync(id);
+            if (updateEntity == null) return (false, "Không tìm thấy đơn đặt hàng", null);
+            updateEntity.Status = (DataAccessLayer.Enum.PurchaseOrderStatus)status;
 
-            var success = await _repo.UpdateAsync(purchaseOrder);
+            var success = await _repo.UpdateAsync(updateEntity);
             if (!success)
                 return (false, "Không thể cập nhật trạng thái đơn đặt hàng", null);
 
-            return (true, null, purchaseOrder);
+            return (true, null, _mappingService.MapToPurchaseOrderViewModel(updateEntity));
         }
 
-        public async Task<(bool Success, string Error, PurchaseOrder Data)> CancelAsync(Guid id)
+        public async Task<(bool Success, string Error, PurchaseOrderResponse Data)> CancelAsync(Guid id)
         {
             return await UpdateStatusAsync(id, PurchaseOrderStatus.Cancelled);
         }

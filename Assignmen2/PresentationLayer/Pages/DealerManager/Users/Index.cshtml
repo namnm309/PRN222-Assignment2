@@ -146,10 +146,10 @@
 					<div class="text-muted small">
 						Tổng <strong>@Model.Users.Count</strong> nhân viên
 					</div>
-					<div class="d-flex gap-2">
-						<span class="badge bg-primary">DealerManager: @Model.Users.Count(u => u.Role == DataAccessLayer.Enum.UserRole.DealerManager)</span>
-						<span class="badge bg-info">DealerStaff: @Model.Users.Count(u => u.Role == DataAccessLayer.Enum.UserRole.DealerStaff)</span>
-					</div>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-primary">DealerManager: @Model.Users.Count(u => u.Role == BusinessLayer.Enums.UserRole.DealerManager)</span>
+                        <span class="badge bg-info">DealerStaff: @Model.Users.Count(u => u.Role == BusinessLayer.Enums.UserRole.DealerStaff)</span>
+                    </div>
 				</div>
 			</div>
 		}

@@ -1,5 +1,4 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -23,7 +22,17 @@ namespace PresentationLayer.Pages.DealerStaff.Promotions
         [BindProperty(SupportsGet = true)]
         public string? Type { get; set; }
 
-        public List<Promotion> Promotions { get; set; } = new();
+        public class PromotionVm
+        {
+            public Guid Id { get; set; }
+            public string title { get; set; } = string.Empty;
+            public string? description { get; set; }
+            public bool IsActive { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public DateTime UpdatedAt { get; set; }
+        }
+
+        public List<PromotionVm> Promotions { get; set; } = new();
 
         public async Task OnGetAsync()
         {
@@ -52,11 +61,11 @@ namespace PresentationLayer.Pages.DealerStaff.Promotions
             // Note: Type filter removed since Promotion entity doesn't have Type property
         }
 
-        private List<Promotion> GetSamplePromotions()
+        private List<PromotionVm> GetSamplePromotions()
         {
-            return new List<Promotion>
+            return new List<PromotionVm>
             {
-                new Promotion
+                new PromotionVm
                 {
                     Id = Guid.NewGuid(),
                     title = "Giảm giá 10% cho khách hàng mới",
@@ -65,7 +74,7 @@ namespace PresentationLayer.Pages.DealerStaff.Promotions
                     CreatedAt = DateTime.Now.AddDays(-30),
                     UpdatedAt = DateTime.Now.AddDays(-30)
                 },
-                new Promotion
+                new PromotionVm
                 {
                     Id = Guid.NewGuid(),
                     title = "Tặng phụ kiện cao cấp",
@@ -74,7 +83,7 @@ namespace PresentationLayer.Pages.DealerStaff.Promotions
                     CreatedAt = DateTime.Now.AddDays(-15),
                     UpdatedAt = DateTime.Now.AddDays(-15)
                 },
-                new Promotion
+                new PromotionVm
                 {
                     Id = Guid.NewGuid(),
                     title = "Trả góp 0% lãi suất",
@@ -83,7 +92,7 @@ namespace PresentationLayer.Pages.DealerStaff.Promotions
                     CreatedAt = DateTime.Now.AddDays(-7),
                     UpdatedAt = DateTime.Now.AddDays(-7)
                 },
-                new Promotion
+                new PromotionVm
                 {
                     Id = Guid.NewGuid(),
                     title = "Khuyến mãi cuối năm",

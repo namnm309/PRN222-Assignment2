@@ -37,8 +37,7 @@ namespace PresentationLayer.Pages.DealerStaff.TestDrive
                 var result = await _testDriveService.GetByDealerAsync(dealerId.Value);
                 if (result.Success && result.Data != null)
                 {
-                    // Map entities to DTOs using mapping service
-                    TestDrives = _mappingService.MapToTestDriveViewModels(result.Data);
+                    TestDrives = result.Data;
 
                     // Apply filters
                     if (!string.IsNullOrWhiteSpace(Status))

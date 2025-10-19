@@ -5,59 +5,328 @@
 	ViewData["Title"] = "Chi tiết lái thử";
 }
 
-<div class="container-fluid">
-	<nav aria-label="breadcrumb" class="mb-3">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a asp-page="/DealerManager/TestDrives/Index">Lái thử</a></li>
-			<li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
-		</ol>
-	</nav>
-
-	<div class="row">
-		<div class="col-lg-8">
-			<div class="card shadow-sm">
-				<div class="card-header d-flex align-items-center">
-					<i class="fas fa-id-card me-2"></i>
-					<span>Thông tin phiếu lái thử</span>
-				</div>
-				<div class="card-body">
-					<dl class="row mb-0">
-						<dt class="col-sm-3">Khách hàng</dt>
-						<dd class="col-sm-9">@Model.Item?.CustomerName</dd>
-						<dt class="col-sm-3">Xe</dt>
-						<dd class="col-sm-9">@Model.Item?.ProductName</dd>
-						<dt class="col-sm-3">Trạng thái</dt>
-						<dd class="col-sm-9">
-							<span class="badge bg-info text-dark">@Model.Item?.StatusName</span>
-						</dd>
-					</dl>
-				</div>
-				<div class="card-footer d-flex flex-wrap gap-2">
-					<form method="post" asp-page-handler="Confirm" class="d-inline">
-						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
-						<button type="submit" class="btn btn-info text-white"><i class="fas fa-check me-1"></i> Xác nhận</button>
-					</form>
-					<form method="post" asp-page-handler="CompleteSuccess" class="d-inline">
-						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
-						<button type="submit" class="btn btn-success"><i class="fas fa-flag-checkered me-1"></i> Hoàn tất (đạt)</button>
-					</form>
-					<form method="post" asp-page-handler="CompleteFail" class="d-inline">
-						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
-						<button type="submit" class="btn btn-secondary"><i class="fas fa-times me-1"></i> Hoàn tất (trượt)</button>
-					</form>
-					<form method="post" asp-page-handler="Cancel" class="d-inline">
-						<input type="hidden" asp-for="Id" value="@Model.Item!.Id" />
-						<button type="submit" class="btn btn-danger"><i class="fas fa-ban me-1"></i> Hủy</button>
-					</form>
-					@if (Model.CanCreateCustomer)
-					{
-						<a class="btn btn-outline-success" asp-page="/DealerManager/Customers/CreateFromTestDrive" asp-route-id="@Model.Item!.Id"><i class="fas fa-user-plus me-1"></i> Tạo khách hàng</a>
-					}
-					<a class="btn btn-outline-secondary" asp-page="/DealerManager/TestDrives/Index">Quay lại</a>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0">
+            <i class="fas fa-calendar-check text-primary me-2"></i>
+            Chi tiết lịch lái thử
+        </h4>
+        <p class="text-muted mb-0">Thông tin chi tiết về lịch hẹn lái thử</p>
+    </div>
+    <div>
+        <a asp-page="/DealerManager/TestDrives/Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>
+            Quay lại
+        </a>
+    </div>
 </div>
 
+@if (Model.Item != null)
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle text-primary me-2"></i>
+                        Thông tin lịch hẹn
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">ID Lịch hẹn</label>
+                                <div class="form-control-plaintext">@Model.Item.Id</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Trạng thái</label>
+                                <div>
+                                    <span class="badge bg-secondary">@Model.Item.StatusName</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Ngày hẹn</label>
+                                <div class="form-control-plaintext">
+                                    <i class="fas fa-calendar text-primary me-1"></i>
+                                    @Model.Item.ScheduledDate.ToString("dd/MM/yyyy")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Giờ hẹn</label>
+                                <div class="form-control-plaintext">
+                                    <i class="fas fa-clock text-primary me-1"></i>
+                                    @Model.Item.ScheduledDate.ToString("HH:mm")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user text-success me-2"></i>
+                        Thông tin khách hàng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted">Tên khách hàng</label>
+                        <div class="form-control-plaintext">
+                            <i class="fas fa-user text-success me-1"></i>
+                            @Model.Item.CustomerName
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted">Số điện thoại</label>
+                        <div class="form-control-plaintext">
+                            <i class="fas fa-phone text-success me-1"></i>
+                            @Model.Item.CustomerPhone
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                            <i class="fas fa-user-plus me-1"></i>Tạo khách hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs text-warning me-2"></i>
+                        Thao tác
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <form method="post" asp-page-handler="Confirm" class="d-inline">
+                            <input type="hidden" asp-for="Id" value="@Model.Item.Id" />
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check me-1"></i>
+                                Xác nhận
+                            </button>
+                        </form>
+                        @if (Model.Item.StatusName != "Failed" && Model.Item.StatusName != "Successfully")
+                        {
+                            <form method="post" asp-page-handler="Cancel" class="d-inline">
+                                <input type="hidden" asp-for="Id" value="@Model.Item.Id" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-times me-1"></i>
+                                    Hủy
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Không tìm thấy thông tin lịch hẹn lái thử.
+    </div>
+}
+
+<!-- Add Customer Modal -->
+<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCustomerModalLabel">
+                    <i class="fas fa-user-plus me-2"></i>Tạo khách hàng mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addCustomerForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="testDriveId" value="@Model.Item.Id" />
+                    <div id="customer-error-message" class="d-none"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="customerName" class="form-label">Tên khách hàng *</label>
+                                <input type="text" class="form-control" id="customerName" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="customerPhone" class="form-label">Số điện thoại *</label>
+                                <input type="tel" class="form-control" id="customerPhone" name="phone" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="customerEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="customerEmail" name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="customerAddress" class="form-label">Địa chỉ</label>
+                                <input type="text" class="form-control" id="customerAddress" name="address">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="customerBirthDate" class="form-label">Ngày sinh</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" id="customerBirthDate" name="birthDate">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="customerGender" class="form-label">Giới tính</label>
+                                <select class="form-select" id="customerGender" name="gender">
+                                    <option value="">Chọn giới tính</option>
+                                    <option value="Male">Nam</option>
+                                    <option value="Female">Nữ</option>
+                                    <option value="Other">Khác</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="customerNotes" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="customerNotes" name="notes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-success" id="saveCustomerBtn">
+                    <i class="fas fa-save me-1"></i>Lưu khách hàng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Pre-fill form when modal opens
+        document.getElementById('addCustomerModal').addEventListener('show.bs.modal', function() {
+            document.getElementById('customerName').value = '@Model.Item.CustomerName';
+            document.getElementById('customerPhone').value = '@Model.Item.CustomerPhone';
+            document.getElementById('customerEmail').value = '@Model.Item.CustomerEmail';
+            // Clear other fields for new customer
+            document.getElementById('customerAddress').value = '';
+            document.getElementById('customerBirthDate').value = '';
+            document.getElementById('customerGender').value = '';
+            document.getElementById('customerNotes').value = '';
+        });
+
+        // Handle customer creation
+        document.getElementById('saveCustomerBtn').addEventListener('click', function() {
+            var form = document.getElementById('addCustomerForm');
+            var formData = new FormData(form);
+            var errorDiv = document.getElementById('customer-error-message');
+            
+            errorDiv.classList.add('d-none');
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...';
+            
+            var phone = formData.get('phone');
+            var name = formData.get('name');
+            
+            // Create FormData for anti-forgery token for CheckCustomer
+            var checkData = new FormData();
+            checkData.append('phone', phone);
+            checkData.append('name', name);
+            checkData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+            
+            fetch('/DealerManager/Customers/Create?handler=CheckCustomer', {
+                method: 'POST',
+                body: checkData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    errorDiv.innerHTML = `
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Khách hàng đã có thông tin rồi!</strong><br>
+                            <small>Tên: ${data.customer.name} | SĐT: ${data.customer.phone} | Email: ${data.customer.email || 'Chưa có'}</small>
+                        </div>`;
+                    errorDiv.classList.remove('d-none');
+                } else {
+                    // Customer doesn't exist, create new one
+                    fetch('/DealerManager/Customers/Create?handler=CreateCustomer', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            errorDiv.innerHTML = `
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <strong>Tạo khách hàng thành công!</strong><br>
+                                    <small>Tên: ${data.customer.name} | SĐT: ${data.customer.phone} | Email: ${data.customer.email || 'Chưa có'}</small>
+                                </div>`;
+                            errorDiv.classList.remove('d-none');
+                            setTimeout(() => {
+                                var modal = bootstrap.Modal.getInstance(document.getElementById('addCustomerModal'));
+                                modal.hide();
+                                form.reset();
+                                errorDiv.classList.add('d-none');
+                                location.reload(); // Reload to show updated data
+                            }, 2000);
+                        } else {
+                            errorDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i> ${data.message}</div>`;
+                            errorDiv.classList.remove('d-none');
+                        }
+                    })
+                    .catch(error => {
+                        errorDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i> Có lỗi xảy ra khi tạo khách hàng. Vui lòng thử lại.</div>`;
+                        errorDiv.classList.remove('d-none');
+                        console.error('Error creating customer:', error);
+                    });
+                }
+            })
+            .catch(error => {
+                errorDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i> Có lỗi xảy ra khi kiểm tra khách hàng. Vui lòng thử lại.</div>`;
+                errorDiv.classList.remove('d-none');
+                console.error('Error checking customer:', error);
+            })
+            .finally(() => {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-save me-1"></i> Lưu khách hàng';
+            });
+        });
+    </script>
+}
 

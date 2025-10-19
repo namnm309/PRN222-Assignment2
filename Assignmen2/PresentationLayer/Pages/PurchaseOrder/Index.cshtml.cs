@@ -2,7 +2,6 @@ using BusinessLayer.Services;
 using BusinessLayer.DTOs.Responses;
 using BusinessLayer.Enums;
 using BusinessLayer.Helpers;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace PresentationLayer.Pages.EVMStaff.PurchaseOrderManagement
 
             if (result.Success && result.Data != null)
             {
-                PurchaseOrders = _mappingService.MapToPurchaseOrderViewModels(result.Data);
+                PurchaseOrders = result.Data;
 
                 // Apply search filter (case-insensitive, diacritics-insensitive)
                 if (!string.IsNullOrWhiteSpace(Search))

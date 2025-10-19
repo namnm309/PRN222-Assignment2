@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
+using BusinessLayer.Enums;
 
 namespace Assignmen2.PresentationLayer.Pages.DealerStaff.TestDrive
 {
@@ -14,7 +15,7 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.TestDrive
             _testDriveService = testDriveService;
         }
 
-        public DataAccessLayer.Entities.TestDrive? TestDrive { get; set; }
+        public TestDriveResponse? TestDrive { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {

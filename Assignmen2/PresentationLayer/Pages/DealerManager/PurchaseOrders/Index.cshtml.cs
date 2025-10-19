@@ -34,23 +34,23 @@ namespace PresentationLayer.Pages.DealerManager.PurchaseOrders
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			DataAccessLayer.Enum.PurchaseOrderStatus? status = null;
+            BusinessLayer.Enums.PurchaseOrderStatus? status = null;
 			if (!string.IsNullOrWhiteSpace(StatusFilter) && int.TryParse(StatusFilter, out var s))
 			{
-				status = (DataAccessLayer.Enum.PurchaseOrderStatus)s;
+                status = (BusinessLayer.Enums.PurchaseOrderStatus)s;
 			}
 
-			var (ok, _, orders) = await purchaseOrderService.GetAllAsync(dealerId, (BusinessLayer.Enums.PurchaseOrderStatus?)status);
+            var (ok, _, orders) = await purchaseOrderService.GetAllAsync(dealerId, status);
 			PurchaseOrders = orders.Select(po => new POVm
 			{
 				Id = po.Id,
-				ProductName = po.Product?.Name ?? "N/A",
-				DealerName = po.Dealer?.Name ?? "N/A",
-				RequestedByName = po.RequestedBy?.FullName ?? "N/A",
-				Quantity = po.RequestedQuantity,
+                ProductName = po.ProductName ?? "N/A",
+                DealerName = po.DealerName ?? "N/A",
+                RequestedByName = po.RequestedByName ?? "N/A",
+                Quantity = po.RequestedQuantity,
 				UnitPrice = po.UnitPrice,
-				Status = po.Status,
-				CreatedAt = po.CreatedAt
+                Status = po.Status,
+                CreatedAt = po.RequestedDate
 			}).ToList();
 
 			return Page();
@@ -64,7 +64,7 @@ namespace PresentationLayer.Pages.DealerManager.PurchaseOrders
 			public string RequestedByName { get; set; } = string.Empty;
 			public int Quantity { get; set; }
 			public decimal UnitPrice { get; set; }
-			public DataAccessLayer.Enum.PurchaseOrderStatus Status { get; set; }
+            public BusinessLayer.Enums.PurchaseOrderStatus Status { get; set; }
 			public DateTime CreatedAt { get; set; }
 		}
 	}

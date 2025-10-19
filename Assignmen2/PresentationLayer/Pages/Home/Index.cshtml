@@ -48,7 +48,7 @@
                 <div class="container">
                     <h2 class="display-6 fw-bold text-dark">Khám phá tương lai xe điện</h2>
                     <p class="lead text-muted mb-3">Hiệu năng, tiết kiệm và thân thiện môi trường</p>
-                    <a asp-page="/Home/Privacy" class="btn btn-primary">Khám phá ngay</a>
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testDriveModal">Đăng ký lái thử</a>
                 </div>
             </div>
         </div>
@@ -203,8 +203,8 @@
     </button>
         </div>
         <div class="d-flex justify-content-center mt-4">
-            <a asp-page="/Products/Index" class="btn btn-primary btn-lg rounded-pill px-5">
-                <i class="fas fa-th me-2"></i> Xem tất cả sản phẩm
+            <a href="#" class="btn btn-primary btn-lg rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                <i class="fas fa-calendar-check me-2"></i> Đăng ký lái thử
             </a>
         </div>
     </div>
@@ -234,7 +234,7 @@ else
                     Đăng ký lái thử miễn phí ngay hôm nay và cảm nhận sự khác biệt
                 </p>
                 <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a asp-page="/Home/All" class="btn btn-light btn-lg rounded-pill px-5">
+                    <a href="#" class="btn btn-light btn-lg rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#testDriveModal">
                         <i class="fas fa-calendar-check me-2"></i> Đăng ký lái thử
                     </a>
                     <a href="tel:1900xxxx" class="btn btn-outline-light btn-lg rounded-pill px-5">
@@ -248,7 +248,74 @@ else
 </div>
 }
 
+<!-- Test Drive Modal -->
+<div class="modal fade" id="testDriveModal" tabindex="-1" aria-labelledby="testDriveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="testDriveModalLabel"><i class="fas fa-calendar-check me-2"></i>Đăng ký lái thử</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="testDriveForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Họ tên</label>
+                            <input id="tdName" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Số điện thoại</label>
+                            <input id="tdPhone" class="form-control" required />
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Email</label>
+                            <input id="tdEmail" type="email" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Đại lý</label>
+                            <select id="tdDealer" class="form-select" required>
+                                <option value="">-- Chọn đại lý --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Xe lái thử</label>
+                            <select id="tdProduct" class="form-select" required>
+                                <option value="">-- Chọn xe --</option>
+                                @if (Model.Products != null)
+                                {
+                                    foreach (var p in Model.Products)
+                                    {
+                                        <option value="@p.Id">@p.Name (@p.Sku)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày</label>
+                            <input id="tdDate" type="date" class="form-control" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Giờ</label>
+                            <input id="tdTime" type="time" class="form-control" required />
+                            <div id="tdSlots" class="mt-2"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Ghi chú</label>
+                            <textarea id="tdNotes" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" form="testDriveForm" class="btn btn-primary"><i class="fas fa-paper-plane me-1"></i>Đặt lịch</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const productRow = document.getElementById('homeProducts');
@@ -301,6 +368,180 @@ else
             setTimeout(function() { successModal.hide(); }, 5000);
             </text>
         }
+        // Load dealers via Page Handler
+        fetch('@Url.Page("/Home/Index", "Dealers")')
+            .then(r=>r.json())
+            .then(list=>{
+                const sel = document.getElementById('tdDealer');
+                if (!sel) return;
+                list.forEach(d=>{
+                    const opt = document.createElement('option');
+                    opt.value = d.id; opt.textContent = d.name;
+                    sel.appendChild(opt);
+                });
+            });
+
+        // SignalR booking modal logic
+        (function() {
+            const connection = new signalR.HubConnectionBuilder().withUrl('/testDriveHub').build();
+            let dealerId = null;
+            let productId = null;
+            const form = document.getElementById('testDriveForm');
+            const productSelect = document.getElementById('tdProduct');
+            const dealerSelect = document.getElementById('tdDealer');
+            const dateInput = document.getElementById('tdDate');
+            const timeInput = document.getElementById('tdTime');
+            const slotsDiv = document.getElementById('tdSlots');
+            const modalEl = document.getElementById('testDriveModal');
+            let heldAt = null; // Date object in local time; server converts to UTC
+            let heldDealerId = null;
+            let heldProductId = null;
+
+            function groupChanged() {
+                if (!dealerId || !productId || !dateInput?.value) return;
+                connection.invoke('JoinGroup', dealerId, productId);
+                reloadDisabledSlots();
+            }
+
+            function reloadDisabledSlots() {
+                if (!dateInput?.value) return;
+                const from = new Date(dateInput.value);
+                const to = new Date(from.getTime() + 24*60*60*1000);
+                connection.invoke('GetDisabledSlots', dealerId, productId, from, to).then(list => {
+                    renderSlots(list);
+                });
+            }
+
+            function releaseCurrentHold() {
+                if (heldAt && heldDealerId && heldProductId) {
+                    try { connection.invoke('ReleaseSlot', heldDealerId, heldProductId, heldAt); } catch {}
+                }
+                heldAt = null;
+                heldDealerId = null;
+                heldProductId = null;
+                if (slotsDiv) {
+                    slotsDiv.querySelectorAll('button.active').forEach(x=>x.classList.remove('active'));
+                }
+            }
+
+            function renderSlots(disabled) {
+                if (!dateInput?.value) return;
+                const hours = ["08:00","09:30","11:00","13:30","15:00","16:30"];
+                const html = hours.map(h => {
+                    const dt = new Date(dateInput.value + 'T' + h + ':00');
+                    const isDisabled = disabled && disabled.some(x => new Date(x).getTime() === dt.getTime());
+                    return `<button type="button" class="btn btn-sm ${isDisabled?'btn-secondary':'btn-outline-primary'} m-1" ${isDisabled?'disabled':''} data-time="${h}">${h}</button>`;
+                }).join('');
+                slotsDiv.innerHTML = html;
+                slotsDiv.querySelectorAll('button').forEach(b => {
+                    b.addEventListener('click', () => {
+                        // release previous hold if any
+                        if (heldAt) {
+                            releaseCurrentHold();
+                        }
+                        timeInput.value = b.dataset.time;
+                        slotsDiv.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+                        b.classList.add('active');
+                        // hold slot when select
+                        if (dealerId && productId && dateInput?.value && timeInput?.value) {
+                            const scheduled = new Date(dateInput.value + 'T' + timeInput.value + ':00');
+                            connection.invoke('HoldSlot', dealerId, productId, scheduled).then(ok => {
+                                if (!ok) {
+                                    b.classList.remove('active');
+                                    alert('Khung giờ vừa được người khác giữ/đặt. Vui lòng chọn giờ khác.');
+                                    reloadDisabledSlots();
+                                }
+                                else {
+                                    heldAt = scheduled;
+                                    heldDealerId = dealerId;
+                                    heldProductId = productId;
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            connection.on('SlotBooked', (iso) => {
+                if (!dateInput?.value) return;
+                const booked = new Date(iso);
+                const cur = new Date(dateInput.value);
+                if (booked.toDateString() === cur.toDateString()) {
+                    reloadDisabledSlots();
+                }
+                if (heldAt && booked.getTime() === heldAt.getTime()) {
+                    // our hold has turned into booking (either us or someone else)
+                    heldAt = null; heldDealerId = null; heldProductId = null;
+                }
+            });
+
+            connection.on('SlotHeld', (iso) => {
+                if (!dateInput?.value) return;
+                const held = new Date(iso);
+                const cur = new Date(dateInput.value);
+                if (held.toDateString() === cur.toDateString()) {
+                    reloadDisabledSlots();
+                }
+            });
+
+            connection.on('SlotReleased', (iso) => {
+                if (!dateInput?.value) return;
+                const rel = new Date(iso);
+                const cur = new Date(dateInput.value);
+                if (rel.toDateString() === cur.toDateString()) {
+                    reloadDisabledSlots();
+                }
+            });
+
+            connection.start();
+
+            dealerSelect?.addEventListener('change', () => {
+                // release any existing hold tied to previous dealer/product
+                releaseCurrentHold();
+                dealerId = dealerSelect.value;
+                groupChanged();
+            });
+            productSelect?.addEventListener('change', () => {
+                releaseCurrentHold();
+                productId = productSelect.value;
+                groupChanged();
+            });
+            dateInput?.addEventListener('change', () => {
+                releaseCurrentHold();
+                groupChanged();
+            });
+
+            // auto release when modal closes
+            if (modalEl) {
+                modalEl.addEventListener('hide.bs.modal', () => {
+                    releaseCurrentHold();
+                });
+            }
+
+            form?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!dealerId || !productId || !dateInput?.value || !timeInput?.value) return;
+                const scheduled = new Date(dateInput.value + 'T' + timeInput.value + ':00');
+                const req = {
+                    customerName: document.getElementById('tdName').value,
+                    customerPhone: document.getElementById('tdPhone').value,
+                    customerEmail: document.getElementById('tdEmail').value,
+                    notes: document.getElementById('tdNotes').value,
+                    productId: productId,
+                    dealerId: dealerId,
+                    scheduledDate: scheduled
+                };
+                connection.invoke('BookSlot', req).then(res => {
+                    if (res?.success) {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('testDriveModal'));
+                        modal?.hide();
+                        window.location.reload();
+                    } else {
+                        alert(res?.error || 'Không thể tạo lịch hẹn');
+                    }
+                });
+            });
+        })();
     </script>
 }
 

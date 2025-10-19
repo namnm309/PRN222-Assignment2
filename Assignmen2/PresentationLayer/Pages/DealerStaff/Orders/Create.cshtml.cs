@@ -223,11 +223,11 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                         string evmMessage;
                         if (evmHasStock)
                         {
-                            evmMessage = $"✅ Có sẵn {product.StockQuantity} xe trong kho EVM (chưa phân bổ cho đại lý)";
+                            evmMessage = $"Có sẵn {product.StockQuantity} xe trong kho";
                         }
                         else
                         {
-                            evmMessage = "❌ Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
+                            evmMessage = "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
                         }
 
                         return new JsonResult(new { 
@@ -264,16 +264,16 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 {
                     if (inventory.AvailableQuantity <= inventory.MinimumStock)
                     {
-                        message = $"⚠️ Tồn kho thấp! Chỉ còn {inventory.AvailableQuantity} xe (tối thiểu: {inventory.MinimumStock} xe)";
+                        message = $"Tồn kho thấp! Chỉ còn {inventory.AvailableQuantity} xe (tối thiểu: {inventory.MinimumStock} xe)";
                     }
                     else
                     {
-                        message = $"✅ Có sẵn {inventory.AvailableQuantity} xe trong kho";
+                        message = $"Có sẵn {inventory.AvailableQuantity} xe trong kho";
                     }
                 }
                 else
                 {
-                    message = "❌ Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
+                    message = "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
                 }
 
                 return new JsonResult(new

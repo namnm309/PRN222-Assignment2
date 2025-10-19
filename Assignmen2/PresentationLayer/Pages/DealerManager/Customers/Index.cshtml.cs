@@ -1,6 +1,7 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerManager.Customers
 {
@@ -22,7 +23,7 @@ namespace PresentationLayer.Pages.DealerManager.Customers
 		[BindProperty(SupportsGet = true)]
 		public string? Search { get; set; }
 
-		public List<DataAccessLayer.Entities.Customer> Customers { get; private set; } = new();
+        public List<CustomerResponse> Customers { get; private set; } = new();
 		public int TotalCustomers { get; private set; }
 		public int NewCustomersThisMonth { get; private set; }
 		public int ActiveCustomers { get; private set; }
@@ -32,8 +33,8 @@ namespace PresentationLayer.Pages.DealerManager.Customers
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			var (ok, _, customers) = await CustomerService.GetAllByDealerAsync(dealerId.Value);
-			if (!ok) customers = new List<DataAccessLayer.Entities.Customer>();
+            var (ok, _, customers) = await CustomerService.GetAllByDealerAsync(dealerId.Value);
+            if (!ok) customers = new List<DataAccessLayer.Entities.Customer>();
 
 			if (!string.IsNullOrWhiteSpace(Search))
 			{
@@ -44,10 +45,10 @@ namespace PresentationLayer.Pages.DealerManager.Customers
 				).ToList();
 			}
 
-			Customers = customers;
-			TotalCustomers = customers.Count;
-			NewCustomersThisMonth = customers.Count(c => c.CreatedAt.Month == DateTime.Today.Month && c.CreatedAt.Year == DateTime.Today.Year);
-			ActiveCustomers = customers.Count; // giả định tất cả đang hoạt động
+            Customers = customers.Select(c => new CustomerResponse { Id = c.Id, FullName = c.FullName, Email = c.Email, PhoneNumber = c.PhoneNumber, Address = c.Address, IsActive = c.IsActive, CreatedAt = c.CreatedAt, UpdatedAt = c.UpdatedAt }).ToList();
+            TotalCustomers = Customers.Count;
+            NewCustomersThisMonth = Customers.Count(c => c.CreatedAt.Month == DateTime.Today.Month && c.CreatedAt.Year == DateTime.Today.Year);
+            ActiveCustomers = Customers.Count; // giả định tất cả đang hoạt động
 
 			return Page();
 		}

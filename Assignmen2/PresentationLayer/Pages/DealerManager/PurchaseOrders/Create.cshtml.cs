@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerManager.PurchaseOrders
 {
@@ -30,15 +31,15 @@ namespace PresentationLayer.Pages.DealerManager.PurchaseOrders
 		[BindProperty]
 		public InputModel Input { get; set; } = new();
 
-		public List<DataAccessLayer.Entities.Product> Products { get; private set; } = new();
+        public List<ProductResponse> Products { get; private set; } = new();
 
 		public async Task<IActionResult> OnGetAsync()
 		{
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			var (ok, _, products) = await productService.SearchAsync(null, null, null, null, null, true);
-			Products = products;
+            var (ok, _, products) = await productService.SearchAsync(null, null, null, null, null, true);
+            Products = products.Select(p => new ProductResponse { Id = p.Id, Name = p.Name, Price = p.Price, StockQuantity = p.StockQuantity, BrandId = p.BrandId, BrandName = p.Brand?.Name ?? string.Empty }).ToList();
 
 			return Page();
 		}
@@ -82,15 +83,15 @@ namespace PresentationLayer.Pages.DealerManager.PurchaseOrders
 		{
 			try
 			{
-				var (ok, _, product) = await productService.GetAsync(productId);
-				if (!ok || product == null)
+                var (ok, _, product) = await productService.GetAsync(productId);
+                if (!ok || product == null)
 				{
 					return new JsonResult(new { success = false, message = "Không tìm thấy sản phẩm" });
 				}
 
-				var hasStock = product.StockQuantity > 0;
+                var hasStock = product.StockQuantity > 0;
 				var minimumStock = 5; // You can make this configurable
-				var availableQuantity = product.StockQuantity;
+                var availableQuantity = product.StockQuantity;
 				var allocatedQuantity = 0; // TODO: Calculate from orders
 				var reservedQuantity = 0; // TODO: Calculate from reservations
 

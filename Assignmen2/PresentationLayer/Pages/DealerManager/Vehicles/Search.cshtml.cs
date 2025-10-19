@@ -1,6 +1,7 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerManager.Vehicles
 {
@@ -32,19 +33,19 @@ namespace PresentationLayer.Pages.DealerManager.Vehicles
 		[BindProperty(SupportsGet = true)] public decimal? MaxPrice { get; set; }
 		[BindProperty(SupportsGet = true)] public bool? InStock { get; set; }
 
-		public List<DataAccessLayer.Entities.Product> Products { get; private set; } = new();
-		public List<DataAccessLayer.Entities.Brand> Brands { get; private set; } = new();
+        public List<ProductResponse> Products { get; private set; } = new();
+        public List<BrandResponse> Brands { get; private set; } = new();
 
 		public async Task<IActionResult> OnGetAsync()
 		{
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			var (okB, _, brands) = await brandService.GetAllAsync();
-			Brands = brands;
+            var (okB, _, brands) = await brandService.GetAllAsync();
+            Brands = brands.Select(b => new BrandResponse { Id = b.Id, Name = b.Name, Country = b.Country, Description = b.Description, IsActive = b.IsActive }).ToList();
 
-			var (okP, _, products) = await productService.SearchAsync(Q, BrandId, MinPrice, MaxPrice, InStock, true);
-			Products = products;
+            var (okP, _, products) = await productService.SearchAsync(Q, BrandId, MinPrice, MaxPrice, InStock, true);
+            Products = products.Select(p => new ProductResponse { Id = p.Id, Name = p.Name, Price = p.Price, StockQuantity = p.StockQuantity, BrandId = p.BrandId, BrandName = p.Brand?.Name ?? string.Empty }).ToList();
 
 			return Page();
 		}

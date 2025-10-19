@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BusinessLayer.Services;
+using BusinessLayer.DTOs.Responses;
 
 namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
 {
@@ -13,7 +14,7 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
             _customerService = customerService;
         }
 
-        public DataAccessLayer.Entities.Customer? Customer { get; set; }
+        public CustomerResponse? Customer { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -22,7 +23,17 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
                 var result = await _customerService.GetAsync(id);
                 if (result.Success && result.Data != null)
                 {
-                    Customer = result.Data;
+                    Customer = new CustomerResponse
+                    {
+                        Id = result.Data.Id,
+                        FullName = result.Data.FullName,
+                        Email = result.Data.Email,
+                        PhoneNumber = result.Data.PhoneNumber,
+                        Address = result.Data.Address,
+                        IsActive = result.Data.IsActive,
+                        CreatedAt = result.Data.CreatedAt,
+                        UpdatedAt = result.Data.UpdatedAt
+                    };
                     return Page();
                 }
                 else

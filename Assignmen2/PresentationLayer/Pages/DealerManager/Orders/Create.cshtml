@@ -38,14 +38,17 @@
 										<i class="fas fa-car me-1 text-primary"></i>Sản phẩm
 										<span class="text-danger">*</span>
 									</label>
-									<select asp-for="Input.ProductId" class="form-select form-select-lg" required id="productSelect">
+									<select asp-for="Input.ProductId" class="form-select form-select-lg" required id="productSelect" onchange="loadProductInfo()">
 										<option value="">-- Chọn sản phẩm --</option>
 										@foreach (var p in Model.Products)
 										{
-											<option value="@p.Id" data-price="@p.Price">@p.Name - @p.Sku (@p.Price.ToString("N0") VND)</option>
+											<option value="@p.Id" data-price="@p.Price" data-stock="@p.StockQuantity">@p.Name - @p.Sku (@p.Price.ToString("N0") VND)</option>
 										}
 									</select>
 									<span asp-validation-for="Input.ProductId" class="text-danger small"></span>
+									<div id="stock-alert" class="mt-2" style="display: none;">
+										<!-- Stock info will be displayed here -->
+									</div>
 								</div>
 								<div class="col-md-6">
 									<label class="form-label fw-semibold">
@@ -202,6 +205,65 @@
 		document.getElementById('totalDisplay').innerText = total.toLocaleString('vi-VN') + ' VND';
 	}
 	
+	function loadProductInfo() {
+		const productSelect = document.getElementById('productSelect');
+		const selectedOption = productSelect.options[productSelect.selectedIndex];
+		
+		if (selectedOption.value) {
+			const price = selectedOption.dataset.price;
+			const stock = selectedOption.dataset.stock;
+			
+			document.getElementById('price').value = price;
+			calcTotal();
+			
+			// Check stock availability
+			checkProductStock(selectedOption.value);
+		} else {
+			document.getElementById('stock-alert').style.display = 'none';
+		}
+	}
+
+	// Function to check product stock via AJAX
+	function checkProductStock(productId) {
+		var stockAlert = document.getElementById('stock-alert');
+		
+		// Show loading
+		stockAlert.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div> Đang kiểm tra tồn kho...';
+		stockAlert.style.display = 'block';
+		
+		fetch(`/DealerManager/Orders/Create?handler=GetProductStock&productId=${productId}`)
+			.then(response => response.json())
+			.then(data => {
+				if (!data.success) {
+					stockAlert.innerHTML = '<div class="alert alert-danger mb-0"><i class="fas fa-exclamation-circle"></i> ' + data.message + '</div>';
+					return;
+				}
+
+				if (data.availableQuantity <= 0) {
+					stockAlert.innerHTML = `
+						<div class="alert alert-warning mb-0">
+							<i class="fas fa-exclamation-triangle"></i> ${data.message}
+							<br><small>Bạn có thể đặt hàng từ hãng tại menu <strong>"Đặt xe từ hãng"</strong></small>
+						</div>`;
+				} else if (data.availableQuantity < 5) {
+					stockAlert.innerHTML = `
+						<div class="alert alert-warning mb-0">
+							<i class="fas fa-warehouse"></i> ${data.message}
+							<br><small>⚠️ Tồn kho thấp! Hãy liên hệ EVM để bổ sung hàng.</small>
+						</div>`;
+				} else {
+					// Tồn kho có sẵn
+					stockAlert.innerHTML = `
+						<div class="alert alert-success mb-0">
+							<i class="fas fa-check-circle"></i> ${data.message}
+						</div>`;
+				}
+			})
+			.catch(error => {
+				stockAlert.innerHTML = '<div class="alert alert-danger mb-0"><i class="fas fa-times-circle"></i> Không thể kiểm tra tồn kho</div>';
+			});
+	}
+
 	// Initialize
 	calcTotal();
 </script>

@@ -1,7 +1,7 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerManager.PurchaseOrders
 {
@@ -22,7 +22,7 @@ namespace PresentationLayer.Pages.DealerManager.PurchaseOrders
         {
         }
 
-        public DataAccessLayer.Entities.PurchaseOrder PurchaseOrder { get; set; } = new();
+        public PurchaseOrderResponse PurchaseOrder { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {

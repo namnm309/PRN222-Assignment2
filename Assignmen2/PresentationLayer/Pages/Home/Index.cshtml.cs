@@ -13,16 +13,18 @@ namespace PresentationLayer.Pages.Home
     {
         private readonly IProductService _productService;
         private readonly IMappingService _mappingService;
+        private readonly IDealerService _dealerService;
 
         public IReadOnlyList<ProductResponse> Products { get; private set; } = Array.Empty<ProductResponse>();
 
         [BindProperty(SupportsGet = true)]
         public string? Search { get; set; }
 
-        public IndexModel(IProductService productService, IMappingService mappingService)
+        public IndexModel(IProductService productService, IMappingService mappingService, IDealerService dealerService)
         {
             _productService = productService;
             _mappingService = mappingService;
+            _dealerService = dealerService;
         }
 
         public async Task OnGetAsync()
@@ -36,6 +38,15 @@ namespace PresentationLayer.Pages.Home
 
             // Map entities -> DTO responses using mapping service
             Products = _mappingService.MapToProductViewModels(data);
+        }
+
+        // Lightweight JSON endpoint to feed dealers dropdown in modal (public API style)
+        public async Task<IActionResult> OnGetDealersAsync()
+        {
+            var (success, error, dealers) = await _dealerService.GetAllAsync();
+            if (!success || dealers == null) return new JsonResult(Array.Empty<object>());
+            var result = dealers.Select(d => new { id = d.Id, name = d.Name }).ToList();
+            return new JsonResult(result);
         }
     }
 }
