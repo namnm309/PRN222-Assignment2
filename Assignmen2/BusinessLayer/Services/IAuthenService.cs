@@ -15,6 +15,7 @@ namespace BusinessLayer.Services
         Task<(bool Success, string Error, List<Users> Data)> GetAllUsersAsync();
         Task<(bool Success, string Error, Users Data)> GetUserByIdAsync(Guid id);
         Task<(bool Success, string Error)> UpdateUserAsync(Users user);
+        Task<(bool Success, string Error)> UpdateUserWithBusinessRoleAsync(Users user, UserRole role);
         Task<(bool Success, string Error)> ToggleUserStatusAsync(Guid id, bool isActive);
         Task<(bool Success, string Error)> DeleteUserAsync(Guid id);
     }

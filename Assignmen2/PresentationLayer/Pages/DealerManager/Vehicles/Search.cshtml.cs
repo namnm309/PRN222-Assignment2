@@ -20,8 +20,9 @@ namespace PresentationLayer.Pages.DealerManager.Vehicles
 			IAuthenService authenService,
 			IPurchaseOrderService purchaseOrderService,
 			IProductService productService,
-			IBrandService brandService)
-			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService)
+			IBrandService brandService,
+			IMappingService mappingService)
+			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService, mappingService)
 		{
 			this.productService = productService;
 			this.brandService = brandService;
@@ -42,10 +43,10 @@ namespace PresentationLayer.Pages.DealerManager.Vehicles
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
             var (okB, _, brands) = await brandService.GetAllAsync();
-            Brands = brands.Select(b => new BrandResponse { Id = b.Id, Name = b.Name, Country = b.Country, Description = b.Description, IsActive = b.IsActive }).ToList();
+            Brands = MappingService.MapToBrandViewModels(brands);
 
             var (okP, _, products) = await productService.SearchAsync(Q, BrandId, MinPrice, MaxPrice, InStock, true);
-            Products = products.Select(p => new ProductResponse { Id = p.Id, Name = p.Name, Price = p.Price, StockQuantity = p.StockQuantity, BrandId = p.BrandId, BrandName = p.Brand?.Name ?? string.Empty }).ToList();
+            Products = MappingService.MapToProductViewModels(products);
 
 			return Page();
 		}

@@ -314,6 +314,51 @@ else
     </div>
 </div>
 
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Đăng ký thành công!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h4 class="text-success mb-3">Cảm ơn bạn đã đăng ký lái thử!</h4>
+                <p class="text-muted mb-4">
+                    Chúng tôi đã nhận được thông tin đăng ký của bạn. Đội ngũ tư vấn sẽ liên hệ lại trong thời gian sớm nhất để xác nhận lịch hẹn.
+                </p>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <i class="fas fa-calendar-alt text-primary mb-2" style="font-size: 1.5rem;"></i>
+                        <p class="small mb-0">Lịch hẹn</p>
+                        <p class="small mb-0 text-muted">Đã được ghi nhận</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="fas fa-phone text-primary mb-2" style="font-size: 1.5rem;"></i>
+                        <p class="small mb-0">Liên hệ</p>
+                        <p class="small mb-0 text-muted">Trong 24h</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="fas fa-car text-primary mb-2" style="font-size: 1.5rem;"></i>
+                        <p class="small mb-0">Trải nghiệm</p>
+                        <p class="small mb-0 text-muted">Miễn phí</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-success btn-lg px-5" data-bs-dismiss="modal">
+                    <i class="fas fa-home me-2"></i>Về trang chủ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
@@ -359,6 +404,20 @@ else
                 updateButtons();
             }
         });
+
+        // Function để hiển thị popup thông báo thành công
+        function showSuccessModal() {
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+            
+            // Tự động đóng modal sau 5 giây và reload trang
+            setTimeout(function() { 
+                successModal.hide();
+                setTimeout(function() {
+                    window.location.reload();
+                }, 500); // Delay nhỏ để modal đóng hoàn toàn trước khi reload
+            }, 5000);
+        }
 
         @if (TempData["Msg"] != null)
         {
@@ -535,7 +594,9 @@ else
                     if (res?.success) {
                         const modal = bootstrap.Modal.getInstance(document.getElementById('testDriveModal'));
                         modal?.hide();
-                        window.location.reload();
+                        
+                        // Hiển thị popup thông báo thành công
+                        showSuccessModal();
                     } else {
                         alert(res?.error || 'Không thể tạo lịch hẹn');
                     }

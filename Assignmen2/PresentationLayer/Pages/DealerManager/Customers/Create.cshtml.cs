@@ -19,8 +19,9 @@ namespace PresentationLayer.Pages.DealerManager.Customers
             IAuthenService authenService,
             IPurchaseOrderService purchaseOrderService,
             IProductService productService,
-            IBrandService brandService)
-            : base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService) {}
+            IBrandService brandService,
+            IMappingService mappingService)
+            : base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService, mappingService) {}
 
         [BindProperty]
         public InputModel Input { get; set; } = new();
