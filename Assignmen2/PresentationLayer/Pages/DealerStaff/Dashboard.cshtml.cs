@@ -106,8 +106,16 @@ namespace PresentationLayer.Pages.DealerStaff
                     var lastMonthOrders = allOrders.Where(o => o.OrderDate >= lastMonth && o.OrderDate < thisMonth).ToList();
                     
                     // Recent orders (last 5)
-                    RecentOrders = _mappingService.MapToOrderCreateViewModels(
-                        allOrders.OrderByDescending(o => o.OrderDate).Take(5).ToList());
+                    RecentOrders = allOrders.OrderByDescending(o => o.OrderDate).Take(5)
+                        .Select(o => new OrderResponse
+                        {
+                            OrderNumber = o.OrderNumber,
+                            CustomerName = o.Customer?.FullName ?? string.Empty,
+                            ProductName = o.Product?.Name ?? string.Empty,
+                            FinalAmount = o.FinalAmount,
+                            Status = o.Status,
+                            CreatedAt = o.CreatedAt
+                        }).ToList();
                     
                     // Calculate stats
                     TodayOrders = allOrders.Count(o => o.OrderDate?.Date == today);
@@ -139,8 +147,14 @@ namespace PresentationLayer.Pages.DealerStaff
                 if (testDrivesResult.Success && testDrivesResult.Data != null)
                 {
                     var testDrives = testDrivesResult.Data;
-                    RecentTestDrives = _mappingService.MapToTestDriveViewModels(
-                        testDrives.OrderByDescending(t => t.ScheduledDate).Take(5).ToList());
+                    RecentTestDrives = testDrives.OrderByDescending(t => t.ScheduledDate).Take(5)
+                        .Select(t => new TestDriveResponse
+                        {
+                            CustomerName = t.CustomerName,
+                            ProductName = t.ProductName,
+                            ScheduledDate = t.ScheduledDate,
+                            Status = t.Status
+                        }).ToList();
                     
                     TodayTestDrives = testDrives.Count(t => t.ScheduledDate.Date == today);
                     PendingTestDrives = testDrives.Count(t => t.Status.ToString() == "Pending");

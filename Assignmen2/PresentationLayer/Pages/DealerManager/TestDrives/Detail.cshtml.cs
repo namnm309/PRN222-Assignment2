@@ -1,12 +1,13 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.Enums;
 
 namespace PresentationLayer.Pages.DealerManager.TestDrives
 {
 	public class DetailModel : BaseDealerManagerPageModel
 	{
-		public record ItemVm(Guid Id, string CustomerName, string ProductName, string StatusName);
+		public record ItemVm(Guid Id, string CustomerName, string ProductName, string StatusName, DateTime ScheduledDate, string? CustomerPhone, string? CustomerEmail);
 		public ItemVm? Item { get; private set; }
 		public bool CanCreateCustomer { get; private set; }
 
@@ -31,15 +32,18 @@ namespace PresentationLayer.Pages.DealerManager.TestDrives
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			var (ok, _, td) = await TestDriveService.GetAsync(id);
+            var (ok, _, td) = await TestDriveService.GetAsync(id);
 			if (!ok || td == null || td.DealerId != dealerId) return RedirectToPage("/DealerManager/TestDrives/Index");
 
 			Item = new ItemVm(
 				td.Id,
-				td.Customer?.FullName ?? td.CustomerName,
-				td.Product?.Name ?? string.Empty,
-				td.Status.ToString());
-			CanCreateCustomer = td.Status == DataAccessLayer.Enum.TestDriveStatus.Successfully || td.Status == DataAccessLayer.Enum.TestDriveStatus.Failed;
+                td.CustomerFullName ?? td.CustomerName,
+                td.ProductName ?? string.Empty,
+				td.Status.ToString(),
+				td.ScheduledDate,
+				td.CustomerPhone ?? td.CustomerPhoneNumber,
+				td.CustomerEmail);
+            CanCreateCustomer = td.Status == TestDriveStatus.Successfully || td.Status == TestDriveStatus.Failed;
 			Id = id;
 			return Page();
 		}

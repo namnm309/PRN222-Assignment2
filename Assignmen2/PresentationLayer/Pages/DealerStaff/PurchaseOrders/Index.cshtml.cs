@@ -37,8 +37,7 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
                 var result = await _purchaseOrderService.GetAllAsync(dealerId.Value);
                 if (result.Success && result.Data != null)
                 {
-                    // Map entities to DTOs using mapping service
-                    PurchaseOrders = _mappingService.MapToPurchaseOrderViewModels(result.Data);
+                    PurchaseOrders = result.Data;
 
                     // Apply search filter
                     if (!string.IsNullOrWhiteSpace(Search))

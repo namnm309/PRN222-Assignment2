@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BusinessLayer.Services;
+using BusinessLayer.DTOs.Responses;
 using System.ComponentModel.DataAnnotations;
 
 namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
@@ -14,7 +15,7 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
             _customerService = customerService;
         }
 
-        public DataAccessLayer.Entities.Customer? Customer { get; set; }
+        public CustomerResponse? Customer { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; } = new();
@@ -46,7 +47,17 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
                 var result = await _customerService.GetAsync(id);
                 if (result.Success && result.Data != null)
                 {
-                    Customer = result.Data;
+                    Customer = new CustomerResponse
+                    {
+                        Id = result.Data.Id,
+                        FullName = result.Data.FullName,
+                        Email = result.Data.Email,
+                        PhoneNumber = result.Data.PhoneNumber,
+                        Address = result.Data.Address,
+                        IsActive = result.Data.IsActive,
+                        CreatedAt = result.Data.CreatedAt,
+                        UpdatedAt = result.Data.UpdatedAt
+                    };
                     
                     // Pre-fill form
                     Input.FullName = Customer.FullName;
@@ -78,7 +89,17 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
                 var result = await _customerService.GetAsync(id);
                 if (result.Success && result.Data != null)
                 {
-                    Customer = result.Data;
+                    Customer = new CustomerResponse
+                    {
+                        Id = result.Data.Id,
+                        FullName = result.Data.FullName,
+                        Email = result.Data.Email,
+                        PhoneNumber = result.Data.PhoneNumber,
+                        Address = result.Data.Address,
+                        IsActive = result.Data.IsActive,
+                        CreatedAt = result.Data.CreatedAt,
+                        UpdatedAt = result.Data.UpdatedAt
+                    };
                 }
                 return Page();
             }
@@ -112,7 +133,17 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
                 var result = await _customerService.GetAsync(id);
                 if (result.Success && result.Data != null)
                 {
-                    Customer = result.Data;
+                    Customer = new CustomerResponse
+                    {
+                        Id = result.Data.Id,
+                        FullName = result.Data.FullName,
+                        Email = result.Data.Email,
+                        PhoneNumber = result.Data.PhoneNumber,
+                        Address = result.Data.Address,
+                        IsActive = result.Data.IsActive,
+                        CreatedAt = result.Data.CreatedAt,
+                        UpdatedAt = result.Data.UpdatedAt
+                    };
                 }
                 return Page();
             }
@@ -124,7 +155,17 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.Customers
                 var result = await _customerService.GetAsync(id);
                 if (result.Success && result.Data != null)
                 {
-                    Customer = result.Data;
+                    Customer = new CustomerResponse
+                    {
+                        Id = result.Data.Id,
+                        FullName = result.Data.FullName,
+                        Email = result.Data.Email,
+                        PhoneNumber = result.Data.PhoneNumber,
+                        Address = result.Data.Address,
+                        IsActive = result.Data.IsActive,
+                        CreatedAt = result.Data.CreatedAt,
+                        UpdatedAt = result.Data.UpdatedAt
+                    };
                 }
                 return Page();
             }

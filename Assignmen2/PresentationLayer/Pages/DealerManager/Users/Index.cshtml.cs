@@ -1,6 +1,7 @@
  using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.Enums;
 
 namespace PresentationLayer.Pages.DealerManager.Users
 {
@@ -36,7 +37,7 @@ namespace PresentationLayer.Pages.DealerManager.Users
 				FullName = u.FullName,
 				Email = u.Email,
 				PhoneNumber = u.PhoneNumber,
-				Role = u.Role,
+                Role = (UserRole)u.Role,
 				DealerName = u.Dealer?.Name,
 				IsActive = u.IsActive
 			}).ToList();
@@ -70,7 +71,7 @@ namespace PresentationLayer.Pages.DealerManager.Users
 			public string FullName { get; set; } = string.Empty;
 			public string Email { get; set; } = string.Empty;
 			public string? PhoneNumber { get; set; }
-			public DataAccessLayer.Enum.UserRole Role { get; set; }
+            public UserRole Role { get; set; }
 			public string? DealerName { get; set; }
 			public bool IsActive { get; set; }
 		}

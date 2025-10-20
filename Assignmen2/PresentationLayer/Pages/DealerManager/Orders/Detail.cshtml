@@ -12,13 +12,13 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <strong>Khách hàng:</strong><br />
-                    @Model.Order.Customer.FullName<br />
-                    <small class="text-muted">@Model.Order.Customer.PhoneNumber</small>
+                    @Model.Order.CustomerName<br />
+                    <small class="text-muted">@Model.Order.Customer?.PhoneNumber</small>
                 </div>
                 <div class="col-md-4">
                     <strong>Sản phẩm:</strong><br />
-                    @Model.Order.Product.Name<br />
-                    <small class="text-muted">SKU: @Model.Order.Product.Sku</small>
+                    @Model.Order.ProductName<br />
+                    <small class="text-muted">SKU: @Model.Order.Product?.Sku</small>
                 </div>
                 <div class="col-md-4">
                     <strong>Trạng thái:</strong><br />

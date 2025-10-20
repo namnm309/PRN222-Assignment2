@@ -44,7 +44,7 @@ namespace PresentationLayer.Pages.DealerManager.Customers
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			var (ok, _, td) = await TestDriveService.GetAsync(TestDriveId);
+            var (ok, _, td) = await TestDriveService.GetAsync(TestDriveId);
 			if (!ok || td == null || td.DealerId != dealerId) return RedirectToPage("/DealerManager/TestDrives/Index");
 			return Page();
 		}
@@ -67,7 +67,18 @@ namespace PresentationLayer.Pages.DealerManager.Customers
 				return Page();
 			}
 
-			// cập nhật test drive sang trạng thái đã xử lý nếu cần (bỏ qua nếu không có yêu cầu)
+			// Cập nhật test drive để liên kết với customer mới tạo
+			var (tdOk, tdErr, testDrive) = await TestDriveService.GetAsync(TestDriveId);
+			if (tdOk && testDrive != null)
+			{
+				// Cập nhật test drive để liên kết với customer
+				var (updateOk, updateErr) = await TestDriveService.UpdateCustomerAsync(TestDriveId, customer.Id);
+				if (!updateOk)
+				{
+					// Log lỗi nhưng không fail toàn bộ process
+					Console.WriteLine($"Warning: Could not link customer to test drive: {updateErr}");
+				}
+			}
 
 			TempData["Success"] = "Tạo khách hàng thành công";
 			return RedirectToPage("/DealerManager/TestDrives/Detail", new { id = TestDriveId });

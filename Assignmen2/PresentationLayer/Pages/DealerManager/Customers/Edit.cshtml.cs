@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerManager.Customers
 {
@@ -24,7 +24,7 @@ namespace PresentationLayer.Pages.DealerManager.Customers
         [BindProperty]
         public InputModel Input { get; set; } = new();
 
-        public Customer Customer { get; set; } = new();
+        public CustomerResponse Customer { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -38,7 +38,17 @@ namespace PresentationLayer.Pages.DealerManager.Customers
                 return RedirectToPage("/DealerManager/Customers/Index");
             }
 
-            Customer = customer;
+            Customer = new CustomerResponse
+            {
+                Id = customer.Id,
+                FullName = customer.FullName,
+                Email = customer.Email,
+                PhoneNumber = customer.PhoneNumber,
+                Address = customer.Address,
+                IsActive = customer.IsActive,
+                CreatedAt = customer.CreatedAt,
+                UpdatedAt = customer.UpdatedAt
+            };
             
             // Populate form with existing data
             Input.FullName = customer.FullName;
@@ -60,7 +70,17 @@ namespace PresentationLayer.Pages.DealerManager.Customers
                 var (success, error, customer) = await CustomerService.GetAsync(id);
                 if (success && customer != null)
                 {
-                    Customer = customer;
+                    Customer = new CustomerResponse
+                    {
+                        Id = customer.Id,
+                        FullName = customer.FullName,
+                        Email = customer.Email,
+                        PhoneNumber = customer.PhoneNumber,
+                        Address = customer.Address,
+                        IsActive = customer.IsActive,
+                        CreatedAt = customer.CreatedAt,
+                        UpdatedAt = customer.UpdatedAt
+                    };
                 }
                 return Page();
             }
@@ -73,7 +93,17 @@ namespace PresentationLayer.Pages.DealerManager.Customers
                 return RedirectToPage("/DealerManager/Customers/Index");
             }
 
-            Customer = existingCustomer;
+            Customer = new CustomerResponse
+            {
+                Id = existingCustomer.Id,
+                FullName = existingCustomer.FullName,
+                Email = existingCustomer.Email,
+                PhoneNumber = existingCustomer.PhoneNumber,
+                Address = existingCustomer.Address,
+                IsActive = existingCustomer.IsActive,
+                CreatedAt = existingCustomer.CreatedAt,
+                UpdatedAt = existingCustomer.UpdatedAt
+            };
 
             // If email is being changed, check if new email already exists
             if (!string.IsNullOrEmpty(Input.Email) && Input.Email != existingCustomer.Email)

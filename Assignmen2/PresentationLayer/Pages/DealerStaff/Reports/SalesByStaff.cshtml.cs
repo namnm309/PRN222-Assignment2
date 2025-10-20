@@ -1,7 +1,7 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerStaff.Reports
 {
@@ -24,10 +24,10 @@ namespace PresentationLayer.Pages.DealerStaff.Reports
         public Guid? StaffId { get; set; }
 
         public List<SalesDataItem> SalesData { get; set; } = new();
-        public List<Users> StaffList { get; set; } = new();
+        public List<UserResponse> StaffList { get; set; } = new();
         public decimal TotalSales { get; set; }
         public int TotalOrders { get; set; }
-        public Users? TopPerformer { get; set; }
+        public UserResponse? TopPerformer { get; set; }
 
         public class SalesDataItem
         {
@@ -114,29 +114,29 @@ namespace PresentationLayer.Pages.DealerStaff.Reports
             };
         }
 
-        private List<Users> GetSampleStaffList()
+        private List<UserResponse> GetSampleStaffList()
         {
-            return new List<Users>
+            return new List<UserResponse>
             {
-                new Users
+                new UserResponse
                 {
                     Id = Guid.NewGuid(),
                     FullName = "Nguyễn Văn A",
                     Email = "nguyenvana@dealer.com"
                 },
-                new Users
+                new UserResponse
                 {
                     Id = Guid.NewGuid(),
                     FullName = "Trần Thị B",
                     Email = "tranthib@dealer.com"
                 },
-                new Users
+                new UserResponse
                 {
                     Id = Guid.NewGuid(),
                     FullName = "Lê Văn C",
                     Email = "levanc@dealer.com"
                 },
-                new Users
+                new UserResponse
                 {
                     Id = Guid.NewGuid(),
                     FullName = "Phạm Thị D",

@@ -135,14 +135,15 @@
 							<tr>
 								<td colspan="8" class="text-center py-5 text-muted">
 									<i class="fas fa-clipboard-check fs-1 mb-3 d-block opacity-25"></i>
-									<div class="fw-semibold">Không có công nợ nào</div>
-									<small>Tất cả đơn hàng đã được thanh toán hoặc không có đơn nào phù hợp với bộ lọc</small>
+									<div class="fw-semibold">Không có đơn hàng nào</div>
+									<small>Không có đơn hàng nào phù hợp với bộ lọc</small>
 								</td>
 							</tr>
 						}
 						@foreach (var order in Model.Orders)
 						{
-							var debt = order.FinalAmount; // Giả định chưa thanh toán gì
+							// Tính số tiền còn nợ
+							var debt = order.PaymentStatus == "Paid" ? 0 : order.FinalAmount;
 							var isOverdue = order.PaymentDueDate.HasValue && order.PaymentDueDate.Value < DateTime.Now;
 							var statusInfo = order.PaymentStatus switch
 							{
@@ -167,11 +168,11 @@
 								<td>
 									<div class="d-flex align-items-center">
 										<div class="avatar-circle bg-primary text-white me-2">
-											@(string.IsNullOrEmpty(order.Customer?.FullName) ? "?" : order.Customer.FullName.Substring(0, 1).ToUpper())
+											@(string.IsNullOrEmpty(order.CustomerName) ? "?" : order.CustomerName.Substring(0, 1).ToUpper())
 										</div>
 										<div>
-											<div class="fw-semibold">@order.Customer.FullName</div>
-											<small class="text-muted">@order.Customer.PhoneNumber</small>
+											<div class="fw-semibold">@order.CustomerName</div>
+											<small class="text-muted">@order.Customer?.PhoneNumber</small>
 										</div>
 									</div>
 								</td>
@@ -184,8 +185,16 @@
 									<small class="text-muted">VND</small>
 								</td>
 								<td class="text-end">
-									<div class="fw-bold text-danger">@debt.ToString("N0")</div>
-									<small class="text-muted">VND</small>
+									@if (order.PaymentStatus == "Paid")
+									{
+										<div class="fw-bold text-success">0</div>
+										<small class="text-muted">VND</small>
+									}
+									else
+									{
+										<div class="fw-bold text-danger">@debt.ToString("N0")</div>
+										<small class="text-muted">VND</small>
+									}
 								</td>
 								<td>
 									<span class="badge bg-@statusInfo.Item1-subtle text-@statusInfo.Item1">
@@ -286,10 +295,11 @@
 					<div class="mb-3">
 						<label class="form-label fw-semibold">Số tiền thanh toán <span class="text-danger">*</span></label>
 						<div class="input-group">
-							<input type="number" class="form-control" id="paymentAmount" name="amount" required min="1" />
+							<input type="number" class="form-control" id="paymentAmount" name="amount" required min="1" step="0.01" />
 							<span class="input-group-text">VND</span>
 						</div>
 						<div class="form-text">Nhập số tiền muốn thanh toán</div>
+						<div class="invalid-feedback" id="amountError"></div>
 					</div>
 					<div class="mb-3">
 						<label class="form-label fw-semibold">Phương thức thanh toán</label>
@@ -377,8 +387,12 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
+		console.log('Debt report page loaded');
+		
 		// Payment modal functions
 		window.showPaymentModal = function(orderId, orderNumber, debtAmount) {
+			console.log('showPaymentModal called:', orderId, orderNumber, debtAmount);
+			
 			document.getElementById('paymentOrderId').value = orderId;
 			document.getElementById('paymentOrderNumber').value = orderNumber;
 			document.getElementById('paymentDebtAmount').value = debtAmount.toLocaleString('vi-VN');
@@ -389,6 +403,7 @@
 			const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
 			modal.show();
 		};
+
 
 		// Extend modal functions
 		window.showExtendModal = function(orderId, orderNumber) {
@@ -410,14 +425,19 @@
 		document.getElementById('paymentForm').addEventListener('submit', function(e) {
 			e.preventDefault();
 			
-			const formData = new FormData(this);
-			const orderId = formData.get('orderId');
-			const amount = parseFloat(formData.get('amount'));
-			const method = formData.get('method');
-			const note = formData.get('note');
+			const formDataObj = new FormData(this);
+			const orderId = formDataObj.get('orderId');
+			const amount = parseFloat(formDataObj.get('amount'));
+			const method = formDataObj.get('method');
+			const note = formDataObj.get('note');
 			
 			if (!orderId || !amount || !method) {
 				showToast('error', 'Vui lòng điền đầy đủ thông tin');
+				return;
+			}
+			
+			if (amount <= 0) {
+				showToast('error', 'Số tiền thanh toán phải lớn hơn 0');
 				return;
 			}
 			
@@ -427,13 +447,19 @@
 			submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
 			
 			// Submit to server
+			const formData = new URLSearchParams();
+			formData.append('PaymentInput.OrderId', orderId);
+			formData.append('PaymentInput.Amount', amount);
+			formData.append('PaymentInput.Method', method);
+			formData.append('PaymentInput.Note', note || '');
+			formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+			
 			fetch('?handler=Payment', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+					'Content-Type': 'application/x-www-form-urlencoded'
 				},
-				body: `PaymentInput.OrderId=${orderId}&PaymentInput.Amount=${amount}&PaymentInput.Method=${method}&PaymentInput.Note=${encodeURIComponent(note || '')}`
+				body: formData
 			})
 			.then(response => {
 				if (response.ok) {
@@ -457,10 +483,10 @@
 		document.getElementById('extendForm').addEventListener('submit', function(e) {
 			e.preventDefault();
 			
-			const formData = new FormData(this);
-			const orderId = formData.get('orderId');
-			const extendDate = formData.get('extendDate');
-			const reason = formData.get('reason');
+			const formDataObj = new FormData(this);
+			const orderId = formDataObj.get('orderId');
+			const extendDate = formDataObj.get('extendDate');
+			const reason = formDataObj.get('reason');
 			
 			if (!orderId || !extendDate) {
 				showToast('error', 'Vui lòng điền đầy đủ thông tin');
@@ -473,13 +499,18 @@
 			submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
 			
 			// Submit to server
+			const formData = new URLSearchParams();
+			formData.append('ExtendInput.OrderId', orderId);
+			formData.append('ExtendInput.ExtendDate', extendDate);
+			formData.append('ExtendInput.Reason', reason || '');
+			formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+			
 			fetch('?handler=Extend', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+					'Content-Type': 'application/x-www-form-urlencoded'
 				},
-				body: `ExtendInput.OrderId=${orderId}&ExtendInput.ExtendDate=${extendDate}&ExtendInput.Reason=${encodeURIComponent(reason || '')}`
+				body: formData
 			})
 			.then(response => {
 				if (response.ok) {

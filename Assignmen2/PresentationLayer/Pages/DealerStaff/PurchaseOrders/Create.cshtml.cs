@@ -1,8 +1,8 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
 {
@@ -20,7 +20,7 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
         [BindProperty]
         public InputModel Input { get; set; } = new();
 
-        public List<Product> Products { get; set; } = new();
+        public List<ProductResponse> Products { get; set; } = new();
 
         public class InputModel
         {
@@ -55,7 +55,7 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
             var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
             if (productsResult.Success)
             {
-                Products = productsResult.Data;
+                Products = productsResult.Data.Select(p => new ProductResponse { Id = p.Id, Name = p.Name, Price = p.Price, StockQuantity = p.StockQuantity, BrandId = p.BrandId, BrandName = p.Brand?.Name ?? string.Empty }).ToList();
             }
 
             // Pre-select product if provided
@@ -88,7 +88,16 @@ namespace PresentationLayer.Pages.DealerStaff.PurchaseOrders
                 var productsResult = await _productService.SearchAsync(null, null, null, null, true, true);
                 if (productsResult.Success)
                 {
-                    Products = productsResult.Data;
+                    Products = productsResult.Data
+                        .Select(p => new ProductResponse
+                        {
+                            Id = p.Id,
+                            Name = p.Name,
+                            Price = p.Price,
+                            StockQuantity = p.StockQuantity,
+                            BrandId = p.BrandId,
+                            BrandName = p.Brand?.Name ?? string.Empty
+                        }).ToList();
                 }
                 return Page();
             }

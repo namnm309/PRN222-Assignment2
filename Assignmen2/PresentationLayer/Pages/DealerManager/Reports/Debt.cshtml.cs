@@ -1,6 +1,7 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
+using BusinessLayer.DTOs.Responses;
 
 namespace PresentationLayer.Pages.DealerManager.Reports
 {
@@ -30,8 +31,8 @@ namespace PresentationLayer.Pages.DealerManager.Reports
 		[BindProperty(SupportsGet = true)]
 		public string? PaymentStatus { get; set; }
 
-		public List<DataAccessLayer.Entities.Customer> Customers { get; private set; } = new();
-		public List<DataAccessLayer.Entities.Order> Orders { get; private set; } = new();
+        public List<CustomerResponse> Customers { get; private set; } = new();
+        public List<OrderResponse> Orders { get; private set; } = new();
 		public decimal TotalDebt { get; private set; }
 
 		public async Task<IActionResult> OnGetAsync()
@@ -39,9 +40,33 @@ namespace PresentationLayer.Pages.DealerManager.Reports
 			var dealerId = GetCurrentDealerId();
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
-			Customers = await debtService.GetDealerCustomersAsync(dealerId.Value);
-			(var orders, var total) = await debtService.GetDebtReportAsync(dealerId.Value, CustomerId, PaymentStatus);
-			Orders = orders;
+            var customersEntity = await debtService.GetDealerCustomersAsync(dealerId.Value);
+            Customers = customersEntity.Select(c => new CustomerResponse { Id = c.Id, FullName = c.FullName, Email = c.Email, PhoneNumber = c.PhoneNumber, Address = c.Address, IsActive = c.IsActive, CreatedAt = c.CreatedAt, UpdatedAt = c.UpdatedAt }).ToList();
+            (var orders, var total) = await debtService.GetDebtReportAsync(dealerId.Value, CustomerId, PaymentStatus);
+            Orders = orders.Select(order => new OrderResponse
+            {
+                Id = order.Id,
+                DealerId = order.DealerId,
+                ProductId = order.ProductId,
+                CustomerId = order.CustomerId,
+                SalesPersonId = order.SalesPersonId,
+                Description = order.Description,
+                Price = order.Price,
+                Discount = order.Discount,
+                Notes = order.Notes,
+                OrderNumber = order.OrderNumber,
+                FinalAmount = order.FinalAmount,
+                Status = order.Status,
+                PaymentStatus = order.PaymentStatus,
+                PaymentMethod = order.PaymentMethod,
+                OrderDate = order.OrderDate,
+                DeliveryDate = order.DeliveryDate,
+                PaymentDueDate = order.PaymentDueDate,
+                CustomerName = order.Customer?.FullName ?? string.Empty,
+                ProductName = order.Product?.Name ?? string.Empty,
+                DealerName = order.Dealer?.Name ?? string.Empty,
+                SalesPersonName = order.SalesPerson?.FullName ?? string.Empty
+            }).ToList();
 			TotalDebt = total;
 			return Page();
 		}
@@ -116,9 +141,33 @@ namespace PresentationLayer.Pages.DealerManager.Reports
 
 		private async Task LoadDataAsync(Guid dealerId)
 		{
-			Customers = await debtService.GetDealerCustomersAsync(dealerId);
-			(var orders, var total) = await debtService.GetDebtReportAsync(dealerId, CustomerId, PaymentStatus);
-			Orders = orders;
+            var customersEntity = await debtService.GetDealerCustomersAsync(dealerId);
+            Customers = customersEntity.Select(c => new CustomerResponse { Id = c.Id, FullName = c.FullName, Email = c.Email, PhoneNumber = c.PhoneNumber, Address = c.Address, IsActive = c.IsActive, CreatedAt = c.CreatedAt, UpdatedAt = c.UpdatedAt }).ToList();
+            (var orders, var total) = await debtService.GetDebtReportAsync(dealerId, CustomerId, PaymentStatus);
+            Orders = orders.Select(order => new OrderResponse
+            {
+                Id = order.Id,
+                DealerId = order.DealerId,
+                ProductId = order.ProductId,
+                CustomerId = order.CustomerId,
+                SalesPersonId = order.SalesPersonId,
+                Description = order.Description,
+                Price = order.Price,
+                Discount = order.Discount,
+                Notes = order.Notes,
+                OrderNumber = order.OrderNumber,
+                FinalAmount = order.FinalAmount,
+                Status = order.Status,
+                PaymentStatus = order.PaymentStatus,
+                PaymentMethod = order.PaymentMethod,
+                OrderDate = order.OrderDate,
+                DeliveryDate = order.DeliveryDate,
+                PaymentDueDate = order.PaymentDueDate,
+                CustomerName = order.Customer?.FullName ?? string.Empty,
+                ProductName = order.Product?.Name ?? string.Empty,
+                DealerName = order.Dealer?.Name ?? string.Empty,
+                SalesPersonName = order.SalesPerson?.FullName ?? string.Empty
+            }).ToList();
 			TotalDebt = total;
 		}
 	}

@@ -1,5 +1,5 @@
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
+using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -17,7 +17,7 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
         [BindProperty(SupportsGet = true)]
         public string? Ids { get; set; }
 
-        public List<Product> Products { get; set; } = new();
+        public List<ProductResponse> Products { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -43,14 +43,22 @@ namespace PresentationLayer.Pages.DealerStaff.VehicleQuery
                 return RedirectToPage("/DealerStaff/VehicleQuery/Index");
             }
 
-            var products = new List<Product>();
+            var products = new List<ProductResponse>();
 
             foreach (var id in productIds)
             {
                 var result = await _productService.GetAsync(id);
                 if (result.Success && result.Data != null)
                 {
-                    products.Add(result.Data);
+                    // Map DAL entity to DTO if needed; here assuming service returns entity, adapt mapping when service updated
+                    products.Add(new ProductResponse
+                    {
+                        Id = result.Data.Id,
+                        Name = result.Data.Name,
+                        Price = result.Data.Price,
+                        StockQuantity = result.Data.StockQuantity,
+                        BrandId = result.Data.BrandId
+                    });
                 }
             }
 

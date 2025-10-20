@@ -176,6 +176,7 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js" integrity="sha512-vXgMZ2ymlk9EYBLETymFcpnSUsctNk6heAQ7Ez+KQEiC5EvhczHxVn9Yx8RJWb1x1o1t4bm/FYnGV8eK3vpYQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const dateInput = document.querySelector('input[name="Input.ScheduledDate"]');
@@ -195,6 +196,35 @@
             dateInput.addEventListener('change', function() {
                 if (this.value) {
                     loadAvailableSlots(this.value);
+                }
+            });
+
+            // Kết nối SignalR
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/testDriveHub")
+                .build();
+
+            connection.start().then(() => {
+                // join group khi đã chọn product
+                const productSelect = document.querySelector('select[name="Input.ProductId"]');
+                const dealerId = '@@Context.Session.GetString("DealerId")';
+                if (dealerId && productSelect.value) {
+                    connection.invoke('JoinGroup', dealerId, productSelect.value);
+                }
+
+                // Khi thay đổi product thì join group mới
+                productSelect.addEventListener('change', () => {
+                    if (dealerId && productSelect.value) {
+                        connection.invoke('JoinGroup', dealerId, productSelect.value);
+                    }
+                });
+            });
+
+            connection.on('SlotBooked', (scheduledDateIso) => {
+                const booked = new Date(scheduledDateIso);
+                // Nếu ngày đang xem trùng, reload list
+                if (dateInput.value === booked.toISOString().split('T')[0]) {
+                    loadAvailableSlots(dateInput.value);
                 }
             });
 

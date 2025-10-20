@@ -1,8 +1,6 @@
+using BusinessLayer;
 using BusinessLayer.Profiles;
 using BusinessLayer.Services;
-using DataAccessLayer.Data;
-using DataAccessLayer.Repository;
-using Microsoft.EntityFrameworkCore;
 using PresentationLayer.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -14,31 +12,8 @@ namespace PresentationLayer
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Cấu hình AutoMapper
-            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-
-            // Đăng ký MappingService và các dịch vụ BusinessLayer qua DI
-            builder.Services.AddScoped<IMappingService, MappingService>();
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IBrandService, BrandService>();
-            builder.Services.AddScoped<ICustomerService, CustomerService>();
-            builder.Services.AddScoped<IDealerService, DealerService>();
-            builder.Services.AddScoped<IDealerContractService, DealerContractService>();
-            builder.Services.AddScoped<IDealerDebtService, DealerDebtService>();
-            builder.Services.AddScoped<IEVMReportService, EVMReportService>();
-            builder.Services.AddScoped<IFeedbackService, FeedbackService>();
-            builder.Services.AddScoped<IInventoryManagementService, InventoryManagementService>();
-            builder.Services.AddScoped<IOrderService, OrderService>();
-            builder.Services.AddScoped<IPricingManagementService, PricingManagementService>();
-            builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
-            builder.Services.AddScoped<ITestDriveService, TestDriveService>();
-            builder.Services.AddScoped<IAuthenService, AuthenService>();
-
-            // Cấu hình DbContext (đăng ký DI trước khi build app)
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            
+            // Đăng ký BusinessLayer (bao gồm AutoMapper, DbContext, Repositories và Services)
+            builder.Services.AddBusinessLayer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
             // Add services to the container.
             builder.Services.AddRazorPages(options =>
@@ -77,73 +52,12 @@ namespace PresentationLayer
                 options.Cookie.IsEssential = true;
             });
 
-            // Đăng ký Repository (DataAccessLayer)
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IBrandRepository, BrandRepository>();
-            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-            builder.Services.AddScoped<IDealerRepository, DealerRepository>();
-            builder.Services.AddScoped<IDealerContractRepository, DealerContractRepository>();
-            //builder.Services.AddScoped<IDealerDebtRepository, DealerDebtRepository>();
-            builder.Services.AddScoped<IEVMRepository, EVMRepository>();
-            builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
-            builder.Services.AddScoped<IInventoryManagementRepository, InventoryManagementRepository>();
-            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<IPricingManagementRepository, PricingManagementRepository>();
-            builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
-            builder.Services.AddScoped<ITestDriveRepository, TestDriveRepository>();
-            builder.Services.AddScoped<IAuthen, Authen>();
+            // SignalR
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
-            // Seed dữ liệu mặc định cho tài khoản EVMStaff
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<AppDbContext>();
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    
-                    // Đảm bảo database đã được tạo
-                    context.Database.Migrate();
-                    
-                    // Kiểm tra và tạo tài khoản EVMStaff mặc định
-                    var evmStaffEmail = "evm.staff@vinfast.com";
-                    var existingEVMStaff = context.Users.FirstOrDefault(u => u.Email == evmStaffEmail);
-                    
-                    if (existingEVMStaff == null)
-                    {
-                        var evmStaffUser = new DataAccessLayer.Entities.Users
-                        {
-                            Id = Guid.NewGuid(),
-                            FullName = "EVM Staff",
-                            Email = evmStaffEmail,
-                            PasswordHash = BCrypt.Net.BCrypt.HashPassword("evmstaff123"),
-                            PhoneNumber = "0900000001",
-                            Address = "VinFast HQ, Hanoi",
-                            Role = DataAccessLayer.Enum.UserRole.EVMStaff,
-                            DealerId = null, // EVMStaff không thuộc dealer nào
-                            IsActive = true,
-                            CreatedAt = DateTime.UtcNow,
-                            UpdatedAt = DateTime.UtcNow
-                        };
-                        
-                        context.Users.Add(evmStaffUser);
-                        context.SaveChanges();
-                        
-                        logger.LogInformation("✅ Tạo tài khoản EVMStaff mặc định thành công: {Email}", evmStaffEmail);
-                    }
-                    else
-                    {
-                        logger.LogInformation("ℹ️ Tài khoản EVMStaff đã tồn tại: {Email}", evmStaffEmail);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "❌ Lỗi khi seed tài khoản EVMStaff mặc định");
-                }
-            }
+            // Seed mặc định có thể được thực hiện thông qua BusinessLayer (di chuyển vào BL)
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -160,6 +74,9 @@ namespace PresentationLayer
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Map hubs
+            app.MapHub<PresentationLayer.Hubs.TestDriveHub>("/testDriveHub");
 
             app.MapRazorPages();
 

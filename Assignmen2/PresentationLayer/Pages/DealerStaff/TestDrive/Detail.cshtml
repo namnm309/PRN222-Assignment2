@@ -47,16 +47,16 @@
                                     @{
                                         var statusClass = Model.TestDrive.Status switch
                                         {
-                                            DataAccessLayer.Enum.TestDriveStatus.Pending => "bg-warning",
-                                            DataAccessLayer.Enum.TestDriveStatus.Successfully => "bg-success",
-                                            DataAccessLayer.Enum.TestDriveStatus.Failed => "bg-danger",
+                                            BusinessLayer.Enums.TestDriveStatus.Pending => "bg-warning",
+                                            BusinessLayer.Enums.TestDriveStatus.Successfully => "bg-success",
+                                            BusinessLayer.Enums.TestDriveStatus.Failed => "bg-danger",
                                             _ => "bg-secondary"
                                         };
                                         var statusText = Model.TestDrive.Status switch
                                         {
-                                            DataAccessLayer.Enum.TestDriveStatus.Pending => "Chờ xác nhận",
-                                            DataAccessLayer.Enum.TestDriveStatus.Successfully => "Thành công",
-                                            DataAccessLayer.Enum.TestDriveStatus.Failed => "Thất bại",
+                                            BusinessLayer.Enums.TestDriveStatus.Pending => "Chờ xác nhận",
+                                            BusinessLayer.Enums.TestDriveStatus.Successfully => "Thành công",
+                                            BusinessLayer.Enums.TestDriveStatus.Failed => "Thất bại",
                                             _ => "Không xác định"
                                         };
                                     }
@@ -193,7 +193,7 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex gap-2 flex-wrap">
-                        @if (Model.TestDrive.Status == DataAccessLayer.Enum.TestDriveStatus.Pending)
+                        @if (Model.TestDrive.Status == BusinessLayer.Enums.TestDriveStatus.Pending)
                         {
                             <form method="post" asp-page-handler="Confirm" asp-route-id="@Model.TestDrive.Id" style="display: inline;" onsubmit="return confirm('Xác nhận lái thử này?')">
                                 <button type="submit" class="btn btn-success">
@@ -203,7 +203,7 @@
                             </form>
                         }
                         
-                        @if (Model.TestDrive.Status != DataAccessLayer.Enum.TestDriveStatus.Failed && Model.TestDrive.Status != DataAccessLayer.Enum.TestDriveStatus.Successfully)
+                        @if (Model.TestDrive.Status != BusinessLayer.Enums.TestDriveStatus.Failed && Model.TestDrive.Status != BusinessLayer.Enums.TestDriveStatus.Successfully)
                         {
                             <form method="post" asp-page-handler="Cancel" asp-route-id="@Model.TestDrive.Id" style="display: inline;" onsubmit="return confirm('Hủy lái thử này?')">
                                 <button type="submit" class="btn btn-danger">

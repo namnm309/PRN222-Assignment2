@@ -26,7 +26,7 @@ namespace BusinessLayer.Services
                 .Include(o => o.Customer)
                 .Include(o => o.Product)
                 .Include(o => o.SalesPerson)
-                .Where(o => o.DealerId == dealerId && o.PaymentStatus != "Paid");
+                .Where(o => o.DealerId == dealerId);
 
             if (customerId.HasValue)
                 query = query.Where(o => o.CustomerId == customerId.Value);
@@ -38,7 +38,10 @@ namespace BusinessLayer.Services
                 .OrderByDescending(o => o.PaymentDueDate)
                 .ToListAsync();
 
-            var totalDebt = orders.Sum(o => o.FinalAmount);
+            // Tính tổng công nợ chỉ cho những đơn chưa thanh toán đầy đủ
+            var totalDebt = orders
+                .Where(o => o.PaymentStatus != "Paid")
+                .Sum(o => o.FinalAmount);
 
             return (orders, totalDebt);
         }
