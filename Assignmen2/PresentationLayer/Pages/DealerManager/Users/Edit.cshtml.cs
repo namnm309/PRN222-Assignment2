@@ -20,8 +20,9 @@ namespace PresentationLayer.Pages.DealerManager.Users
 			IAuthenService authenService,
 			IPurchaseOrderService purchaseOrderService,
 			IProductService productService,
-			IBrandService brandService)
-			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService)
+			IBrandService brandService,
+			IMappingService mappingService)
+			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService, mappingService)
 		{
 		}
 
@@ -46,7 +47,7 @@ namespace PresentationLayer.Pages.DealerManager.Users
 				FullName = user.FullName,
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
-				Role = user.Role,
+				Role = (BusinessLayer.Enums.UserRole)user.Role,
 				DealerName = user.Dealer?.Name,
 				IsActive = user.IsActive
 			};
@@ -57,7 +58,7 @@ namespace PresentationLayer.Pages.DealerManager.Users
 				FullName = user.FullName,
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
-				Role = user.Role,
+				Role = (BusinessLayer.Enums.UserRole)user.Role,
 				IsActive = user.IsActive
 			};
 
@@ -108,10 +109,9 @@ namespace PresentationLayer.Pages.DealerManager.Users
 			currentUser.FullName = Input.FullName;
 			currentUser.Email = Input.Email;
 			currentUser.PhoneNumber = Input.PhoneNumber ?? string.Empty;
-			currentUser.Role = Input.Role;
 			currentUser.IsActive = Input.IsActive;
 
-			var (success, error) = await AuthenService.UpdateUserAsync(currentUser);
+			var (success, error) = await AuthenService.UpdateUserWithBusinessRoleAsync(currentUser, Input.Role);
 
 			if (success)
 			{
@@ -138,7 +138,7 @@ namespace PresentationLayer.Pages.DealerManager.Users
 					FullName = user.FullName,
 					Email = user.Email,
 					PhoneNumber = user.PhoneNumber,
-					Role = user.Role,
+					Role = (BusinessLayer.Enums.UserRole)user.Role,
 					DealerName = user.Dealer?.Name,
 					IsActive = user.IsActive
 				};
@@ -161,7 +161,7 @@ namespace PresentationLayer.Pages.DealerManager.Users
 			public string? PhoneNumber { get; set; }
 
 			[Required(ErrorMessage = "Vai trò là bắt buộc")]
-			public DataAccessLayer.Enum.UserRole Role { get; set; }
+			public BusinessLayer.Enums.UserRole Role { get; set; }
 
 			public bool IsActive { get; set; } = true;
 		}
@@ -172,7 +172,7 @@ namespace PresentationLayer.Pages.DealerManager.Users
 			public string FullName { get; set; } = string.Empty;
 			public string Email { get; set; } = string.Empty;
 			public string? PhoneNumber { get; set; }
-			public DataAccessLayer.Enum.UserRole Role { get; set; }
+			public BusinessLayer.Enums.UserRole Role { get; set; }
 			public string? DealerName { get; set; }
 			public bool IsActive { get; set; }
 		}

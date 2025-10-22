@@ -19,8 +19,9 @@ namespace PresentationLayer.Pages.DealerManager.Reports
 			IAuthenService authenService,
 			IPurchaseOrderService purchaseOrderService,
 			IProductService productService,
-			IBrandService brandService)
-			: base(dealerService, orderService, testDriveService, customerService, reportService, debtService, authenService, purchaseOrderService, productService, brandService)
+			IBrandService brandService,
+			IMappingService mappingService)
+			: base(dealerService, orderService, testDriveService, customerService, reportService, debtService, authenService, purchaseOrderService, productService, brandService, mappingService)
 		{
 			this.debtService = debtService;
 		}
@@ -41,32 +42,9 @@ namespace PresentationLayer.Pages.DealerManager.Reports
 			if (dealerId == null) return RedirectToPage("/Dashboard/Index");
 
             var customersEntity = await debtService.GetDealerCustomersAsync(dealerId.Value);
-            Customers = customersEntity.Select(c => new CustomerResponse { Id = c.Id, FullName = c.FullName, Email = c.Email, PhoneNumber = c.PhoneNumber, Address = c.Address, IsActive = c.IsActive, CreatedAt = c.CreatedAt, UpdatedAt = c.UpdatedAt }).ToList();
+            Customers = MappingService.MapToCustomerViewModels(customersEntity);
             (var orders, var total) = await debtService.GetDebtReportAsync(dealerId.Value, CustomerId, PaymentStatus);
-            Orders = orders.Select(order => new OrderResponse
-            {
-                Id = order.Id,
-                DealerId = order.DealerId,
-                ProductId = order.ProductId,
-                CustomerId = order.CustomerId,
-                SalesPersonId = order.SalesPersonId,
-                Description = order.Description,
-                Price = order.Price,
-                Discount = order.Discount,
-                Notes = order.Notes,
-                OrderNumber = order.OrderNumber,
-                FinalAmount = order.FinalAmount,
-                Status = order.Status,
-                PaymentStatus = order.PaymentStatus,
-                PaymentMethod = order.PaymentMethod,
-                OrderDate = order.OrderDate,
-                DeliveryDate = order.DeliveryDate,
-                PaymentDueDate = order.PaymentDueDate,
-                CustomerName = order.Customer?.FullName ?? string.Empty,
-                ProductName = order.Product?.Name ?? string.Empty,
-                DealerName = order.Dealer?.Name ?? string.Empty,
-                SalesPersonName = order.SalesPerson?.FullName ?? string.Empty
-            }).ToList();
+            Orders = MappingService.MapToOrderCreateViewModels(orders);
 			TotalDebt = total;
 			return Page();
 		}
@@ -142,32 +120,9 @@ namespace PresentationLayer.Pages.DealerManager.Reports
 		private async Task LoadDataAsync(Guid dealerId)
 		{
             var customersEntity = await debtService.GetDealerCustomersAsync(dealerId);
-            Customers = customersEntity.Select(c => new CustomerResponse { Id = c.Id, FullName = c.FullName, Email = c.Email, PhoneNumber = c.PhoneNumber, Address = c.Address, IsActive = c.IsActive, CreatedAt = c.CreatedAt, UpdatedAt = c.UpdatedAt }).ToList();
+            Customers = MappingService.MapToCustomerViewModels(customersEntity);
             (var orders, var total) = await debtService.GetDebtReportAsync(dealerId, CustomerId, PaymentStatus);
-            Orders = orders.Select(order => new OrderResponse
-            {
-                Id = order.Id,
-                DealerId = order.DealerId,
-                ProductId = order.ProductId,
-                CustomerId = order.CustomerId,
-                SalesPersonId = order.SalesPersonId,
-                Description = order.Description,
-                Price = order.Price,
-                Discount = order.Discount,
-                Notes = order.Notes,
-                OrderNumber = order.OrderNumber,
-                FinalAmount = order.FinalAmount,
-                Status = order.Status,
-                PaymentStatus = order.PaymentStatus,
-                PaymentMethod = order.PaymentMethod,
-                OrderDate = order.OrderDate,
-                DeliveryDate = order.DeliveryDate,
-                PaymentDueDate = order.PaymentDueDate,
-                CustomerName = order.Customer?.FullName ?? string.Empty,
-                ProductName = order.Product?.Name ?? string.Empty,
-                DealerName = order.Dealer?.Name ?? string.Empty,
-                SalesPersonName = order.SalesPerson?.FullName ?? string.Empty
-            }).ToList();
+            Orders = MappingService.MapToOrderCreateViewModels(orders);
 			TotalDebt = total;
 		}
 	}

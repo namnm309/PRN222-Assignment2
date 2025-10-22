@@ -17,8 +17,9 @@ namespace PresentationLayer.Pages.DealerManager.Users
 			IAuthenService authenService,
 			IPurchaseOrderService purchaseOrderService,
 			IProductService productService,
-			IBrandService brandService)
-			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService) { }
+			IBrandService brandService,
+			IMappingService mappingService)
+			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService, mappingService) { }
 
 		public List<UserVm> Users { get; private set; } = new();
 

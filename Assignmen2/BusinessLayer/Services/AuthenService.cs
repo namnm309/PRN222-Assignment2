@@ -178,6 +178,28 @@ namespace BusinessLayer.Services
             }
         }
 
+        public async Task<(bool Success, string Error)> UpdateUserWithBusinessRoleAsync(Users user, UserRole role)
+        {
+            try
+            {
+                // Convert BusinessLayer enum to DataAccessLayer enum
+                user.Role = (DataAccessLayer.Enum.UserRole)role;
+                
+                var success = await _authRepository.UpdateAsync(user);
+                
+                if (!success)
+                {
+                    return (false, "Không thể cập nhật thông tin người dùng");
+                }
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Lỗi khi cập nhật người dùng: {ex.Message}");
+            }
+        }
+
         public async Task<(bool Success, string Error)> DeleteUserAsync(Guid id)
         {
             try

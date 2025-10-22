@@ -19,6 +19,7 @@ namespace PresentationLayer.Pages.Base
 		protected readonly IPurchaseOrderService PurchaseOrderService;
 		protected readonly IProductService ProductService;
 		protected readonly IBrandService BrandService;
+		protected readonly IMappingService MappingService;
 
 		public BaseDealerManagerPageModel(
 			IDealerService dealerService,
@@ -30,7 +31,8 @@ namespace PresentationLayer.Pages.Base
 			IAuthenService authenService,
 			IPurchaseOrderService purchaseOrderService,
 			IProductService productService,
-			IBrandService brandService)
+			IBrandService brandService,
+			IMappingService mappingService)
 		{
 			DealerService = dealerService;
 			OrderService = orderService;
@@ -42,6 +44,7 @@ namespace PresentationLayer.Pages.Base
 			PurchaseOrderService = purchaseOrderService;
 			ProductService = productService;
 			BrandService = brandService;
+			MappingService = mappingService;
 		}
 
 		protected Guid? GetCurrentDealerId()

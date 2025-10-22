@@ -22,8 +22,9 @@ namespace PresentationLayer.Pages.DealerManager
 			IAuthenService authenService,
 			IPurchaseOrderService purchaseOrderService,
 			IProductService productService,
-			IBrandService brandService)
-			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService)
+			IBrandService brandService,
+			IMappingService mappingService)
+			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService, mappingService)
 		{
 		}
 
@@ -57,7 +58,8 @@ namespace PresentationLayer.Pages.DealerManager
 			});
 
 			var (custOk, _, customers) = await CustomerService.GetAllByDealerAsync(dealerId.Value);
-			NewCustomers = customers.Count(c => 
+			var customerResponses = MappingService.MapToCustomerViewModels(customers);
+			NewCustomers = customerResponses.Count(c => 
 			{
 				var custDate = TimeZoneInfo.ConvertTimeFromUtc(c.CreatedAt.ToUniversalTime(), vnTimeZone);
 				return custDate.Month == month && custDate.Year == year;
