@@ -1,0 +1,343 @@
+@page
+@model PresentationLayer.Pages.DealerManager.Inventory.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Tồn kho đại lý";
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-warehouse me-2 text-primary"></i>
+            Tồn kho đại lý
+        </h2>
+        <p class="text-muted mb-0">@Model.DealerName - Quản lý tồn kho đã phân bổ</p>
+    </div>
+    <div class="text-muted">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+</div>
+
+<!-- Alert Messages -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Inventory Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="text-primary mb-2">
+                    <i class="fas fa-boxes fa-2x"></i>
+                </div>
+                <h4 class="mb-1">@Model.InventoryAllocations.Count</h4>
+                <p class="text-muted mb-0">Sản phẩm có tồn kho</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="text-success mb-2">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+                <h4 class="mb-1">@Model.InventoryAllocations.Sum(x => x.AvailableQuantity)</h4>
+                <p class="text-muted mb-0">Tổng xe có sẵn</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="text-warning mb-2">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </div>
+                <h4 class="mb-1">@Model.InventoryAllocations.Count(x => x.AvailableQuantity <= x.MinimumStock)</h4>
+                <p class="text-muted mb-0">Sản phẩm tồn kho thấp</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="text-danger mb-2">
+                    <i class="fas fa-times-circle fa-2x"></i>
+                </div>
+                <h4 class="mb-1">@Model.InventoryAllocations.Count(x => x.AvailableQuantity == 0)</h4>
+                <p class="text-muted mb-0">Sản phẩm hết hàng</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inventory Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2 text-primary"></i>
+                Chi tiết tồn kho
+            </h5>
+            <a asp-page="/DealerManager/PurchaseOrders/Create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i>Đặt xe từ hãng
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.InventoryAllocations.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="fas fa-car me-1"></i>Sản phẩm</th>
+                            <th><i class="fas fa-cubes me-1"></i>Đã phân bổ</th>
+                            <th><i class="fas fa-check-circle me-1"></i>Có sẵn</th>
+                            <th><i class="fas fa-clock me-1"></i>Đã đặt</th>
+                            <th><i class="fas fa-exclamation-triangle me-1"></i>Tối thiểu</th>
+                            <th><i class="fas fa-info-circle me-1"></i>Trạng thái</th>
+                            <th><i class="fas fa-calendar me-1"></i>Cập nhật cuối</th>
+                            <th style="width: 120px;"><i class="fas fa-cogs me-1"></i>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var allocation in Model.InventoryAllocations)
+                        {
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>@allocation.ProductName</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary fs-6">@allocation.AllocatedQuantity</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success fs-6">@allocation.AvailableQuantity</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info fs-6">@allocation.ReservedQuantity</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning fs-6">@allocation.MinimumStock</span>
+                                </td>
+                                <td>
+                                    @if (allocation.AvailableQuantity == 0)
+                                    {
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-times-circle me-1"></i>Hết hàng
+                                        </span>
+                                    }
+                                    else if (allocation.AvailableQuantity <= allocation.MinimumStock)
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>Tồn kho thấp
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check-circle me-1"></i>Đủ hàng
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <small>@(allocation.UpdatedAt?.ToString("dd/MM/yyyy") ?? allocation.CreatedAt.ToString("dd/MM/yyyy"))</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        @if (allocation.AvailableQuantity == 0 || allocation.AvailableQuantity <= allocation.MinimumStock)
+                                        {
+                                            <a asp-page="/DealerManager/PurchaseOrders/Create" 
+                                               class="btn btn-outline-primary" 
+                                               title="Đặt hàng từ hãng">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </a>
+                                        }
+                                        <button type="button" class="btn btn-outline-info" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#allocationModal-@allocation.Id" 
+                                                title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-warehouse fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Chưa có tồn kho được phân bổ</h5>
+                <p class="text-muted">Liên hệ EVM để được phân bổ tồn kho cho đại lý</p>
+                <a asp-page="/DealerManager/PurchaseOrders/Create" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Đặt xe từ hãng
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Allocation Detail Modals -->
+@foreach (var allocation in Model.InventoryAllocations)
+{
+    <div class="modal fade" id="allocationModal-@allocation.Id" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-warehouse me-2"></i>Chi tiết tồn kho
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Thông tin sản phẩm -->
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-car me-2"></i>Thông tin sản phẩm
+                            </h6>
+                            <div class="mb-2">
+                                <strong>Tên sản phẩm:</strong><br>
+                                <span class="badge bg-primary">@allocation.ProductName</span>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin tồn kho -->
+                        <div class="col-md-6">
+                            <h6 class="text-success mb-3">
+                                <i class="fas fa-boxes me-2"></i>Thông tin tồn kho
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-center p-2 border rounded mb-2">
+                                        <div class="text-primary mb-1">
+                                            <i class="fas fa-cubes fa-lg"></i>
+                                        </div>
+                                        <h6 class="mb-1">@allocation.AllocatedQuantity</h6>
+                                        <small class="text-muted">Đã phân bổ</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center p-2 border rounded mb-2">
+                                        <div class="text-success mb-1">
+                                            <i class="fas fa-check-circle fa-lg"></i>
+                                        </div>
+                                        <h6 class="mb-1">@allocation.AvailableQuantity</h6>
+                                        <small class="text-muted">Có sẵn</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center p-2 border rounded mb-2">
+                                        <div class="text-info mb-1">
+                                            <i class="fas fa-clock fa-lg"></i>
+                                        </div>
+                                        <h6 class="mb-1">@allocation.ReservedQuantity</h6>
+                                        <small class="text-muted">Đã đặt</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center p-2 border rounded mb-2">
+                                        <div class="text-warning mb-1">
+                                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                                        </div>
+                                        <h6 class="mb-1">@allocation.MinimumStock</h6>
+                                        <small class="text-muted">Tối thiểu</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin quản lý -->
+                        <div class="col-12">
+                            <h6 class="text-warning mb-3">
+                                <i class="fas fa-cogs me-2"></i>Thông tin quản lý
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <strong>Trạng thái:</strong><br>
+                                        @if (allocation.AvailableQuantity == 0)
+                                        {
+                                            <span class="badge bg-danger">Hết hàng</span>
+                                        }
+                                        else if (allocation.AvailableQuantity <= allocation.MinimumStock)
+                                        {
+                                            <span class="badge bg-warning text-dark">Tồn kho thấp</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Đủ hàng</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <strong>Ưu tiên:</strong><br>
+                                        @switch (allocation.Priority?.ToLower())
+                                        {
+                                            case "high":
+                                                <span class="badge bg-danger">Cao</span>
+                                                break;
+                                            case "medium":
+                                                <span class="badge bg-warning text-dark">Trung bình</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">Thấp</span>
+                                                break;
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <strong>Cập nhật:</strong><br>
+                                        <small>@(allocation.UpdatedAt?.ToString("dd/MM/yyyy HH:mm") ?? allocation.CreatedAt.ToString("dd/MM/yyyy HH:mm"))</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        @if (!string.IsNullOrEmpty(allocation.Notes))
+                        {
+                            <div class="col-12">
+                                <h6 class="text-secondary mb-3">
+                                    <i class="fas fa-sticky-note me-2"></i>Ghi chú
+                                </h6>
+                                <div class="alert alert-light">
+                                    <small>@allocation.Notes</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Đóng
+                    </button>
+                    @if (allocation.AvailableQuantity == 0 || allocation.AvailableQuantity <= allocation.MinimumStock)
+                    {
+                        <a asp-page="/DealerManager/PurchaseOrders/Create" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart me-2"></i>Đặt hàng từ hãng
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

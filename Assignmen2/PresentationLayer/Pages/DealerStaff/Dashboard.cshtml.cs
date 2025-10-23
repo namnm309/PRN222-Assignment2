@@ -13,23 +13,27 @@ namespace PresentationLayer.Pages.DealerStaff
         private readonly ICustomerService _customerService;
         private readonly ITestDriveService _testDriveService;
         private readonly IMappingService _mappingService;
+        private readonly IDealerService _dealerService;
 
         public DashboardModel(
             IOrderService orderService,
             ICustomerService customerService,
             ITestDriveService testDriveService,
-            IMappingService mappingService)
+            IMappingService mappingService,
+            IDealerService dealerService)
         {
             _orderService = orderService;
             _customerService = customerService;
             _testDriveService = testDriveService;
             _mappingService = mappingService;
+            _dealerService = dealerService;
         }
 
         // User Info
         public string UserName { get; set; } = string.Empty;
         public string UserEmail { get; set; } = string.Empty;
         public Guid? DealerId { get; set; }
+        public string? DealerName { get; set; }
 
         // Today's Stats
         public int TodayOrders { get; set; }
@@ -72,6 +76,14 @@ namespace PresentationLayer.Pages.DealerStaff
 
             if (DealerId.HasValue)
             {
+                // Get dealer name
+                var (dealerOk, _, dealer) = await _dealerService.GetByIdAsync(DealerId.Value);
+                if (dealerOk && dealer != null)
+                {
+                    DealerName = dealer.Name;
+                    ViewData["DealerName"] = DealerName;
+                }
+                
                 await LoadDashboardData(DealerId.Value);
             }
             else

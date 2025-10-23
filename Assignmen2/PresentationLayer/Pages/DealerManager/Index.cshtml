@@ -81,6 +81,53 @@
 		</div>
 	</div>
 
+	<!-- Charts Section -->
+	<div class="row g-3 mb-4">
+		<div class="col-lg-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-header bg-white border-0 py-3">
+					<h5 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary"></i>Doanh số 6 tháng gần nhất</h5>
+				</div>
+				<div class="card-body">
+					<canvas id="salesChart" height="300"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-header bg-white border-0 py-3">
+					<h5 class="mb-0"><i class="fas fa-chart-line me-2 text-success"></i>Xu hướng đơn hàng theo tuần</h5>
+				</div>
+				<div class="card-body">
+					<canvas id="ordersChart" height="300"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row g-3 mb-4">
+		<div class="col-lg-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-header bg-white border-0 py-3">
+					<h5 class="mb-0"><i class="fas fa-chart-pie me-2 text-warning"></i>Phân bổ tồn kho theo danh mục</h5>
+				</div>
+				<div class="card-body">
+					<canvas id="inventoryChart" height="300"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-header bg-white border-0 py-3">
+					<h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2 text-danger"></i>Công nợ khách hàng</h5>
+				</div>
+				<div class="card-body">
+					<canvas id="debtChart" height="300"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Quick Actions -->
 	<div class="row g-3 mb-4">
 		<div class="col-md-3">
@@ -305,4 +352,278 @@
 	.hover-bg-light:hover {
 		background-color: rgba(0,0,0,0.02);
 	}
+
+	.chart-container {
+		position: relative;
+		height: 300px;
+	}
 </style>
+
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+	<script>
+		$(document).ready(function() {
+			console.log('Document ready, bắt đầu khởi tạo biểu đồ...');
+			
+			// Kiểm tra Chart.js có load được không
+			if (typeof Chart === 'undefined') {
+				console.error('Chart.js chưa được load!');
+				return;
+			}
+			console.log('Chart.js đã load thành công');
+			
+			// Khởi tạo các biểu đồ
+			initSalesChart();
+			initOrdersChart();
+			initInventoryChart();
+			initDebtChart();
+		});
+
+		// Biểu đồ doanh số 6 tháng
+		async function initSalesChart() {
+			try {
+				console.log('Đang tải dữ liệu biểu đồ doanh số...');
+				const response = await fetch('/DealerManager?handler=SalesChartData');
+				console.log('Response status:', response.status);
+				const data = await response.json();
+				console.log('Dữ liệu nhận được:', data);
+				
+				const canvas = document.getElementById('salesChart');
+				if (!canvas) {
+					console.error('Không tìm thấy canvas element với id salesChart');
+					return;
+				}
+				const ctx = canvas.getContext('2d');
+				console.log('Đang tạo biểu đồ doanh số...');
+				new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: data.labels,
+						datasets: [{
+							label: 'Doanh số (VND)',
+							data: data.data.map(item => item.revenue),
+							backgroundColor: 'rgba(102, 126, 234, 0.8)',
+							borderColor: 'rgba(102, 126, 234, 1)',
+							borderWidth: 2,
+							borderRadius: 4,
+							borderSkipped: false,
+						}]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: {
+								display: false
+							},
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										return 'Doanh số: ' + new Intl.NumberFormat('vi-VN', {
+											style: 'currency',
+											currency: 'VND'
+										}).format(context.parsed.y);
+									}
+								}
+							}
+						},
+						scales: {
+							y: {
+								beginAtZero: true,
+								ticks: {
+									callback: function(value) {
+										return new Intl.NumberFormat('vi-VN', {
+											style: 'currency',
+											currency: 'VND',
+											minimumFractionDigits: 0
+										}).format(value);
+									}
+								}
+							}
+						}
+					}
+				});
+			} catch (error) {
+				console.error('Lỗi tải dữ liệu biểu đồ doanh số:', error);
+			}
+		}
+
+		// Biểu đồ xu hướng đơn hàng
+		async function initOrdersChart() {
+			try {
+				console.log('Đang tải dữ liệu biểu đồ đơn hàng...');
+				const response = await fetch('/DealerManager?handler=OrdersChartData');
+				console.log('Orders response status:', response.status);
+				const data = await response.json();
+				console.log('Orders data:', data);
+				
+				const ctx = document.getElementById('ordersChart').getContext('2d');
+				new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels: data.labels,
+						datasets: [{
+							label: 'Số đơn hàng',
+							data: data.data,
+							borderColor: 'rgba(67, 233, 123, 1)',
+							backgroundColor: 'rgba(67, 233, 123, 0.1)',
+							borderWidth: 3,
+							fill: true,
+							tension: 0.4,
+							pointBackgroundColor: 'rgba(67, 233, 123, 1)',
+							pointBorderColor: '#fff',
+							pointBorderWidth: 2,
+							pointRadius: 6,
+							pointHoverRadius: 8
+						}]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: {
+								display: false
+							}
+						},
+						scales: {
+							y: {
+								beginAtZero: true,
+								ticks: {
+									stepSize: 1
+								}
+							}
+						}
+					}
+				});
+			} catch (error) {
+				console.error('Lỗi tải dữ liệu biểu đồ đơn hàng:', error);
+			}
+		}
+
+		// Biểu đồ phân bổ tồn kho
+		async function initInventoryChart() {
+			try {
+				const response = await fetch('/DealerManager?handler=InventoryChartData');
+				const data = await response.json();
+				
+				const ctx = document.getElementById('inventoryChart').getContext('2d');
+				new Chart(ctx, {
+					type: 'doughnut',
+					data: {
+						labels: data.map(item => item.category),
+						datasets: [{
+							data: data.map(item => item.totalQuantity),
+							backgroundColor: [
+								'rgba(255, 99, 132, 0.8)',
+								'rgba(54, 162, 235, 0.8)',
+								'rgba(255, 205, 86, 0.8)',
+								'rgba(75, 192, 192, 0.8)',
+								'rgba(153, 102, 255, 0.8)',
+								'rgba(255, 159, 64, 0.8)',
+								'rgba(199, 199, 199, 0.8)',
+								'rgba(83, 102, 255, 0.8)'
+							],
+							borderColor: [
+								'rgba(255, 99, 132, 1)',
+								'rgba(54, 162, 235, 1)',
+								'rgba(255, 205, 86, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(153, 102, 255, 1)',
+								'rgba(255, 159, 64, 1)',
+								'rgba(199, 199, 199, 1)',
+								'rgba(83, 102, 255, 1)'
+							],
+							borderWidth: 2
+						}]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: {
+								position: 'bottom',
+								labels: {
+									padding: 20,
+									usePointStyle: true
+								}
+							},
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										const label = context.label || '';
+										const value = context.parsed;
+										return label + ': ' + value + ' sản phẩm';
+									}
+								}
+							}
+						}
+					}
+				});
+			} catch (error) {
+				console.error('Lỗi tải dữ liệu biểu đồ tồn kho:', error);
+			}
+		}
+
+		// Biểu đồ công nợ khách hàng
+		async function initDebtChart() {
+			try {
+				const response = await fetch('/DealerManager?handler=DebtChartData');
+				const data = await response.json();
+				
+				const ctx = document.getElementById('debtChart').getContext('2d');
+				new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: data.map(item => item.customerName.length > 15 ? 
+							item.customerName.substring(0, 15) + '...' : item.customerName),
+						datasets: [{
+							label: 'Công nợ (VND)',
+							data: data.map(item => item.totalDebt),
+							backgroundColor: 'rgba(255, 99, 132, 0.8)',
+							borderColor: 'rgba(255, 99, 132, 1)',
+							borderWidth: 2,
+							borderRadius: 4,
+							borderSkipped: false,
+						}]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						indexAxis: 'y',
+						plugins: {
+							legend: {
+								display: false
+							},
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										return 'Công nợ: ' + new Intl.NumberFormat('vi-VN', {
+											style: 'currency',
+											currency: 'VND'
+										}).format(context.parsed.x);
+									}
+								}
+							}
+						},
+						scales: {
+							x: {
+								beginAtZero: true,
+								ticks: {
+									callback: function(value) {
+										return new Intl.NumberFormat('vi-VN', {
+											style: 'currency',
+											currency: 'VND',
+											minimumFractionDigits: 0
+										}).format(value);
+									}
+								}
+							}
+						}
+					}
+				});
+			} catch (error) {
+				console.error('Lỗi tải dữ liệu biểu đồ công nợ:', error);
+			}
+		}
+	</script>
+}

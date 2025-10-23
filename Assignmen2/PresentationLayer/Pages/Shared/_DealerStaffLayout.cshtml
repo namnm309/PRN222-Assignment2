@@ -366,6 +366,10 @@
             <div class="info">
                 <h6>@(Context.Session.GetString("UserFullName") ?? "Trần Thị B")</h6>
                 <small>DealerStaff</small>
+                @if (!string.IsNullOrEmpty(ViewData["DealerName"]?.ToString()))
+                {
+                    <small class="text-white fst-italic" style="opacity: 0.7;">@ViewData["DealerName"]</small>
+                }
             </div>
         </div>
     </div>

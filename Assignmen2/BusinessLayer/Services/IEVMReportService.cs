@@ -45,5 +45,11 @@ namespace BusinessLayer.Services
         Task<Users> GetUserByIdAsync(Guid userId);
         Task<bool> UpdateUserAsync(Users user);
         Task<bool> DeleteUserAsync(Guid userId);
+
+        // Dashboard Chart Data
+        Task<object> GetSalesChartDataAsync(Guid dealerId);
+        Task<object> GetInventoryChartDataAsync(Guid dealerId);
+        Task<object> GetDebtChartDataAsync(Guid dealerId);
+        Task<object> GetOrdersChartDataAsync(Guid dealerId);
     }
 }

@@ -39,6 +39,10 @@
                     <div class="user-info">
                         <strong>@ViewData["UserName"]</strong>
                         <small>@ViewData["UserRole"]</small>
+                        @if (!string.IsNullOrEmpty(ViewData["DealerName"]?.ToString()))
+                        {
+                            <small class="text-light fst-italic" style="opacity: 0.8;">@ViewData["DealerName"]</small>
+                        }
                     </div>
                 </div>
             </div>

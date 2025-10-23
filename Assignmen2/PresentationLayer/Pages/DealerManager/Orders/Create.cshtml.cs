@@ -9,6 +9,7 @@ namespace PresentationLayer.Pages.DealerManager.Orders
 	public class CreateModel : BaseDealerManagerPageModel
 	{
 		private readonly IProductService productService;
+		private readonly IInventoryManagementService inventoryService;
 
 		public CreateModel(
 			IDealerService dealerService,
@@ -21,10 +22,12 @@ namespace PresentationLayer.Pages.DealerManager.Orders
 			IPurchaseOrderService purchaseOrderService,
 			IProductService productService,
 			IBrandService brandService,
-			IMappingService mappingService)
+			IMappingService mappingService,
+			IInventoryManagementService inventoryService)
 			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService, mappingService)
 		{
 			this.productService = productService;
+			this.inventoryService = inventoryService;
 		}
 
 		[BindProperty]
@@ -112,37 +115,70 @@ namespace PresentationLayer.Pages.DealerManager.Orders
 					return new JsonResult(new { success = false, message = err ?? "Không thể tìm thấy sản phẩm" });
 				}
 
-				var stockQuantity = product.StockQuantity;
-				var hasStock = stockQuantity > 0;
+				// Kiểm tra tồn kho đã phân bổ cho đại lý
+				var inventoryResult = await inventoryService.GetInventoryByDealerAndProductAsync(dealerId.Value, productId);
 				
-				string message;
-				if (hasStock)
+				if (inventoryResult.Success && inventoryResult.Data != null)
 				{
-					if (stockQuantity < 5)
+					// Có allocation cho đại lý
+					var inventory = inventoryResult.Data;
+					var hasStock = inventory.AvailableQuantity > 0;
+					
+					string message;
+					if (hasStock)
 					{
-						message = $"Tồn kho thấp! Chỉ còn {stockQuantity} xe trong kho";
+						if (inventory.AvailableQuantity <= inventory.MinimumStock)
+						{
+							message = $"Tồn kho thấp! Chỉ còn {inventory.AvailableQuantity} xe (tối thiểu: {inventory.MinimumStock} xe)";
+						}
+						else
+						{
+							message = $"Có sẵn {inventory.AvailableQuantity} xe trong kho";
+						}
 					}
 					else
 					{
-						message = $"Có sẵn {stockQuantity} xe trong kho";
+						message = "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
 					}
+
+					return new JsonResult(new
+					{
+						success = true,
+						hasStock = hasStock,
+						availableQuantity = inventory.AvailableQuantity,
+						allocatedQuantity = inventory.AllocatedQuantity,
+						reservedQuantity = inventory.ReservedQuantity,
+						minimumStock = inventory.MinimumStock,
+						message = message,
+						isEVMStock = false
+					});
 				}
 				else
 				{
-					message = "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
-				}
+					// Không có allocation cho đại lý, kiểm tra tồn kho EVM
+					var evmHasStock = product.StockQuantity > 0;
+					string evmMessage;
+					
+					if (evmHasStock)
+					{
+						evmMessage = $"Tồn kho EVM: {product.StockQuantity} xe (chưa phân bổ cho đại lý)";
+					}
+					else
+					{
+						evmMessage = "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
+					}
 
-				return new JsonResult(new
-				{
-					success = true,
-					hasStock = hasStock,
-					availableQuantity = stockQuantity,
-					allocatedQuantity = 0,
-					reservedQuantity = 0,
-					minimumStock = 0,
-					message = message,
-					isEVMStock = true
-				});
+					return new JsonResult(new { 
+						success = true,
+						hasStock = evmHasStock,
+						availableQuantity = product.StockQuantity,
+						allocatedQuantity = 0,
+						reservedQuantity = 0,
+						minimumStock = 0,
+						message = evmMessage,
+						isEVMStock = true // Đánh dấu đây là tồn kho EVM, chưa phân bổ
+					});
+				}
 			}
 			catch (Exception ex)
 			{

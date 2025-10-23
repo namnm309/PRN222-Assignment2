@@ -64,7 +64,47 @@ namespace PresentationLayer.Pages.DealerManager
 				var custDate = TimeZoneInfo.ConvertTimeFromUtc(c.CreatedAt.ToUniversalTime(), vnTimeZone);
 				return custDate.Month == month && custDate.Year == year;
 			});
+
+			// Set ViewData for layout
+			ViewData["DealerName"] = DealerName;
 			return Page();
+		}
+
+		// API endpoints cho biểu đồ
+		public async Task<IActionResult> OnGetSalesChartDataAsync()
+		{
+			var dealerId = GetCurrentDealerId();
+			if (dealerId == null) return new JsonResult(new { error = "Dealer not found" });
+
+			var chartData = await ReportService.GetSalesChartDataAsync(dealerId.Value);
+			return new JsonResult(chartData);
+		}
+
+		public async Task<IActionResult> OnGetInventoryChartDataAsync()
+		{
+			var dealerId = GetCurrentDealerId();
+			if (dealerId == null) return new JsonResult(new { error = "Dealer not found" });
+
+			var chartData = await ReportService.GetInventoryChartDataAsync(dealerId.Value);
+			return new JsonResult(chartData);
+		}
+
+		public async Task<IActionResult> OnGetDebtChartDataAsync()
+		{
+			var dealerId = GetCurrentDealerId();
+			if (dealerId == null) return new JsonResult(new { error = "Dealer not found" });
+
+			var chartData = await ReportService.GetDebtChartDataAsync(dealerId.Value);
+			return new JsonResult(chartData);
+		}
+
+		public async Task<IActionResult> OnGetOrdersChartDataAsync()
+		{
+			var dealerId = GetCurrentDealerId();
+			if (dealerId == null) return new JsonResult(new { error = "Dealer not found" });
+
+			var chartData = await ReportService.GetOrdersChartDataAsync(dealerId.Value);
+			return new JsonResult(chartData);
 		}
 	}
 }
