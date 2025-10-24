@@ -10,8 +10,8 @@ using BusinessLayer.Enums;
 
 namespace PresentationLayer.Pages.Base
 {
-	[Authorize(Roles = "DealerManager")]
-	public class BaseDealerManagerPageModel : PageModel
+	[Authorize(Roles = "DealerStaff")]
+	public class BaseDealerStaffPageModel : PageModel
 	{
 		protected readonly IDealerService DealerService;
 		protected readonly IOrderService OrderService;
@@ -25,7 +25,7 @@ namespace PresentationLayer.Pages.Base
 		protected readonly IBrandService BrandService;
 		protected readonly IMappingService MappingService;
 
-		public BaseDealerManagerPageModel(
+		public BaseDealerStaffPageModel(
 			IDealerService dealerService,
 			IOrderService orderService,
 			ITestDriveService testDriveService,

@@ -5,21 +5,23 @@
     ViewData["Title"] = "EVM Staff Dashboard";
 }
 
-<!-- Welcome Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex align-items-center justify-content-between">
     <div>
-        <h2 class="mb-1">
-            <i class="fas fa-tachometer-alt me-2 text-primary"></i>
-            Chào mừng, @Model.CurrentUserName
-        </h2>
-        <p class="text-muted mb-0">
-            <i class="fas fa-shield-alt me-1"></i> EVM Staff Dashboard - Tổng quan hệ thống
-        </p>
+                        <h2 class="mb-2 fw-bold">Chào mừng, @Model.CurrentUserName</h2>
+                        <p class="mb-0 opacity-75 vn-date"><i class="fas fa-shield-alt me-2"></i>EVM Staff Dashboard - Tổng quan hệ thống</p>
+                    </div>
+                    <div class="text-end">
+                        <div class="fs-5 fw-semibold">@DateTime.Now.ToString("dddd, dd/MM/yyyy", new System.Globalization.CultureInfo("vi-VN"))</div>
+                        <div class="small opacity-75">@DateTime.Now.ToString("HH:mm")</div>
+                    </div>
+                </div>
+            </div>
     </div>
-    <div>
-        <span class="badge bg-success px-3 py-2">
-            <i class="fas fa-clock me-1"></i> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
-        </span>
     </div>
 </div>
 
@@ -39,201 +41,291 @@
     </div>
 }
 
-<!-- Statistics Cards -->
-<div class="row g-4 mb-4">
-    <!-- Total Products -->
-    <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                        <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                            <i class="fas fa-car fa-2x"></i>
-                        </div>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1 small">Tổng sản phẩm</h6>
-                        <h3 class="mb-0 fw-bold">@Model.TotalProducts</h3>
-                        <small class="text-success">
-                            <i class="fas fa-arrow-up"></i> Đang kinh doanh
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0">
-                <a asp-page="/EVMStaff/ProductManagement/Index" class="btn btn-sm btn-outline-primary w-100">
-                    <i class="fas fa-eye me-1"></i> Xem chi tiết
-                </a>
-            </div>
-        </div>
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        @{
+            ViewData["Title"] = "Tổng sản phẩm";
+            ViewData["Value"] = Model.TotalProducts.ToString();
+            ViewData["Unit"] = "Sản phẩm";
+            ViewData["IconClass"] = "fas fa-car";
+            ViewData["GradientClass"] = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+            ViewData["ProgressPercent"] = 75;
+            ViewData["SubText"] = "<i class=\"fas fa-arrow-up me-1\"></i>Đang kinh doanh";
+        }
+        <partial name="_KpiCard" />
     </div>
 
-    <!-- Total Dealers -->
-    <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                        <div class="stat-icon bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                            <i class="fas fa-building fa-2x"></i>
-                        </div>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1 small">Tổng đại lý</h6>
-                        <h3 class="mb-0 fw-bold">@Model.TotalDealers</h3>
-                        <small class="text-muted">
-                            <i class="fas fa-check-circle"></i> Đang hoạt động
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0">
-                <a asp-page="/EVMStaff/DealerManagement/Index" class="btn btn-sm btn-outline-success w-100">
-                    <i class="fas fa-eye me-1"></i> Xem chi tiết
-                </a>
-            </div>
-        </div>
+    <div class="col-xl-3 col-md-6">
+        @{
+            ViewData["Title"] = "Tổng đại lý";
+            ViewData["Value"] = Model.TotalDealers.ToString();
+            ViewData["Unit"] = "Đại lý";
+            ViewData["IconClass"] = "fas fa-building";
+            ViewData["GradientClass"] = "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)";
+            ViewData["ProgressPercent"] = 88;
+            ViewData["SubText"] = "<i class=\"fas fa-check-circle me-1\"></i>Đang hoạt động";
+        }
+        <partial name="_KpiCard" />
     </div>
 
-    <!-- Total Orders -->
-    <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                        <div class="stat-icon bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                            <i class="fas fa-shopping-cart fa-2x"></i>
-                        </div>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1 small">Tổng đơn hàng</h6>
-                        <h3 class="mb-0 fw-bold">@Model.TotalOrders</h3>
-                        <small class="text-info">
-                            <i class="fas fa-chart-line"></i> Tất cả thời gian
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0">
-                <a asp-page="/EVMStaff/SalesReport/Index" class="btn btn-sm btn-outline-info w-100">
-                    <i class="fas fa-eye me-1"></i> Xem chi tiết
-                </a>
-            </div>
-        </div>
+    <div class="col-xl-3 col-md-6">
+        @{
+            ViewData["Title"] = "Tổng đơn hàng";
+            ViewData["Value"] = Model.TotalOrders.ToString();
+            ViewData["Unit"] = "Đơn hàng";
+            ViewData["IconClass"] = "fas fa-shopping-cart";
+            ViewData["GradientClass"] = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
+            ViewData["ProgressPercent"] = 92;
+            ViewData["SubText"] = "<i class=\"fas fa-chart-line me-1\"></i>Tất cả thời gian";
+        }
+        <partial name="_KpiCard" />
     </div>
 
-    <!-- Pending Purchase Orders -->
-    <div class="col-12 col-sm-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                        <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                            <i class="fas fa-clock fa-2x"></i>
-                        </div>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="text-muted mb-1 small">Đơn chờ duyệt</h6>
-                        <h3 class="mb-0 fw-bold">@Model.PendingPurchaseOrders</h3>
-                        <small class="text-warning">
-                            <i class="fas fa-exclamation-circle"></i> Cần xử lý
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0">
-                <a asp-page="/EVMStaff/PurchaseOrderManagement/Index" class="btn btn-sm btn-outline-warning w-100">
-                    <i class="fas fa-eye me-1"></i> Xem chi tiết
-                </a>
-            </div>
-        </div>
+    <div class="col-xl-3 col-md-6">
+        @{
+            ViewData["Title"] = "Đơn chờ duyệt";
+            ViewData["Value"] = Model.PendingPurchaseOrders.ToString();
+            ViewData["Unit"] = "Đơn hàng";
+            ViewData["IconClass"] = "fas fa-clock";
+            ViewData["GradientClass"] = "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)";
+            ViewData["ProgressPercent"] = 45;
+            ViewData["SubText"] = "<i class=\"fas fa-exclamation-circle me-1\"></i>Cần xử lý";
+        }
+        <partial name="_KpiCard" />
     </div>
 </div>
 
-<!-- Revenue & Low Stock -->
-<div class="row g-4 mb-4">
-    <!-- Total Revenue -->
-    <div class="col-12 col-lg-6">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-transparent border-0 pt-3">
-                <h5 class="mb-0">
-                    <i class="fas fa-dollar-sign me-2 text-success"></i>
-                    Doanh thu tổng
-                </h5>
+<!-- Charts Section -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary"></i>Doanh số 6 tháng gần nhất</h5>
             </div>
             <div class="card-body">
-                <h2 class="display-4 fw-bold text-success mb-0">
-                    @Model.TotalRevenue.ToString("N0") VNĐ
-                </h2>
-                <p class="text-muted mb-0">Tổng doanh thu từ tất cả đơn hàng</p>
+                <canvas id="salesChart" height="300"></canvas>
+                        </div>
+                    </div>
+                    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2 text-success"></i>Xu hướng đơn đặt hàng theo tuần</h5>
+                </div>
+            <div class="card-body">
+                <canvas id="ordersChart" height="300"></canvas>
             </div>
-            <div class="card-footer bg-transparent border-0">
-                <a asp-page="/EVMStaff/SalesReport/ByRegion" class="btn btn-outline-success w-100">
-                    <i class="fas fa-chart-bar me-2"></i> Xem báo cáo chi tiết
-                </a>
             </div>
         </div>
     </div>
 
-    <!-- Low Stock Alert -->
-    <div class="col-12 col-lg-6">
-        <div class="card border-0 shadow-sm h-100 @(Model.LowStockProducts > 0 ? "border-danger" : "")">
-            <div class="card-header bg-transparent border-0 pt-3">
-                <h5 class="mb-0">
-                    <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
-                    Cảnh báo tồn kho
-                </h5>
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2 text-warning"></i>Phân bổ tồn kho theo thương hiệu</h5>
             </div>
             <div class="card-body">
-                <h2 class="display-4 fw-bold text-danger mb-0">
-                    @Model.LowStockProducts
-                </h2>
-                <p class="text-muted mb-0">Sản phẩm có tồn kho ≤ 10 chiếc</p>
+                <canvas id="inventoryChart" height="300"></canvas>
+                        </div>
+                    </div>
+                    </div>
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0"><i class="fas fa-building me-2 text-info"></i>Top đại lý theo doanh số</h5>
+                </div>
+            <div class="card-body">
+                <canvas id="dealersChart" height="300"></canvas>
             </div>
-            <div class="card-footer bg-transparent border-0">
-                <a asp-page="/EVMStaff/InventoryManagement/Index" class="btn btn-outline-danger w-100">
-                    <i class="fas fa-warehouse me-2"></i> Quản lý tồn kho
-                </a>
             </div>
         </div>
     </div>
-</div>
 
 <!-- Quick Actions -->
-<div class="row g-4">
-    <div class="col-12">
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <a asp-page="/EVMStaff/ProductManagement/Create" class="text-decoration-none">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <div class="p-3 rounded-circle d-inline-block" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-plus-circle fs-2 text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-2 fw-semibold">Thêm sản phẩm</h5>
+                    <p class="text-muted small mb-0">Tạo sản phẩm mới</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-page="/EVMStaff/InventoryManagement/Index" class="text-decoration-none">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <div class="p-3 rounded-circle d-inline-block" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                            <i class="fas fa-truck fs-2 text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-2 fw-semibold">Điều phối tồn kho</h5>
+                    <p class="text-muted small mb-0">Quản lý kho hàng</p>
+                </div>
+            </div>
+                </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-page="/EVMStaff/PricingManagement/Index" class="text-decoration-none">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <div class="p-3 rounded-circle d-inline-block" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <i class="fas fa-tags fs-2 text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-2 fw-semibold">Quản lý giá</h5>
+                    <p class="text-muted small mb-0">Cập nhật giá sản phẩm</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-page="/EVMStaff/UserManagement/Index" class="text-decoration-none">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <div class="p-3 rounded-circle d-inline-block" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <i class="fas fa-users-cog fs-2 text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-2 fw-semibold">Quản lý tài khoản</h5>
+                    <p class="text-muted small mb-0">Tài khoản đại lý</p>
+                </div>
+            </div>
+                </a>
+    </div>
+</div>
+
+<!-- Recent Activities & Stats -->
+<div class="row g-3">
+    <div class="col-lg-8">
         <div class="card border-0 shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-bolt me-2"></i>
-                    Thao tác nhanh
-                </h5>
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary"></i>Hoạt động gần đây</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    @{
+                        ViewData["IconClass"] = "fas fa-plus-circle";
+                        ViewData["Title"] = "Sản phẩm mới được thêm";
+                        ViewData["Description"] = "VinFast VF e34 đã được thêm vào hệ thống";
+                        ViewData["TimeAgo"] = "5 phút trước";
+                        ViewData["ColorClass"] = "bg-primary";
+                    }
+                    <partial name="_ActivityItem" />
+                    
+                    @{
+                        ViewData["IconClass"] = "fas fa-shopping-cart";
+                        ViewData["Title"] = "Đơn đặt hàng mới";
+                        ViewData["Description"] = "Đại lý ABC đặt 3 xe VinFast VF 8";
+                        ViewData["TimeAgo"] = "1 giờ trước";
+                        ViewData["ColorClass"] = "bg-success";
+                    }
+                    <partial name="_ActivityItem" />
+                    
+                    @{
+                        ViewData["IconClass"] = "fas fa-building";
+                        ViewData["Title"] = "Đại lý mới";
+                        ViewData["Description"] = "Đại lý XYZ đã được đăng ký";
+                        ViewData["TimeAgo"] = "3 giờ trước";
+                        ViewData["ColorClass"] = "bg-info";
+                    }
+                    <partial name="_ActivityItem" />
+                    
+                    @{
+                        ViewData["IconClass"] = "fas fa-exclamation-triangle";
+                        ViewData["Title"] = "Cảnh báo tồn kho";
+                        ViewData["Description"] = "5 sản phẩm có tồn kho thấp";
+                        ViewData["TimeAgo"] = "1 ngày trước";
+                        ViewData["ColorClass"] = "bg-warning";
+                    }
+                    <partial name="_ActivityItem" />
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0 text-center py-3">
+                <a asp-page="/EVMStaff/SalesReport/Index" class="text-decoration-none small">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0"><i class="fas fa-tasks me-2 text-warning"></i>Cần xử lý</h5>
             </div>
             <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <a asp-page="/EVMStaff/ProductManagement/Create" class="btn btn-outline-primary w-100 py-3">
-                            <i class="fas fa-plus-circle fa-2x mb-2 d-block"></i>
-                            <strong>Thêm sản phẩm mới</strong>
-                        </a>
+                <a asp-page="/PurchaseOrder/Index" class="text-decoration-none">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom hover-bg-light p-2 rounded">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-warning bg-opacity-10 p-2 rounded me-3">
+                                <i class="fas fa-clock text-warning fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold">Đơn chờ duyệt</div>
+                                <small class="text-muted">Cần xử lý</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-warning">@Model.PendingPurchaseOrders</span>
+            </div>
+                </a>
+                <a asp-page="/EVMStaff/InventoryManagement/Index" class="text-decoration-none">
+                    <div class="d-flex align-items-center justify-content-between hover-bg-light p-2 rounded">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-danger bg-opacity-10 p-2 rounded me-3">
+                                <i class="fas fa-exclamation-triangle text-danger fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold">Tồn kho thấp</div>
+                                <small class="text-muted">Cần bổ sung</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-danger">@Model.LowStockProducts</span>
+            </div>
+                </a>
+    </div>
+</div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0"><i class="fas fa-star me-2 text-success"></i>Thống kê tuần</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="fw-semibold">Doanh số</small>
+                        <small class="fw-semibold text-success">75%</small>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <a asp-page="/EVMStaff/InventoryManagement/Allocate" class="btn btn-outline-success w-100 py-3">
-                            <i class="fas fa-truck fa-2x mb-2 d-block"></i>
-                            <strong>Điều phối tồn kho</strong>
-                        </a>
+                    <div class="progress" style="height: 8px; border-radius: 4px;">
+                        <div class="progress-bar" style="width: 75%; background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%); border-radius: 4px;"></div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <a asp-page="/EVMStaff/PricingManagement/Index" class="btn btn-outline-info w-100 py-3">
-                            <i class="fas fa-tags fa-2x mb-2 d-block"></i>
-                            <strong>Quản lý giá</strong>
-                        </a>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="fw-semibold">Sản phẩm mới</small>
+                        <small class="fw-semibold text-info">60%</small>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <a asp-page="/EVMStaff/UserManagement/Index" class="btn btn-outline-warning w-100 py-3">
-                            <i class="fas fa-users-cog fa-2x mb-2 d-block"></i>
-                            <strong>Quản lý tài khoản</strong>
-                        </a>
+                    <div class="progress" style="height: 8px; border-radius: 4px;">
+                        <div class="progress-bar" style="width: 60%; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); border-radius: 4px;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="fw-semibold">Hoàn thành đơn</small>
+                        <small class="fw-semibold text-primary">88%</small>
+                    </div>
+                    <div class="progress" style="height: 8px; border-radius: 4px;">
+                        <div class="progress-bar" style="width: 88%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border-radius: 4px;"></div>
                     </div>
                 </div>
             </div>
@@ -242,11 +334,298 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script>
-        // Auto refresh statistics every 5 minutes
-        setTimeout(function() {
-            location.reload();
-        }, 300000);
+        $(document).ready(function() {
+            console.log('Document ready, bắt đầu khởi tạo biểu đồ...');
+            
+            // Kiểm tra Chart.js có load được không
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js chưa được load!');
+                return;
+            }
+            console.log('Chart.js đã load thành công');
+            
+            // Khởi tạo các biểu đồ
+            initSalesChart();
+            initOrdersChart();
+            initInventoryChart();
+            initDealersChart();
+        });
+
+        // Biểu đồ doanh số 6 tháng
+        async function initSalesChart() {
+            try {
+                console.log('Đang tải dữ liệu biểu đồ doanh số...');
+                const response = await fetch('/EVMStaff/Dashboard?handler=SalesChartData');
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Dữ liệu nhận được:', data);
+                
+                const canvas = document.getElementById('salesChart');
+                if (!canvas) {
+                    console.error('Không tìm thấy canvas element với id salesChart');
+                    return;
+                }
+                const ctx = canvas.getContext('2d');
+                console.log('Đang tạo biểu đồ doanh số...');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Doanh số (VND)',
+                            data: data.data.map(item => item.revenue),
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                            borderColor: 'rgba(102, 126, 234, 1)',
+                            borderWidth: 2,
+                            borderRadius: 4,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Doanh số: ' + new Intl.NumberFormat('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND'
+                                        }).format(context.parsed.y);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return new Intl.NumberFormat('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND',
+                                            minimumFractionDigits: 0
+                                        }).format(value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Lỗi tải dữ liệu biểu đồ doanh số:', error);
+            }
+        }
+
+        // Biểu đồ xu hướng đơn đặt hàng
+        async function initOrdersChart() {
+            try {
+                console.log('Đang tải dữ liệu biểu đồ đơn đặt hàng...');
+                const response = await fetch('/EVMStaff/Dashboard?handler=OrdersChartData');
+                console.log('Orders response status:', response.status);
+                const data = await response.json();
+                console.log('Orders data:', data);
+                
+                const ctx = document.getElementById('ordersChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Số đơn đặt hàng',
+                            data: data.data.map(item => item.orders),
+                            borderColor: 'rgba(67, 233, 123, 1)',
+                            backgroundColor: 'rgba(67, 233, 123, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: 'rgba(67, 233, 123, 1)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const dataIndex = context.dataIndex;
+                                        const item = data.data[dataIndex];
+                                        return [
+                                            'Đơn hàng: ' + item.orders,
+                                            'Doanh số: ' + new Intl.NumberFormat('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            }).format(item.revenue)
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Lỗi tải dữ liệu biểu đồ đơn đặt hàng:', error);
+            }
+        }
+
+        // Biểu đồ phân bổ tồn kho theo thương hiệu
+        async function initInventoryChart() {
+            try {
+                const response = await fetch('/EVMStaff/Dashboard?handler=InventoryChartData');
+                const data = await response.json();
+                
+                const ctx = document.getElementById('inventoryChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.map(item => item.brandName),
+                        datasets: [{
+                            data: data.map(item => item.totalQuantity),
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.8)',
+                                'rgba(54, 162, 235, 0.8)',
+                                'rgba(255, 205, 86, 0.8)',
+                                'rgba(75, 192, 192, 0.8)',
+                                'rgba(153, 102, 255, 0.8)',
+                                'rgba(255, 159, 64, 0.8)',
+                                'rgba(199, 199, 199, 0.8)',
+                                'rgba(83, 102, 255, 0.8)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 205, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(199, 199, 199, 1)',
+                                'rgba(83, 102, 255, 1)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const dataIndex = context.dataIndex;
+                                        const item = data[dataIndex];
+                                        return [
+                                            context.label + ': ' + context.parsed + ' sản phẩm',
+                                            'Giá trị: ' + new Intl.NumberFormat('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            }).format(item.totalValue)
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Lỗi tải dữ liệu biểu đồ tồn kho:', error);
+            }
+        }
+
+        // Biểu đồ top đại lý theo doanh số
+        async function initDealersChart() {
+            try {
+                const response = await fetch('/EVMStaff/Dashboard?handler=DealersChartData');
+                const data = await response.json();
+                
+                const ctx = document.getElementById('dealersChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.map(item => item.dealerName.length > 15 ? 
+                            item.dealerName.substring(0, 15) + '...' : item.dealerName),
+                        datasets: [{
+                            label: 'Doanh số (VND)',
+                            data: data.map(item => item.totalSales),
+                            backgroundColor: 'rgba(79, 172, 254, 0.8)',
+                            borderColor: 'rgba(79, 172, 254, 1)',
+                            borderWidth: 2,
+                            borderRadius: 4,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const dataIndex = context.dataIndex;
+                                        const item = data[dataIndex];
+                                        return [
+                                            'Đại lý: ' + item.dealerName,
+                                            'Doanh số: ' + new Intl.NumberFormat('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            }).format(context.parsed.x),
+                                            'Đơn hàng: ' + item.orderCount
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return new Intl.NumberFormat('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND',
+                                            minimumFractionDigits: 0
+                                        }).format(value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Lỗi tải dữ liệu biểu đồ đại lý:', error);
+            }
+        }
     </script>
 }
 

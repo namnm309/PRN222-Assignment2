@@ -2,18 +2,15 @@ using BusinessLayer.Services;
 using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PresentationLayer.Pages.Base;
 
 namespace PresentationLayer.Pages.DealerStaff.Customers
 {
-    public class IndexModel : PageModel
+    public class IndexModel : BaseDealerStaffPageModel
     {
-        private readonly ICustomerService _customerService;
-        private readonly IMappingService _mappingService;
-
-        public IndexModel(ICustomerService customerService, IMappingService mappingService)
+        public IndexModel(ICustomerService customerService, IMappingService mappingService, IDealerService dealerService)
+            : base(dealerService, null, null, customerService, null, null, null, null, null, null, mappingService)
         {
-            _customerService = customerService;
-            _mappingService = mappingService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -23,10 +20,13 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
         public string? Status { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string SortBy { get; set; } = "CreatedDate";
+        public string SortBy { get; set; } = "CreatedDateDesc";
 
         [BindProperty(SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
+
+        [BindProperty(SupportsGet = true)]
+        public int PageNumber { get; set; } = 1;
 
         public int PageSize { get; set; } = 10;
         public int TotalPages { get; set; }
@@ -36,12 +36,24 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
 
         public async Task OnGetAsync()
         {
+            // Clear any potential caching issues
+            Response.Headers.Append("Cache-Control", "no-cache, no-store, must-revalidate");
+            Response.Headers.Append("Pragma", "no-cache");
+            Response.Headers.Append("Expires", "0");
+            
+            // Get page parameter directly from query string
+            var pageFromQuery = Request.Query["page"].FirstOrDefault();
+            int.TryParse(pageFromQuery, out int pageFromUrl);
+            
+            // Set ViewData for DealerName
+            await SetDealerNameViewDataAsync();
+            
             // Get all customers using service
-            var result = await _customerService.GetAllAsync();
+            var result = await CustomerService.GetAllAsync();
             if (result.Success && result.Data != null)
             {
                 // Map entities to DTOs using mapping service
-                Customers = _mappingService.MapToCustomerViewModels(result.Data);
+                Customers = MappingService.MapToCustomerViewModels(result.Data);
 
                 // Apply search filter
                 if (!string.IsNullOrWhiteSpace(Search))
@@ -58,8 +70,8 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
                 // Apply status filter
                 if (!string.IsNullOrWhiteSpace(Status))
                 {
-                    // For now, all customers are considered active
-                    // You can add an IsActive property to Customer entity if needed
+                    bool isActive = Status == "Active";
+                    Customers = Customers.Where(c => c.IsActive == isActive).ToList();
                 }
 
                 // Apply sorting
@@ -75,11 +87,20 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
                 TotalItems = Customers.Count;
                 TotalPages = (int)Math.Ceiling((double)TotalItems / PageSize);
 
+                // Use page parameter from URL, fallback to PageNumber, then CurrentPage
+                var pageToUse = pageFromUrl > 0 ? pageFromUrl : (PageNumber > 0 ? PageNumber : CurrentPage);
+                if (pageToUse < 1) pageToUse = 1;
+                if (pageToUse > TotalPages && TotalPages > 0) pageToUse = TotalPages;
+
+
                 // Simple pagination (in real app, you'd implement this in the service layer)
                 Customers = Customers
-                    .Skip((CurrentPage - 1) * PageSize)
+                    .Skip((pageToUse - 1) * PageSize)
                     .Take(PageSize)
                     .ToList();
+
+                // Update CurrentPage to reflect actual page used
+                CurrentPage = pageToUse;
             }
             else
             {

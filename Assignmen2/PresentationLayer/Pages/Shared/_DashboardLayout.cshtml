@@ -89,6 +89,69 @@
                 window.location.href = '/Account/Logout';
             }
         }
+
+        // Sidebar Active State Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname.toLowerCase();
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            // Loại bỏ class active khỏi tất cả menu items
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Tìm menu item phù hợp nhất
+            let bestMatch = null;
+            let bestMatchLength = 0;
+            
+            menuItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href) {
+                    const itemPath = href.toLowerCase();
+                    
+                    // Exact match - ưu tiên cao nhất
+                    if (currentPath === itemPath) {
+                        bestMatch = item;
+                        bestMatchLength = itemPath.length;
+                    }
+                    // Partial match - chỉ khi chưa có exact match
+                    else if (!bestMatch && currentPath.startsWith(itemPath) && itemPath.length > bestMatchLength) {
+                        bestMatch = item;
+                        bestMatchLength = itemPath.length;
+                    }
+                }
+            });
+            
+            // Thêm class active vào menu item phù hợp nhất
+            if (bestMatch) {
+                bestMatch.classList.add('active');
+            }
+        });
+
+        // Ngăn scroll lên đầu trang khi bấm menu item
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Lưu vị trí scroll hiện tại
+                    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    // Nếu đang ở cùng trang, ngăn hành vi mặc định và giữ vị trí scroll
+                    const href = this.getAttribute('href');
+                    if (href && window.location.pathname === href) {
+                        e.preventDefault();
+                        
+                        // Giữ nguyên vị trí scroll
+                        setTimeout(() => {
+                            window.scrollTo(0, currentScrollTop);
+                        }, 0);
+                        
+                        return false;
+                    }
+                });
+            });
+        });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

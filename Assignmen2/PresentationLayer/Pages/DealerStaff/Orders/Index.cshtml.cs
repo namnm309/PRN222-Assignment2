@@ -2,18 +2,15 @@ using BusinessLayer.Services;
 using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PresentationLayer.Pages.Base;
 
 namespace PresentationLayer.Pages.DealerStaff.Orders
 {
-    public class IndexModel : PageModel
+    public class IndexModel : BaseDealerStaffPageModel
     {
-        private readonly IOrderService _orderService;
-        private readonly IMappingService _mappingService;
-
-        public IndexModel(IOrderService orderService, IMappingService mappingService)
+        public IndexModel(IOrderService orderService, IMappingService mappingService, IDealerService dealerService)
+            : base(dealerService, orderService, null, null, null, null, null, null, null, null, mappingService)
         {
-            _orderService = orderService;
-            _mappingService = mappingService;
         }
 
         public List<OrderResponse> Orders { get; set; } = new();
@@ -29,6 +26,9 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
             StatusFilter = status ?? string.Empty;
             CurrentPage = page;
 
+            // Set ViewData for DealerName
+            await SetDealerNameViewDataAsync();
+
             try
             {
                 // Get current dealer ID from session
@@ -41,7 +41,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 }
 
                 // Search orders for current dealer using service
-                var result = await _orderService.SearchAsync(
+                var result = await OrderService.SearchAsync(
                     dealerId.Value,
                     SearchTerm,
                     StatusFilter,
@@ -53,7 +53,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
                 if (result.Success && result.Item3.Data != null)
                 {
                     // Map entities to DTOs using mapping service
-                    Orders = _mappingService.MapToOrderCreateViewModels(result.Item3.Data);
+                    Orders = MappingService.MapToOrderCreateViewModels(result.Item3.Data);
                     TotalPages = result.Item3.TotalPages;
                 }
                 else
@@ -73,7 +73,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
         {
             try
             {
-                var result = await _orderService.DeleteOrderAsync(id);
+                var result = await OrderService.DeleteOrderAsync(id);
                 if (result.Success)
                 {
                     TempData["Success"] = "Xóa đơn hàng thành công!";

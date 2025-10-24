@@ -17,21 +17,39 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.TestDrive
 
         public TestDriveResponse? TestDrive { get; set; }
 
+        private Guid? GetCurrentDealerId()
+        {
+            var dealerIdString = HttpContext.Session.GetString("DealerId");
+            return Guid.TryParse(dealerIdString, out var dealerId) ? dealerId : null;
+        }
+
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
             try
             {
-                var result = await _testDriveService.GetAsync(id);
-                if (result.Success && result.Data != null)
+                var dealerId = GetCurrentDealerId();
+                if (!dealerId.HasValue)
                 {
-                    TestDrive = result.Data;
-                    return Page();
+                    TempData["Error"] = "Không xác định được đại lý";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
                 }
-                else
+
+                var result = await _testDriveService.GetAsync(id);
+                if (!result.Success || result.Data == null)
                 {
                     TempData["Error"] = result.Error ?? "Không tìm thấy lịch hẹn lái thử";
                     return RedirectToPage("/DealerStaff/TestDrive/Index");
                 }
+
+                // Kiểm tra quyền truy cập
+                if (result.Data.DealerId != dealerId.Value)
+                {
+                    TempData["Error"] = "Bạn không có quyền truy cập lịch hẹn này";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
+                }
+
+                TestDrive = result.Data;
+                return Page();
             }
             catch (Exception ex)
             {
@@ -44,6 +62,27 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.TestDrive
         {
             try
             {
+                var dealerId = GetCurrentDealerId();
+                if (!dealerId.HasValue)
+                {
+                    TempData["Error"] = "Không xác định được đại lý";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
+                }
+
+                // Kiểm tra quyền trước khi xác nhận
+                var testDriveResult = await _testDriveService.GetAsync(id);
+                if (!testDriveResult.Success || testDriveResult.Data == null)
+                {
+                    TempData["Error"] = "Không tìm thấy lịch hẹn";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
+                }
+
+                if (testDriveResult.Data.DealerId != dealerId.Value)
+                {
+                    TempData["Error"] = "Bạn không có quyền xác nhận lịch hẹn này";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
+                }
+
                 var result = await _testDriveService.ConfirmAsync(id);
                 if (result.Success)
                 {
@@ -65,6 +104,27 @@ namespace Assignmen2.PresentationLayer.Pages.DealerStaff.TestDrive
         {
             try
             {
+                var dealerId = GetCurrentDealerId();
+                if (!dealerId.HasValue)
+                {
+                    TempData["Error"] = "Không xác định được đại lý";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
+                }
+
+                // Kiểm tra quyền trước khi hủy
+                var testDriveResult = await _testDriveService.GetAsync(id);
+                if (!testDriveResult.Success || testDriveResult.Data == null)
+                {
+                    TempData["Error"] = "Không tìm thấy lịch hẹn";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
+                }
+
+                if (testDriveResult.Data.DealerId != dealerId.Value)
+                {
+                    TempData["Error"] = "Bạn không có quyền hủy lịch hẹn này";
+                    return RedirectToPage("/DealerStaff/TestDrive/Index");
+                }
+
                 var result = await _testDriveService.CancelAsync(id);
                 if (result.Success)
                 {

@@ -40,6 +40,9 @@ namespace PresentationLayer.Pages.DealerManager
 			var (ok, _, dealer) = await DealerService.GetByIdAsync(dealerId.Value);
 			DealerName = dealer?.Name;
 
+			// Set ViewData for DealerName
+			await SetDealerNameViewDataAsync();
+
 			// Sử dụng timezone Việt Nam cho tính toán tháng
 			var vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 			var today = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone).Date;
@@ -65,8 +68,6 @@ namespace PresentationLayer.Pages.DealerManager
 				return custDate.Month == month && custDate.Year == year;
 			});
 
-			// Set ViewData for layout
-			ViewData["DealerName"] = DealerName;
 			return Page();
 		}
 

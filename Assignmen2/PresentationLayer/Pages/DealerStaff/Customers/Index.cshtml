@@ -5,6 +5,15 @@
     ViewData["Title"] = "Quản lý khách hàng";
 }
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="mb-1">
@@ -41,8 +50,8 @@
                 <select name="sortBy" class="form-select">
                     <option value="Name" selected="@(Model.SortBy == "Name")">Tên A-Z</option>
                     <option value="NameDesc" selected="@(Model.SortBy == "NameDesc")">Tên Z-A</option>
-                    <option value="CreatedDate" selected="@(Model.SortBy == "CreatedDate")">Mới nhất</option>
-                    <option value="CreatedDateDesc" selected="@(Model.SortBy == "CreatedDateDesc")">Cũ nhất</option>
+                    <option value="CreatedDateDesc" selected="@(Model.SortBy == "CreatedDateDesc")">Mới nhất</option>
+                    <option value="CreatedDate" selected="@(Model.SortBy == "CreatedDate")">Cũ nhất</option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -154,7 +163,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <div class="text-muted small">Tổng khách hàng</div>
-                    <div class="h4 text-primary">@Model.Customers.Count</div>
+                    <div class="h4 text-primary">@Model.TotalItems</div>
                 </div>
             </div>
         </div>

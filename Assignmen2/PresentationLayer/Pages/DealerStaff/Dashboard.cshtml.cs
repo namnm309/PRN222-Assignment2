@@ -4,29 +4,20 @@ using BusinessLayer.Enums;
 using BusinessLayer.Services;
 using BusinessLayer.DTOs.Responses;
 using System.Text.Json;
+using PresentationLayer.Pages.Base;
 
 namespace PresentationLayer.Pages.DealerStaff
 {
-    public class DashboardModel : PageModel
+    public class DashboardModel : BaseDealerStaffPageModel
     {
-        private readonly IOrderService _orderService;
-        private readonly ICustomerService _customerService;
-        private readonly ITestDriveService _testDriveService;
-        private readonly IMappingService _mappingService;
-        private readonly IDealerService _dealerService;
-
         public DashboardModel(
             IOrderService orderService,
             ICustomerService customerService,
             ITestDriveService testDriveService,
             IMappingService mappingService,
             IDealerService dealerService)
+            : base(dealerService, orderService, testDriveService, customerService, null, null, null, null, null, null, mappingService)
         {
-            _orderService = orderService;
-            _customerService = customerService;
-            _testDriveService = testDriveService;
-            _mappingService = mappingService;
-            _dealerService = dealerService;
         }
 
         // User Info
@@ -68,22 +59,12 @@ namespace PresentationLayer.Pages.DealerStaff
                 DealerId = dealerId;
             }
 
-            // Set ViewData for all views
-            ViewData["UserRole"] = HttpContext.Session.GetString("UserRole");
-            ViewData["UserRoleName"] = HttpContext.Session.GetString("UserRole");
-            ViewData["UserName"] = UserName;
-            ViewData["UserEmail"] = UserEmail;
+            // Set ViewData for DealerName
+            await SetDealerNameViewDataAsync();
+            DealerName = ViewData["DealerName"]?.ToString();
 
             if (DealerId.HasValue)
             {
-                // Get dealer name
-                var (dealerOk, _, dealer) = await _dealerService.GetByIdAsync(DealerId.Value);
-                if (dealerOk && dealer != null)
-                {
-                    DealerName = dealer.Name;
-                    ViewData["DealerName"] = DealerName;
-                }
-                
                 await LoadDashboardData(DealerId.Value);
             }
             else
@@ -102,7 +83,7 @@ namespace PresentationLayer.Pages.DealerStaff
                 var lastMonth = thisMonth.AddMonths(-1);
 
                 // Load orders for this month
-                var ordersResult = await _orderService.SearchAsync(
+                var ordersResult = await OrderService.SearchAsync(
                     dealerId, 
                     null, // search
                     null, // status
@@ -146,7 +127,7 @@ namespace PresentationLayer.Pages.DealerStaff
                 }
 
                 // Load customers
-                var customersResult = await _customerService.GetAllAsync();
+                var customersResult = await CustomerService.GetAllAsync();
                 if (customersResult.Success && customersResult.Data != null)
                 {
                     var customers = customersResult.Data;
@@ -155,7 +136,7 @@ namespace PresentationLayer.Pages.DealerStaff
                 }
 
                 // Load test drives
-                var testDrivesResult = await _testDriveService.GetByDealerAsync(dealerId);
+                var testDrivesResult = await TestDriveService.GetByDealerAsync(dealerId);
                 if (testDrivesResult.Success && testDrivesResult.Data != null)
                 {
                     var testDrives = testDrivesResult.Data;
@@ -255,7 +236,7 @@ namespace PresentationLayer.Pages.DealerStaff
                     RevenueChartLabels.Add(date.ToString("dd/MM"));
                     
                     // Get actual revenue for this date
-                    var dayOrdersResult = await _orderService.SearchAsync(
+                    var dayOrdersResult = await OrderService.SearchAsync(
                         dealerId, 
                         null, // search
                         null, // status
@@ -276,7 +257,7 @@ namespace PresentationLayer.Pages.DealerStaff
                 }
 
                 // Get actual order status distribution
-                var statusOrdersResult = await _orderService.SearchAsync(
+                var statusOrdersResult = await OrderService.SearchAsync(
                     dealerId, 
                     null, // search
                     null, // status

@@ -5,49 +5,216 @@
     Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
 }
 
-<h2>Quản lý thương hiệu</h2>
-
-<div class="mb-3">
-    <a class="btn btn-primary" asp-page="/EVMStaff/BrandManagement/Create">Thêm thương hiệu</a>
-    <a class="btn btn-secondary" asp-page="/EVMStaff/ProductManagement/Index">Quản lý sản phẩm</a>
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h2 class="mb-2 fw-bold">
+                            <i class="fas fa-copyright me-2"></i>
+                            Quản lý thương hiệu
+                        </h2>
+                        <p class="mb-0 opacity-75">Quản lý danh sách thương hiệu xe điện</p>
+                    </div>
+                    <div>
+                        <a class="btn btn-light btn-lg me-2" asp-page="/EVMStaff/BrandManagement/Create">
+                            <i class="fas fa-plus me-2"></i>Thêm thương hiệu
+                        </a>
+                        <a class="btn btn-outline-light btn-lg" asp-page="/EVMStaff/ProductManagement/Index">
+                            <i class="fas fa-car me-2"></i>Quản lý sản phẩm
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
+<!-- Alert Messages -->
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success">@TempData["Success"]</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">@TempData["Error"]</div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Tên thương hiệu</th>
-            <th>Quốc gia</th>
-            <th>Trạng thái</th>
-            <th>Mô tả</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var b in Model.Brands)
-    {
-        <tr>
-            <td>@b.Name</td>
-            <td>@b.Country</td>
-            <td>@(b.IsActive ? "Active" : "Inactive")</td>
-            <td>@b.Description</td>
-            <td class="text-end">
-                <a class="btn btn-sm btn-secondary" asp-page="/EVMStaff/BrandManagement/Edit" asp-route-id="@b.Id">Sửa</a>
-                <form method="post" asp-page-handler="Delete" asp-route-id="@b.Id" class="d-inline" onsubmit="return confirm('Xóa thương hiệu này?');">
-                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                </form>
-            </td>
-        </tr>
-    }
-    </tbody>
-    </table>
+<!-- Search & Filter Card -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-0 py-3">
+        <h5 class="mb-0"><i class="fas fa-filter me-2 text-primary"></i>Bộ lọc tìm kiếm</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">
+                    <i class="fas fa-search me-1"></i>Tìm kiếm
+                </label>
+                <input type="text" name="search" class="form-control" placeholder="Tên thương hiệu, quốc gia...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">
+                    <i class="fas fa-flag me-1"></i>Quốc gia
+                </label>
+                <select name="country" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="Vietnam">Việt Nam</option>
+                    <option value="China">Trung Quốc</option>
+                    <option value="USA">Mỹ</option>
+                    <option value="Germany">Đức</option>
+                    <option value="Japan">Nhật Bản</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">
+                    <i class="fas fa-toggle-on me-1"></i>Trạng thái
+                </label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="active">Đang hoạt động</option>
+                    <option value="inactive">Ngừng hoạt động</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Brands Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        @if (Model.Brands.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Thương hiệu</th>
+                            <th>Quốc gia</th>
+                            <th>Trạng thái</th>
+                            <th>Mô tả</th>
+                            <th class="text-center pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var b in Model.Brands)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle bg-primary text-white me-3">
+                                            @(string.IsNullOrEmpty(b.Name) ? "?" : b.Name.Substring(0, 1).ToUpper())
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">@b.Name</div>
+                                            <small class="text-muted">ID: @b.Id.ToString().Substring(0, 8).ToUpper()</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-flag me-2 text-muted"></i>
+                                        @b.Country
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (b.IsActive)
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check-circle me-1"></i>Đang hoạt động
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-pause-circle me-1"></i>Ngừng hoạt động
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 200px;" title="@b.Description">
+                                        @b.Description
+                                    </div>
+                                </td>
+                                <td class="text-center pe-4">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-page="/EVMStaff/BrandManagement/Edit" asp-route-id="@b.Id" 
+                                           class="btn btn-outline-primary" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#deleteModal-@b.Id" 
+                                                title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <div class="p-4 rounded-circle d-inline-block" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-copyright fa-3x text-white"></i>
+                    </div>
+                </div>
+                <h4 class="text-muted mb-3">Chưa có thương hiệu nào</h4>
+                <p class="text-muted mb-4">Bắt đầu bằng cách thêm thương hiệu đầu tiên</p>
+                <a asp-page="/EVMStaff/BrandManagement/Create" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Thêm thương hiệu đầu tiên
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Delete Confirmation Modals -->
+@foreach (var b in Model.Brands)
+{
+    <div class="modal fade" id="deleteModal-@b.Id" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa thương hiệu <strong>@b.Name</strong>?</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@b.Id" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Xóa
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 

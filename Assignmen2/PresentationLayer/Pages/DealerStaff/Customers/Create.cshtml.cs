@@ -74,7 +74,7 @@ namespace PresentationLayer.Pages.DealerStaff.Customers
                 if (result.Success)
                 {
                     TempData["Success"] = "Tạo khách hàng thành công!";
-                    return RedirectToPage("/DealerStaff/Customers/Index");
+                    return RedirectToPage("/DealerStaff/Customers/Index", new { page = 1, search = "", status = "", sortBy = "CreatedDateDesc" });
                 }
                 else
                 {
