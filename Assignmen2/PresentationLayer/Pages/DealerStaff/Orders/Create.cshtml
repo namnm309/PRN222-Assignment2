@@ -24,7 +24,7 @@
     <div class="col-12 col-lg-8">
         <div class="card border-0 shadow-sm">
             <div class="card-body">
-                <form method="post">
+                <form method="post" onsubmit="return validateFormSubmit(event)">
                     <div class="row g-3">
                         <!-- Order Type -->
                         <div class="col-12">
@@ -109,16 +109,54 @@
                             </h5>
                         </div>
 
-                        <div class="col-md-4">
-                            <label asp-for="Input.Price" class="form-label">Giá bán <span class="text-danger">*</span></label>
-                            <input asp-for="Input.Price" type="number" step="0.01" class="form-control" placeholder="0" onchange="calculateTotal()">
-                            <span asp-validation-for="Input.Price" class="text-danger"></span>
+                        <!-- Pricing Policy Info -->
+                        <div id="pricing-info" class="alert alert-info mb-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Chính sách giá:</strong>
+                                    <div id="policy-type" class="badge bg-primary"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Giảm giá:</strong>
+                                    <span id="discount-rate" class="text-success"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <label asp-for="Input.Discount" class="form-label">Giảm giá</label>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-tags me-1 text-primary"></i>Loại giá
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="Input.PriceType" id="priceWholesale" value="Wholesale" checked onchange="updatePrice()">
+                                    <label class="form-check-label" for="priceWholesale">
+                                        <strong>Giá sỉ</strong> <span id="wholesale-price" class="text-success"></span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="Input.PriceType" id="priceRetail" value="Retail" onchange="updatePrice()">
+                                    <label class="form-check-label" for="priceRetail">
+                                        <strong>Giá lẻ</strong> <span id="retail-price" class="text-primary"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="hidden" asp-for="Input.PriceType" id="priceType" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.Price" class="form-label">Giá bán <span class="text-danger">*</span></label>
+                            <input asp-for="Input.Price" type="number" step="0.01" class="form-control" placeholder="0" onchange="calculateTotal()" readonly>
+                            <span asp-validation-for="Input.Price" class="text-danger"></span>
+                            <small class="text-muted">Giá sẽ được tự động điền theo chính sách giá</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Input.Discount" class="form-label">Giảm giá bổ sung</label>
                             <input asp-for="Input.Discount" type="number" step="0.01" class="form-control" placeholder="0" onchange="calculateTotal()">
                             <span asp-validation-for="Input.Discount" class="text-danger"></span>
+                            <small class="text-muted">Giảm giá thêm (ngoài discount của chính sách)</small>
                         </div>
 
                         <div class="col-md-4">
@@ -307,6 +345,8 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        // Biến global để lưu trạng thái tồn kho
+        let currentProductHasStock = false;
         function toggleOrderType() {
             const orderType = document.querySelector('select[name="Input.OrderType"]').value;
             const paymentSection = document.getElementById('paymentSection');
@@ -360,8 +400,14 @@
                 .then(data => {
                     if (!data.success) {
                         stockAlert.innerHTML = '<div class="alert alert-danger mb-0"><i class="fas fa-exclamation-circle"></i> ' + data.message + '</div>';
+                        currentProductHasStock = false;
+                        updateSubmitButton();
                         return;
                     }
+
+                    // Lưu trạng thái tồn kho
+                    currentProductHasStock = data.hasStock;
+                    updateSubmitButton();
 
                     if (!data.hasStock) {
                         stockAlert.innerHTML = `
@@ -376,26 +422,111 @@
                                 <br><small class="text-danger">⚠️ Tồn kho thấp (tối thiểu: ${data.minimumStock} xe). Nên đặt hàng thêm!</small>
                             </div>`;
                     } else {
-                        if (data.isEVMStock) {
-                            // Tồn kho EVM (chưa phân bổ cho đại lý)
-                            stockAlert.innerHTML = `
-                                <div class="alert alert-info mb-0">
-                                    <i class="fas fa-info-circle"></i> ${data.message}
-                                    <br><small class="text-info">💡 Đây là tồn kho EVM. Liên hệ EVM để phân bổ cho đại lý.</small>
-                                </div>`;
-                        } else {
-                            // Tồn kho đã phân bổ cho đại lý
-                            stockAlert.innerHTML = `
-                                <div class="alert alert-success mb-0">
-                                    <i class="fas fa-check-circle"></i> ${data.message}
-                                    <br><small>Đã phân bổ: ${data.allocatedQuantity} | Đã đặt: ${data.reservedQuantity}</small>
-                                </div>`;
-                        }
+                        // Tồn kho đã phân bổ cho đại lý
+                        stockAlert.innerHTML = `
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle"></i> ${data.message}
+                                <br><small>Đã phân bổ: ${data.allocatedQuantity} | Đã đặt: ${data.reservedQuantity}</small>
+                            </div>`;
                     }
                 })
                 .catch(error => {
                     stockAlert.innerHTML = '<div class="alert alert-danger mb-0"><i class="fas fa-times-circle"></i> Không thể kiểm tra tồn kho</div>';
                 });
+        }
+
+        // Function để cập nhật trạng thái submit button
+        function updateSubmitButton() {
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (submitButton) {
+                if (!currentProductHasStock) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="fas fa-ban me-1"></i> Không thể tạo đơn (hết hàng)';
+                    submitButton.classList.add('btn-secondary');
+                    submitButton.classList.remove('btn-primary');
+                } else {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fas fa-save me-1"></i> Tạo đơn hàng';
+                    submitButton.classList.add('btn-primary');
+                    submitButton.classList.remove('btn-secondary');
+                }
+            }
+        }
+
+        // Function để validate form submit
+        function validateFormSubmit(event) {
+            if (!currentProductHasStock) {
+                event.preventDefault();
+                alert('Không thể tạo đơn hàng vì đã hết hàng. Vui lòng chọn sản phẩm khác hoặc liên hệ EVM để đặt hàng.');
+                return false;
+            }
+            return true;
+        }
+
+        // Pricing data from server
+        const pricingData = @Html.Raw(Json.Serialize(Model.ProductPricing));
+
+        // Function to load product pricing info
+        function loadProductPricingInfo() {
+            const productSelect = document.getElementById('product-select');
+            const selectedProductId = productSelect.value;
+            const pricingInfo = document.getElementById('pricing-info');
+            const wholesalePriceSpan = document.getElementById('wholesale-price');
+            const retailPriceSpan = document.getElementById('retail-price');
+            const policyTypeSpan = document.getElementById('policy-type');
+            const discountRateSpan = document.getElementById('discount-rate');
+
+            if (selectedProductId && pricingData[selectedProductId]) {
+                const pricing = pricingData[selectedProductId];
+                
+                // Show pricing info
+                pricingInfo.style.display = 'block';
+                policyTypeSpan.textContent = pricing.policyType;
+                discountRateSpan.textContent = pricing.discountRate > 0 ? pricing.discountRate + '%' : 'Không có';
+                
+                // Update price displays
+                wholesalePriceSpan.textContent = '(' + pricing.wholesalePrice.toLocaleString('vi-VN') + ' VND)';
+                retailPriceSpan.textContent = '(' + pricing.retailPrice.toLocaleString('vi-VN') + ' VND)';
+                
+                // Update price based on selected type
+                updatePrice();
+            } else {
+                pricingInfo.style.display = 'none';
+                document.querySelector('input[name="Input.Price"]').value = '';
+            }
+        }
+
+        // Function to update price based on selected type
+        function updatePrice() {
+            const productSelect = document.getElementById('product-select');
+            const selectedProductId = productSelect.value;
+            const priceInput = document.querySelector('input[name="Input.Price"]');
+            const priceTypeInput = document.getElementById('priceType');
+            
+            if (selectedProductId && pricingData[selectedProductId]) {
+                const pricing = pricingData[selectedProductId];
+                const isWholesale = document.getElementById('priceWholesale').checked;
+                
+                priceTypeInput.value = isWholesale ? 'Wholesale' : 'Retail';
+                
+                let basePrice = isWholesale ? pricing.wholesalePrice : pricing.retailPrice;
+                
+                // Apply discount if available
+                if (pricing.discountRate > 0) {
+                    basePrice = basePrice * (1 - pricing.discountRate / 100);
+                    basePrice = Math.max(basePrice, pricing.minimumPrice);
+                }
+                
+                priceInput.value = Math.round(basePrice);
+                calculateTotal();
+            }
+        }
+
+        // Override the original loadProductInfo to include pricing
+        const originalLoadProductInfo = window.loadProductInfo;
+        window.loadProductInfo = function() {
+            originalLoadProductInfo();
+            loadProductPricingInfo();
         }
 
         function calculateTotal() {
@@ -489,6 +620,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             calculateTotal();
+            updateSubmitButton(); // Khởi tạo trạng thái submit button
         });
     </script>
 }

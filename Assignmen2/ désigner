@@ -1,0 +1,118 @@
+@page "/DealerManager/PricingPolicies"
+@model PresentationLayer.Pages.DealerManager.PricingPolicies.IndexModel
+@{
+    Layout = "~/Pages/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Bảng giá sản phẩm";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-tags me-2 text-primary"></i>
+            Bảng giá sản phẩm
+        </h2>
+        <p class="text-muted mb-0">Xem các chính sách giá đang áp dụng cho đại lý của bạn</p>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        @if (Model.PricingPolicies.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Loại chính sách</th>
+                            <th>Giá sỉ</th>
+                            <th>Giá lẻ</th>
+                            <th>Giảm giá</th>
+                            <th>Giá tối thiểu</th>
+                            <th>Hiệu lực</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var policy in Model.PricingPolicies)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@policy.ProductName</strong>
+                                    @if (policy.DealerId.HasValue)
+                                    {
+                                        <br/><small class="text-muted">Đại lý: @policy.DealerName</small>
+                                    }
+                                    @if (policy.RegionId.HasValue)
+                                    {
+                                        <br/><small class="text-muted">Khu vực: @policy.RegionName</small>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">@policy.PolicyType</span>
+                                </td>
+                                <td><strong class="text-success">@policy.WholesalePrice.ToString("N0") đ</strong></td>
+                                <td><strong class="text-primary">@policy.RetailPrice.ToString("N0") đ</strong></td>
+                                <td>
+                                    @if (policy.DiscountRate > 0)
+                                    {
+                                        <span class="badge bg-danger">@policy.DiscountRate%</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>@policy.MinimumPrice.ToString("N0") đ</td>
+                                <td>
+                                    <small>
+                                        @policy.EffectiveDate.ToString("dd/MM/yyyy")
+                                        <br/>đến<br/>
+                                        @(policy.ExpiryDate?.ToString("dd/MM/yyyy") ?? "Không giới hạn")
+                                    </small>
+                                </td>
+                                <td>
+                                    @switch (policy.Status?.ToLower())
+                                    {
+                                        case "active":
+                                            <span class="badge bg-success">Đang áp dụng</span>
+                                            break;
+                                        case "inactive":
+                                            <span class="badge bg-secondary">Không hoạt động</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-warning text-dark">@policy.Status</span>
+                                            break;
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-tags fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Chưa có chính sách giá nào được áp dụng cho đại lý của bạn.</h5>
+                <p class="text-muted">Vui lòng liên hệ EVM Staff để biết thêm thông tin.</p>
+            </div>
+        }
+    </div>
+</div>

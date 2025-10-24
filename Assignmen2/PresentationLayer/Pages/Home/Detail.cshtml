@@ -1,251 +1,210 @@
-@page
-@model PresentationLayer.Pages.Home.IndexModel
+@page "{id:guid}"
+@model PresentationLayer.Pages.Home.DetailModel
 @{
-    ViewData["Title"] = "Electric Vehicle Store";
+    ViewData["Title"] = Model.Product?.Name ?? "Chi tiết sản phẩm";
 }
 
-@* Success Message Display *@
-@if (TempData["Msg"] != null)
-{
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-success text-white border-0">
-                    <h5 class="modal-title" id="successModalLabel">
-                        <i class="fas fa-check-circle me-2"></i>Thành công!
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center py-4">
-                    <div class="mb-3">
-                        <i class="fas fa-calendar-check text-success" style="font-size: 3rem;"></i>
-                    </div>
-                    <h6 class="fw-bold mb-3">@TempData["Msg"]</h6>
-                    <p class="text-muted mb-0">
-                        Đội ngũ tư vấn của chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận lịch hẹn.
-                    </p>
-                </div>
-                <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">
-                        <i class="fas fa-thumbs-up me-2"></i>Tuyệt vời!
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
-@section FullWidthTop {
-<div id="homeCarousel" class="carousel slide home-hero mb-4" data-bs-ride="carousel" data-bs-interval="5000">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <div class="home-hero-slide slide-1 d-flex align-items-center text-center">
-                <div class="container">
-                    <h2 class="display-6 fw-bold text-dark">Khám phá tương lai xe điện</h2>
-                    <p class="lead text-muted mb-3">Hiệu năng, tiết kiệm và thân thiện môi trường</p>
-                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testDriveModal">Đăng ký lái thử</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="home-hero-slide slide-2 d-flex align-items-center text-center">
-                <div class="container">
-                    <h2 class="display-6 fw-bold text-dark">Ưu đãi hấp dẫn</h2>
-                    <p class="lead text-muted mb-3">Nâng cấp lên xe điện với chi phí tốt nhất</p>
-                    <a asp-page="/Home/Privacy" class="btn btn-outline-primary">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="home-hero-slide slide-3 d-flex align-items-center text-center">
-                <div class="container">
-                    <h2 class="display-6 fw-bold text-dark">Sạc nhanh mọi nơi</h2>
-                    <p class="lead text-muted mb-3">Hệ sinh thái trạm sạc tiện lợi, an toàn</p>
-                    <a asp-page="/VehicleSearch/Index" class="btn btn-primary">Tìm trạm sạc</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-    </div>
-</div>
-}
-
-@section FullWidthContent {
-<!-- Why Choose Us cards (moved up to match old UI) -->
-<div class="container-fluid bg-gradient-section py-5 mt-5">
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="bg-light py-3">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-3">
-                <i class="fas fa-award text-warning me-2"></i>
-                Tại sao chọn xe điện?
-            </h2>
-            <p class="text-muted">Trải nghiệm công nghệ tương lai ngay hôm nay</p>
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a asp-page="/Home/Index" class="text-decoration-none">
+                    <i class="fas fa-home me-1"></i>Trang chủ
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm</li>
+        </ol>
+    </div>
+</nav>
+
+@if (Model.Product != null)
+{
+    <div class="container my-5">
+        <!-- Product Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-1">@Model.Product.Name</h1>
+                        <p class="text-muted mb-0">Thông tin chi tiết về xe điện @Model.Product.BrandName</p>
+                    </div>
+                    <div>
+                        <a asp-page="/Home/Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Product Content -->
         <div class="row g-4">
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="stats-card text-center p-4">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </div>
-                    <h3 class="fw-bold text-primary mb-2">0-100km/h</h3>
-                    <p class="text-muted mb-0">Tăng tốc chỉ trong 5.8 giây</p>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="stats-card text-center p-4">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-road"></i>
-                    </div>
-                    <h3 class="fw-bold text-primary mb-2">400km+</h3>
-                    <p class="text-muted mb-0">Quãng đường di chuyển tối đa</p>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="stats-card text-center p-4">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-charging-station"></i>
-                    </div>
-                    <h3 class="fw-bold text-primary mb-2">2,000+</h3>
-                    <p class="text-muted mb-0">Trạm sạc trên toàn quốc</p>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="stats-card text-center p-4">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="fw-bold text-primary mb-2">10 năm</h3>
-                    <p class="text-muted mb-0">Bảo hành pin và động cơ</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- Products Section -->
-@if (Model.Products != null && Model.Products.Any())
-{
-<div class="container-fluid px-0 py-4 pt-md-2">
-    <div class="container">
-        <div class="row mb-4 align-items-end home-section-title">
-            <div class="col-12 col-md-7 col-lg-8">
-                <h2 class="h4 mb-2">
-                    <i class="fas fa-star text-warning me-2"></i>
-                    Sản phẩm nổi bật
-                </h2>
-                <p class="text-muted mb-0">Tìm và so sánh các mẫu xe điện từ nhiều hãng uy tín</p>
-            </div>
-            <div class="col-12 col-md-5 col-lg-4 mt-3 mt-md-0">
-                <form method="get">
-                    <div class="input-group">
-                        <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="Tìm theo tên xe, mã SKU, hãng...">
-                        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="product-slider position-relative">
-    <div id="homeProducts" class="row g-3 flex-nowrap product-row">
-        @foreach (var item in Model.Products)
-        {
-            <div class="col-6 col-md-4 col-lg-3 col-xl-2-4 flex-shrink-0">
-                <div class="card ev-card h-100">
-                    <div class="ev-card-img">
-                        @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+            <!-- Product Image -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        @if (!string.IsNullOrWhiteSpace(Model.Product.ImageUrl))
                         {
-                            <img src="@item.ImageUrl" alt="@item.Name" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                            <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" class="img-fluid rounded" style="width: 100%; height: 400px; object-fit: cover;" />
                         }
                         else
                         {
-                            <div class="placeholder-img d-flex align-items-center justify-content-center text-muted" style="height: 200px; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                            <div class="d-flex align-items-center justify-content-center text-muted" style="height: 400px; background-color: #f8f9fa;">
                                 <div class="text-center">
-                                    <i class="fas fa-car fa-2x mb-2"></i>
-                                    <div class="small">@item.Name</div>
+                                    <i class="fas fa-car fa-4x mb-3"></i>
+                                    <div class="h5">@Model.Product.Name</div>
                                 </div>
                             </div>
                         }
                     </div>
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title mb-1">@item.Name</h5>
-                        <div class="text-muted small mb-2">@item.BrandName • SKU: @item.Sku</div>
-                        <p class="card-text text-truncate-2">@item.Description</p>
-                        <div class="mt-auto">
-                            <div class="price fw-bold text-primary fs-5 mb-2">@item.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
-                            <a asp-page="/Home/Detail" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm w-100">Xem chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Product Information -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h3 class="card-title mb-0">@Model.Product.Name</h3>
+                            <span class="badge bg-primary fs-6">@Model.Product.BrandName</span>
+                        </div>
+                        
+                        <div class="text-muted mb-3">SKU: @Model.Product.Sku</div>
+                        
+                        <div class="mb-4">
+                            <h5>Mô tả sản phẩm</h5>
+                            <p class="text-muted">@(string.IsNullOrWhiteSpace(Model.Product.Description) ? "Chưa có mô tả" : Model.Product.Description)</p>
+                        </div>
+
+                        <!-- Price Info -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <div class="text-muted small">Giá bán</div>
+                                        <div class="h4 text-primary fw-bold">@Model.Product.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product Specifications -->
+                        <div class="mb-4">
+                            <h5>Thông số kỹ thuật</h5>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Hãng xe:</span>
+                                        <span class="fw-bold">@Model.Product.BrandName</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Mã SKU:</span>
+                                        <span class="fw-bold">@Model.Product.Sku</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Trạng thái:</span>
+                                        <span class="badge @(Model.Product.IsActive ? "bg-success" : "bg-danger")">
+                                            @(Model.Product.IsActive ? "Hoạt động" : "Ngừng bán")
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Cập nhật:</span>
+                                        <span class="fw-bold">@Model.Product.UpdatedAt.ToString("dd/MM/yyyy")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#testDriveModal">
+                                <i class="fas fa-calendar-check me-2"></i> Đăng ký lái thử
+                            </button>
+                            <a href="tel:1900xxxx" class="btn btn-outline-primary">
+                                <i class="fas fa-phone me-2"></i> Liên hệ tư vấn
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Related Products -->
+        @if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+        {
+            <div class="mt-5">
+                <h4 class="mb-4">
+                    <i class="fas fa-th me-2"></i>
+                    Sản phẩm cùng hãng
+                </h4>
+                <div class="row g-3">
+                    @foreach (var related in Model.RelatedProducts.Take(4))
+                    {
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <div class="card ev-card h-100 border-0 shadow-sm">
+                                <div class="ev-card-img">
+                                    @if (!string.IsNullOrWhiteSpace(related.ImageUrl))
+                                    {
+                                        <img src="@related.ImageUrl" alt="@related.Name" class="card-img-top" style="height: 150px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="placeholder-img d-flex align-items-center justify-content-center text-muted" style="height: 150px; background-color: #f8f9fa;">
+                                            <i class="fas fa-car fa-2x"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title">@related.Name</h6>
+                                    <div class="text-muted small mb-2">SKU: @related.Sku</div>
+                                    <div class="fw-bold text-primary">@related.Price.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</div>
+                                    <a asp-page="/Home/Detail" asp-route-id="@related.Id" class="btn btn-outline-primary btn-sm w-100 mt-2">
+                                        Xem chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="mt-5 text-center py-4">
+                <h4 class="mb-3">
+                    <i class="fas fa-th me-2"></i>
+                    Sản phẩm cùng hãng
+                </h4>
+                <p class="text-muted">Không có sản phẩm cùng hãng</p>
+            </div>
         }
     </div>
-    <button id="productPrev" class="product-control product-prev" type="button">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button id="productNext" class="product-control product-next" type="button">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-        </div>
-        <div class="d-flex justify-content-center mt-4">
-            <a href="#" class="btn btn-primary btn-lg rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#testDriveModal">
-                <i class="fas fa-calendar-check me-2"></i> Đăng ký lái thử
-            </a>
-        </div>
-    </div>
-
-</div>
 }
 else
 {
-<div class="container my-4">
-    <div class="d-flex justify-content-center">
-        <a asp-page="/Products/Index" class="btn btn-primary rounded-pill px-4">
-            <i class="fas fa-th me-2"></i> Xem tất cả sản phẩm
-        </a>
-    </div>
-</div>
-}
-
-<!-- Call to Action Section -->
-<div class="container my-5 py-5">
-    <div class="cta-section text-center p-5 rounded-4">
+    <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h2 class="display-5 fw-bold text-white mb-3">
-                    Sẵn sàng trải nghiệm xe điện?
-                </h2>
-                <p class="lead text-white mb-4">
-                    Đăng ký lái thử miễn phí ngay hôm nay và cảm nhận sự khác biệt
-                </p>
-                <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="#" class="btn btn-light btn-lg rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#testDriveModal">
-                        <i class="fas fa-calendar-check me-2"></i> Đăng ký lái thử
-                    </a>
-                    <a href="tel:1900xxxx" class="btn btn-outline-light btn-lg rounded-pill px-5">
-                        <i class="fas fa-phone me-2"></i> Liên hệ tư vấn
-                    </a>
+            <div class="col-md-6 text-center">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body py-5">
+                        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                        <h4 class="mb-3">Không tìm thấy sản phẩm</h4>
+                        <p class="text-muted mb-4">Sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+                        <a asp-page="/Home/Index" class="btn btn-primary">
+                            <i class="fas fa-arrow-left me-2"></i> Về trang chủ
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-</div>
 }
 
 <!-- Test Drive Modal -->
@@ -281,13 +240,6 @@ else
                             <label class="form-label">Xe lái thử</label>
                             <select id="tdProduct" class="form-select" required>
                                 <option value="">-- Chọn xe --</option>
-                                @if (Model.Products != null)
-                                {
-                                    foreach (var p in Model.Products)
-                                    {
-                                        <option value="@p.Id">@p.Name (@p.Sku)</option>
-                                    }
-                                }
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -362,49 +314,6 @@ else
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const productRow = document.getElementById('homeProducts');
-            const prevBtn = document.getElementById('productPrev');
-            const nextBtn = document.getElementById('productNext');
-
-            if (productRow && prevBtn && nextBtn) {
-                const scrollAmount = 300;
-                prevBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    productRow.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                });
-                nextBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    productRow.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                });
-
-                function updateButtons() {
-                    const scrollLeft = productRow.scrollLeft;
-                    const maxScroll = productRow.scrollWidth - productRow.clientWidth;
-                    if (scrollLeft > 10) {
-                        prevBtn.style.opacity = '1';
-                        prevBtn.style.visibility = 'visible';
-                    } else {
-                        prevBtn.style.opacity = '0.3';
-                        prevBtn.style.visibility = 'visible';
-                    }
-                    if (scrollLeft < maxScroll - 10) {
-                        nextBtn.style.opacity = '1';
-                        nextBtn.style.visibility = 'visible';
-                    } else {
-                        nextBtn.style.opacity = '0.3';
-                        nextBtn.style.visibility = 'visible';
-                    }
-                }
-                prevBtn.style.display = 'flex';
-                nextBtn.style.display = 'flex';
-                prevBtn.style.pointerEvents = 'auto';
-                nextBtn.style.pointerEvents = 'auto';
-                productRow.addEventListener('scroll', updateButtons);
-                updateButtons();
-            }
-        });
-
         // Function để hiển thị popup thông báo thành công
         function showSuccessModal() {
             const successModal = new bootstrap.Modal(document.getElementById('successModal'));
@@ -419,14 +328,6 @@ else
             }, 5000);
         }
 
-        @if (TempData["Msg"] != null)
-        {
-            <text>
-            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-            successModal.show();
-            setTimeout(function() { successModal.hide(); }, 5000);
-            </text>
-        }
         // Load dealers via Page Handler
         fetch('@Url.Page("/Home/Index", "Dealers")')
             .then(r=>r.json())
@@ -437,6 +338,25 @@ else
                     const opt = document.createElement('option');
                     opt.value = d.id; opt.textContent = d.name;
                     sel.appendChild(opt);
+                });
+            });
+
+        // Load all products via Page Handler
+        fetch('@Url.Page("/Home/Detail", "Products")')
+            .then(r=>r.json())
+            .then(list=>{
+                const sel = document.getElementById('tdProduct');
+                if (!sel) return;
+                list.forEach(p=>{
+                    const opt = document.createElement('option');
+                    opt.value = p.id; 
+                    opt.textContent = p.name + ' (' + p.sku + ')';
+                    sel.appendChild(opt);
+                    
+                    // Pre-select current product if available
+                    if ('@Model.Product?.Id' && p.id === '@Model.Product?.Id') {
+                        opt.selected = true;
+                    }
                 });
             });
 
@@ -598,12 +518,13 @@ else
                         // Hiển thị popup thông báo thành công
                         showSuccessModal();
                     } else {
-                        alert(res?.error || 'Không thể tạo lịch hẹn');
+                        alert(res?.error || 'Có lỗi xảy ra khi đăng ký lái thử');
                     }
+                }).catch(err => {
+                    console.error('SignalR error:', err);
+                    alert('Có lỗi xảy ra khi kết nối. Vui lòng thử lại.');
                 });
             });
         })();
     </script>
 }
-
-

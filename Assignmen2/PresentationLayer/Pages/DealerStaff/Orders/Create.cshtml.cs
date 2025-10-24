@@ -3,26 +3,46 @@ using BusinessLayer.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using DataAccessLayer.Entities;
 
 namespace PresentationLayer.Pages.DealerStaff.Orders
 {
+    public class PricingInfo
+    {
+        public decimal WholesalePrice { get; set; }
+        public decimal RetailPrice { get; set; }
+        public decimal DiscountRate { get; set; }
+        public decimal MinimumPrice { get; set; }
+        public string PolicyType { get; set; } = string.Empty;
+        public bool HasPolicy { get; set; }
+    }
+
     public class CreateModel : PageModel
     {
         private readonly IOrderService _orderService;
         private readonly ICustomerService _customerService;
         private readonly IProductService _productService;
         private readonly IMappingService _mappingService;
+        private readonly IInventoryManagementService _inventoryService;
+        private readonly IPricingManagementService _pricingService;
+        private readonly IDealerService _dealerService;
 
         public CreateModel(
             IOrderService orderService,
             ICustomerService customerService,
             IProductService productService,
-            IMappingService mappingService)
+            IMappingService mappingService,
+            IInventoryManagementService inventoryService,
+            IPricingManagementService pricingService,
+            IDealerService dealerService)
         {
             _orderService = orderService;
             _customerService = customerService;
             _productService = productService;
             _mappingService = mappingService;
+            _inventoryService = inventoryService;
+            _pricingService = pricingService;
+            _dealerService = dealerService;
         }
 
         [BindProperty]
@@ -30,6 +50,7 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
 
         public List<CustomerResponse> Customers { get; set; } = new();
         public List<ProductResponse> Products { get; set; } = new();
+        public Dictionary<Guid, PricingInfo> ProductPricing { get; set; } = new();
 
         public class InputModel
         {
@@ -60,6 +81,9 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
             [Display(Name = "Hạn thanh toán")]
             public DateTime? PaymentDueDate { get; set; }
 
+            [Required]
+            public string PriceType { get; set; } = "Wholesale"; // Wholesale or Retail
+
             [Display(Name = "Mô tả")]
             public string? Description { get; set; }
 
@@ -81,6 +105,46 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
             if (productsResult.Success && productsResult.Data != null)
             {
                 Products = _mappingService.MapToProductViewModels(productsResult.Data);
+
+                // Load pricing information for each product
+                var dealerId = GetCurrentDealerId();
+                if (dealerId.HasValue)
+                {
+                    var (dealerOk, _, dealer) = await _dealerService.GetByIdAsync(dealerId.Value);
+                    if (dealerOk && dealer != null)
+                    {
+                        foreach (var product in productsResult.Data)
+                        {
+                            var pricingPolicy = await _pricingService.GetActivePricingPolicyAsync(product.Id, dealerId.Value, dealer.RegionId);
+                            
+                            if (pricingPolicy != null)
+                            {
+                                ProductPricing[product.Id] = new PricingInfo
+                                {
+                                    WholesalePrice = pricingPolicy.WholesalePrice,
+                                    RetailPrice = pricingPolicy.RetailPrice,
+                                    DiscountRate = pricingPolicy.DiscountRate,
+                                    MinimumPrice = pricingPolicy.MinimumPrice,
+                                    PolicyType = pricingPolicy.PolicyType,
+                                    HasPolicy = true
+                                };
+                            }
+                            else
+                            {
+                                // Fallback to product base price
+                                ProductPricing[product.Id] = new PricingInfo
+                                {
+                                    WholesalePrice = product.Price,
+                                    RetailPrice = product.Price,
+                                    DiscountRate = 0,
+                                    MinimumPrice = product.Price,
+                                    PolicyType = "Standard",
+                                    HasPolicy = false
+                                };
+                            }
+                        }
+                    }
+                }
             }
 
             // Pre-select if parameters provided
@@ -122,14 +186,38 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
             // Get current sales person ID from session
             var salesPersonId = GetCurrentSalesPersonId();
 
+            // Kiểm tra tồn kho trước khi tạo đơn hàng
+            var inventoryResult = await _inventoryService.GetInventoryByDealerAndProductAsync(dealerId.Value, Input.ProductId);
+            if (!inventoryResult.Success || inventoryResult.Data == null || inventoryResult.Data.AvailableQuantity <= 0)
+            {
+                ModelState.AddModelError("", "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng hoặc chọn sản phẩm khác.");
+                await LoadDataAsync();
+                return Page();
+            }
+
             try
             {
+                // Tính giá theo PriceType
+                decimal finalPrice = Input.Price;
+                if (ProductPricing.ContainsKey(Input.ProductId))
+                {
+                    var pricing = ProductPricing[Input.ProductId];
+                    finalPrice = Input.PriceType == "Retail" ? pricing.RetailPrice : pricing.WholesalePrice;
+                    
+                    // Apply discount nếu có
+                    if (pricing.DiscountRate > 0)
+                    {
+                        finalPrice = finalPrice * (1 - pricing.DiscountRate / 100);
+                        finalPrice = Math.Max(finalPrice, pricing.MinimumPrice);
+                    }
+                }
+
                 var result = await _orderService.CreateQuotationAsync(
                     Input.ProductId,
                     Input.CustomerId,
                     dealerId.Value,
                     salesPersonId,
-                    Input.Price,
+                    finalPrice,
                     Input.Discount,
                     Input.OrderType,
                     Input.Notes ?? ""
@@ -211,49 +299,17 @@ namespace PresentationLayer.Pages.DealerStaff.Orders
 
                 if (!result.Success || result.Data == null)
                 {
-                    // Fallback: Kiểm tra tồn kho tổng từ Product (như EVMStaff)
-                    var productService = HttpContext.RequestServices.GetRequiredService<IProductService>();
-                    var productResult = await productService.GetByIdAsync(productId);
-                    
-                    if (productResult.Success && productResult.Data != null)
-                    {
-                        var product = productResult.Data;
-                        var evmHasStock = product.StockQuantity > 0;
-                        
-                        string evmMessage;
-                        if (evmHasStock)
-                        {
-                            evmMessage = $"Có sẵn {product.StockQuantity} xe trong kho";
-                        }
-                        else
-                        {
-                            evmMessage = "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
-                        }
-
-                        return new JsonResult(new { 
-                            success = true,
-                            hasStock = evmHasStock,
-                            availableQuantity = product.StockQuantity,
-                            allocatedQuantity = 0,
-                            reservedQuantity = 0,
-                            minimumStock = 0,
-                            message = evmMessage,
-                            isEVMStock = true // Đánh dấu đây là tồn kho EVM, chưa phân bổ
-                        });
-                    }
-                    else
-                    {
-                        // Không tìm thấy sản phẩm
-                        return new JsonResult(new { 
-                            success = true,
-                            hasStock = false,
-                            availableQuantity = 0,
-                            allocatedQuantity = 0,
-                            reservedQuantity = 0,
-                            minimumStock = 0,
-                            message = "Không tìm thấy thông tin sản phẩm."
-                        });
-                    }
+                    // Không có allocation cho đại lý này
+                    return new JsonResult(new { 
+                        success = true,
+                        hasStock = false,
+                        availableQuantity = 0,
+                        allocatedQuantity = 0,
+                        reservedQuantity = 0,
+                        minimumStock = 0,
+                        message = "Chưa có xe được phân bổ cho đại lý này. Vui lòng liên hệ EVM để đặt hàng.",
+                        isEVMStock = false
+                    });
                 }
 
                 var inventory = result.Data;

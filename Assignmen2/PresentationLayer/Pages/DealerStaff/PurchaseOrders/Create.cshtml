@@ -65,7 +65,42 @@
                             </h5>
                         </div>
 
-                        <div class="row">
+                        <!-- Pricing Policy Info -->
+                        <div id="pricing-info" class="alert alert-info mb-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Chính sách giá:</strong>
+                                    <div id="policy-type" class="badge bg-primary"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Giảm giá:</strong>
+                                    <span id="discount-rate" class="text-success"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">
+                                    <i class="fas fa-tags me-1 text-primary"></i>Loại giá
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="Input.PriceType" id="priceWholesale" value="Wholesale" checked onchange="updatePrice()">
+                                        <label class="form-check-label" for="priceWholesale">
+                                            <strong>Giá sỉ</strong> <span id="wholesale-price" class="text-success"></span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="Input.PriceType" id="priceRetail" value="Retail" onchange="updatePrice()">
+                                        <label class="form-check-label" for="priceRetail">
+                                            <strong>Giá lẻ</strong> <span id="retail-price" class="text-primary"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="Input.PriceType" id="priceType" />
+                            </div>
                             <div class="col-md-6">
                                 <label asp-for="Input.RequestedQuantity" class="form-label"><strong>Số lượng</strong></label>
                                 <input asp-for="Input.RequestedQuantity" class="form-control" type="number" min="1" max="1000" onchange="updateProductInfo()" />
@@ -75,7 +110,7 @@
                                 <label asp-for="Input.UnitPrice" class="form-label"><strong>Đơn giá (VNĐ)</strong></label>
                                 <input asp-for="Input.UnitPrice" class="form-control" type="number" step="0.01" min="0" readonly style="background-color: #f8f9fa; cursor: not-allowed;" />
                                 <span asp-validation-for="Input.UnitPrice" class="text-danger"></span>
-                                <div class="form-text">Đơn giá được tự động tính theo sản phẩm và số lượng</div>
+                                <div class="form-text">Đơn giá được tự động tính theo chính sách giá</div>
                             </div>
                         </div>
 
@@ -202,6 +237,58 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        const pricingData = @Html.Raw(Json.Serialize(Model.ProductPricing));
+
+        function loadProductPricingInfo() {
+            const productSelect = document.getElementById('productSelect');
+            const selectedProductId = productSelect.value;
+            const pricingInfo = document.getElementById('pricing-info');
+            const wholesalePriceSpan = document.getElementById('wholesale-price');
+            const retailPriceSpan = document.getElementById('retail-price');
+            const policyTypeSpan = document.getElementById('policy-type');
+            const discountRateSpan = document.getElementById('discount-rate');
+
+            if (selectedProductId && pricingData[selectedProductId]) {
+                const pricing = pricingData[selectedProductId];
+                
+                pricingInfo.style.display = 'block';
+                policyTypeSpan.textContent = pricing.policyType;
+                discountRateSpan.textContent = pricing.discountRate > 0 ? pricing.discountRate + '%' : 'Không có';
+                
+                wholesalePriceSpan.textContent = '(' + pricing.wholesalePrice.toLocaleString('vi-VN') + ' VND)';
+                retailPriceSpan.textContent = '(' + pricing.retailPrice.toLocaleString('vi-VN') + ' VND)';
+                
+                updatePrice();
+            } else {
+                pricingInfo.style.display = 'none';
+                document.querySelector('input[name="Input.UnitPrice"]').value = '';
+            }
+        }
+
+        function updatePrice() {
+            const productSelect = document.getElementById('productSelect');
+            const selectedProductId = productSelect.value;
+            const priceInput = document.querySelector('input[name="Input.UnitPrice"]');
+            const priceTypeInput = document.getElementById('priceType');
+            
+            if (selectedProductId && pricingData[selectedProductId]) {
+                const pricing = pricingData[selectedProductId];
+                const isWholesale = document.getElementById('priceWholesale').checked;
+                
+                priceTypeInput.value = isWholesale ? 'Wholesale' : 'Retail';
+                
+                let basePrice = isWholesale ? pricing.wholesalePrice : pricing.retailPrice;
+                
+                if (pricing.discountRate > 0) {
+                    basePrice = basePrice * (1 - pricing.discountRate / 100);
+                    basePrice = Math.max(basePrice, pricing.minimumPrice);
+                }
+                
+                priceInput.value = Math.round(basePrice);
+                updateProductInfo();
+            }
+        }
+
         function updateProductInfo() {
             const select = document.getElementById('productSelect');
             const productInfo = document.getElementById('productInfo');
@@ -219,8 +306,7 @@
                 
                 productInfo.innerHTML = `
                     <strong>${name}</strong><br>
-                    Thương hiệu: ${brand} | SKU: ${sku}<br>
-                    Tồn kho hiện tại: <span class="badge bg-info">${stock} xe</span>
+                    Thương hiệu: ${brand} | SKU: ${sku}
                 `;
                 
                 // Auto-calculate unit price based on product price (not quantity)
@@ -228,11 +314,13 @@
                 
                 calculateTotal();
                 updateInventoryInfo();
+                loadProductPricingInfo(); // Load pricing info when product changes
             } else {
                 productInfo.innerHTML = '';
                 unitPriceInput.value = '';
                 calculateTotal();
                 updateInventoryInfo();
+                document.getElementById('pricing-info').style.display = 'none';
             }
         }
 
@@ -330,6 +418,7 @@
                 dateInput.setAttribute('min', today);
             }
             calculateTotal();
+            loadProductPricingInfo(); // Load pricing info on page load
         });
     </script>
 }

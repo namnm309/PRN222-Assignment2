@@ -3,13 +3,25 @@ using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Pages.Base;
 using BusinessLayer.DTOs.Responses;
+using DataAccessLayer.Entities;
 
 namespace PresentationLayer.Pages.DealerManager.Orders
 {
+	public class PricingInfo
+	{
+		public decimal WholesalePrice { get; set; }
+		public decimal RetailPrice { get; set; }
+		public decimal DiscountRate { get; set; }
+		public decimal MinimumPrice { get; set; }
+		public string PolicyType { get; set; } = string.Empty;
+		public bool HasPolicy { get; set; }
+	}
+
 	public class CreateModel : BaseDealerManagerPageModel
 	{
 		private readonly IProductService productService;
 		private readonly IInventoryManagementService inventoryService;
+		private readonly IPricingManagementService pricingService;
 
 		public CreateModel(
 			IDealerService dealerService,
@@ -23,11 +35,13 @@ namespace PresentationLayer.Pages.DealerManager.Orders
 			IProductService productService,
 			IBrandService brandService,
 			IMappingService mappingService,
-			IInventoryManagementService inventoryService)
+			IInventoryManagementService inventoryService,
+			IPricingManagementService pricingService)
 			: base(dealerService, orderService, testDriveService, customerService, reportService, dealerDebtService, authenService, purchaseOrderService, productService, brandService, mappingService)
 		{
 			this.productService = productService;
 			this.inventoryService = inventoryService;
+			this.pricingService = pricingService;
 		}
 
 		[BindProperty]
@@ -36,6 +50,7 @@ namespace PresentationLayer.Pages.DealerManager.Orders
         public List<ProductResponse> Products { get; private set; } = new();
         public List<CustomerResponse> Customers { get; private set; } = new();
         public List<UserResponse> Staff { get; private set; } = new();
+        public Dictionary<Guid, PricingInfo> ProductPricing { get; set; } = new();
 
 		public async Task<IActionResult> OnGetAsync()
 		{
@@ -51,6 +66,42 @@ namespace PresentationLayer.Pages.DealerManager.Orders
             var staffEntities = await ReportService.GetUsersByDealerAsync(dealerId.Value);
             Staff = staffEntities.Select(u => new UserResponse { Id = u.Id, FullName = u.FullName, Email = u.Email, PhoneNumber = u.PhoneNumber ?? string.Empty, Role = BusinessLayer.Enums.UserRole.DealerStaff, DealerId = u.DealerId, DealerName = u.Dealer?.Name ?? string.Empty, IsActive = u.IsActive, CreatedAt = u.CreatedAt, UpdatedAt = u.UpdatedAt }).ToList();
 
+			// Load pricing information for each product
+			var (dealerOk, _, dealer) = await DealerService.GetByIdAsync(dealerId.Value);
+			if (dealerOk && dealer != null)
+			{
+				foreach (var product in products)
+				{
+					var pricingPolicy = await pricingService.GetActivePricingPolicyAsync(product.Id, dealerId.Value, dealer.RegionId);
+					
+					if (pricingPolicy != null)
+					{
+						ProductPricing[product.Id] = new PricingInfo
+						{
+							WholesalePrice = pricingPolicy.WholesalePrice,
+							RetailPrice = pricingPolicy.RetailPrice,
+							DiscountRate = pricingPolicy.DiscountRate,
+							MinimumPrice = pricingPolicy.MinimumPrice,
+							PolicyType = pricingPolicy.PolicyType,
+							HasPolicy = true
+						};
+					}
+					else
+					{
+						// Fallback to product base price
+						ProductPricing[product.Id] = new PricingInfo
+						{
+							WholesalePrice = product.Price,
+							RetailPrice = product.Price,
+							DiscountRate = 0,
+							MinimumPrice = product.Price,
+							PolicyType = "Standard",
+							HasPolicy = false
+						};
+					}
+				}
+			}
+
 			return Page();
 		}
 
@@ -65,12 +116,36 @@ namespace PresentationLayer.Pages.DealerManager.Orders
 				return Page();
 			}
 
+			// Kiểm tra tồn kho trước khi tạo đơn hàng
+			var inventoryResult = await inventoryService.GetInventoryByDealerAndProductAsync(dealerId.Value, Input.ProductId);
+			if (!inventoryResult.Success || inventoryResult.Data == null || inventoryResult.Data.AvailableQuantity <= 0)
+			{
+				ModelState.AddModelError(string.Empty, "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng hoặc chọn sản phẩm khác.");
+				await OnGetAsync();
+				return Page();
+			}
+
+			// Tính giá theo PriceType
+			decimal finalPrice = Input.Price;
+			if (ProductPricing.ContainsKey(Input.ProductId))
+			{
+				var pricing = ProductPricing[Input.ProductId];
+				finalPrice = Input.PriceType == "Retail" ? pricing.RetailPrice : pricing.WholesalePrice;
+				
+				// Apply discount nếu có
+				if (pricing.DiscountRate > 0)
+				{
+					finalPrice = finalPrice * (1 - pricing.DiscountRate / 100);
+					finalPrice = Math.Max(finalPrice, pricing.MinimumPrice);
+				}
+			}
+
 			var (ok, err, order) = await OrderService.CreateQuotationAsync(
 				Input.ProductId,
 				Input.CustomerId,
 				dealerId.Value,
 				Input.SalesPersonId,
-				Input.Price,
+				finalPrice,
 				Input.Discount,
 				Input.Description ?? string.Empty,
 				Input.Notes ?? string.Empty
@@ -96,6 +171,7 @@ namespace PresentationLayer.Pages.DealerManager.Orders
 			public Guid? SalesPersonId { get; set; }
 			public string? Description { get; set; }
 			public string? Notes { get; set; }
+			[Required] public string PriceType { get; set; } = "Wholesale"; // Wholesale or Retail
 		}
 
 		public async Task<IActionResult> OnGetGetProductStockAsync(Guid productId)
@@ -155,28 +231,16 @@ namespace PresentationLayer.Pages.DealerManager.Orders
 				}
 				else
 				{
-					// Không có allocation cho đại lý, kiểm tra tồn kho EVM
-					var evmHasStock = product.StockQuantity > 0;
-					string evmMessage;
-					
-					if (evmHasStock)
-					{
-						evmMessage = $"Tồn kho EVM: {product.StockQuantity} xe (chưa phân bổ cho đại lý)";
-					}
-					else
-					{
-						evmMessage = "Không có xe trong kho. Vui lòng liên hệ EVM để đặt hàng.";
-					}
-
+					// Không có allocation cho đại lý này
 					return new JsonResult(new { 
 						success = true,
-						hasStock = evmHasStock,
-						availableQuantity = product.StockQuantity,
+						hasStock = false,
+						availableQuantity = 0,
 						allocatedQuantity = 0,
 						reservedQuantity = 0,
 						minimumStock = 0,
-						message = evmMessage,
-						isEVMStock = true // Đánh dấu đây là tồn kho EVM, chưa phân bổ
+						message = "Chưa có xe được phân bổ cho đại lý này. Vui lòng liên hệ EVM để đặt hàng.",
+						isEVMStock = false
 					});
 				}
 			}

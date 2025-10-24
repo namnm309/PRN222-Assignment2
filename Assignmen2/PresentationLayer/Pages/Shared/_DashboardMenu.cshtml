@@ -79,6 +79,10 @@ else if (userRole == UserRole.DealerManager)
             <i class="fas fa-file-invoice-dollar"></i>
             <span>Báo cáo công nợ</span>
         </a>
+        <a asp-page="/DealerManager/Reports/PricingSalesReport" class="menu-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Báo cáo giá & doanh số</span>
+        </a>
     </div>
     
     <div class="menu-section">
@@ -110,6 +114,10 @@ else if (userRole == UserRole.DealerManager)
         <a asp-page="/DealerManager/PurchaseOrders/Index" class="menu-item">
             <i class="fas fa-box"></i>
             <span>Đặt xe từ hãng</span>
+        </a>
+        <a asp-page="/DealerManager/PricingPolicies/Index" class="menu-item">
+            <i class="fas fa-tags"></i>
+            <span>Bảng giá sản phẩm</span>
         </a>
     </div>
     
